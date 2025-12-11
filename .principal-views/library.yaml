@@ -3,86 +3,72 @@ name: "Backlog.md Component Library"
 
 nodeComponents:
   CLI:
-    type: "entrypoint"
     description: "Main CLI interface and command router"
     icon: "terminal"
     color: "#007ACC"
     
   Core:
-    type: "module"
     description: "Core backlog functionality and task management"
     icon: "core"
     color: "#FF6B35"
     
   FileSystem:
-    type: "module"
     description: "File system operations and management"
     icon: "folder"
     color: "#4ECDC4"
     
   Markdown:
-    type: "module"
     description: "Markdown parsing and serialization"
     icon: "document"
     color: "#45B7D1"
     
   MCP:
-    type: "module"
     description: "Model Context Protocol server implementation"
     icon: "server"
     color: "#9B59B6"
     
   WebUI:
-    type: "module"
     description: "React-based web interface components"
     icon: "web"
     color: "#E74C3C"
     
   Utils:
-    type: "module"
     description: "Utility functions and helpers"
     icon: "tools"
     color: "#95A5A6"
     
   Commands:
-    type: "module"
     description: "CLI command implementations"
     icon: "command"
     color: "#F39C12"
     
   Git:
-    type: "module"
     description: "Git operations and integration"
     icon: "git"
     color: "#27AE60"
     
   Server:
-    type: "module"
     description: "HTTP server for web interface"
     icon: "server"
     color: "#E67E22"
 
 edgeComponents:
   DataFlow:
-    type: "data"
     description: "Data flow between components"
     style: "solid"
     color: "#3498DB"
     
   Dependency:
-    type: "dependency"
     description: "Module dependency relationship"
     style: "dashed"
     color: "#7F8C8D"
     
   EventFlow:
-    type: "event"
     description: "Event-driven communication"
     style: "dotted"
     color: "#E74C3C"
     
   API:
-    type: "api"
     description: "API interface between components"
     style: "double"
     color: "#9B59B6"

@@ -1,21 +1,7 @@
 {
-  "vv": {
+  "pv": {
     "name": "Backlog.md Architecture",
-    "version": "1.0.0",
-    "edgeTypes": {
-      "DataFlow": {
-        "style": "solid",
-        "color": "#3498DB"
-      },
-      "Dependency": {
-        "style": "dashed",
-        "color": "#7F8C8D"
-      },
-      "API": {
-        "style": "double",
-        "color": "#9B59B6"
-      }
-    }
+    "version": "1.0.0"
   },
   "nodes": [
     {
@@ -26,7 +12,7 @@
       "width": 120,
       "height": 60,
       "text": "CLI Interface",
-      "vv": {
+      "pv": {
         "nodeType": "CLI",
         "shape": "rectangle"
       }
@@ -39,7 +25,7 @@
       "width": 120,
       "height": 60,
       "text": "Commands",
-      "vv": {
+      "pv": {
         "nodeType": "Commands",
         "shape": "rectangle"
       }
@@ -52,7 +38,7 @@
       "width": 120,
       "height": 60,
       "text": "Core",
-      "vv": {
+      "pv": {
         "nodeType": "Core",
         "shape": "rectangle"
       }
@@ -65,7 +51,7 @@
       "width": 120,
       "height": 60,
       "text": "Utils",
-      "vv": {
+      "pv": {
         "nodeType": "Utils",
         "shape": "rectangle"
       }
@@ -78,7 +64,7 @@
       "width": 120,
       "height": 60,
       "text": "File System",
-      "vv": {
+      "pv": {
         "nodeType": "FileSystem",
         "shape": "rectangle"
       }
@@ -91,7 +77,7 @@
       "width": 120,
       "height": 60,
       "text": "Markdown",
-      "vv": {
+      "pv": {
         "nodeType": "Markdown",
         "shape": "rectangle"
       }
@@ -104,7 +90,7 @@
       "width": 120,
       "height": 60,
       "text": "Git",
-      "vv": {
+      "pv": {
         "nodeType": "Git",
         "shape": "rectangle"
       }
@@ -117,7 +103,7 @@
       "width": 120,
       "height": 60,
       "text": "MCP Server",
-      "vv": {
+      "pv": {
         "nodeType": "MCP",
         "shape": "rectangle"
       }
@@ -130,7 +116,7 @@
       "width": 120,
       "height": 60,
       "text": "Web Server",
-      "vv": {
+      "pv": {
         "nodeType": "Server",
         "shape": "rectangle"
       }
@@ -143,7 +129,7 @@
       "width": 120,
       "height": 60,
       "text": "Web UI",
-      "vv": {
+      "pv": {
         "nodeType": "WebUI",
         "shape": "rectangle"
       }
@@ -154,8 +140,8 @@
       "id": "cli-commands",
       "fromNode": "cli",
       "toNode": "commands",
-      "text": "routes",
-      "vv": {
+      "label": "routes",
+      "pv": {
         "edgeType": "DataFlow"
       }
     },
@@ -163,8 +149,8 @@
       "id": "cli-core",
       "fromNode": "cli",
       "toNode": "core",
-      "text": "delegates",
-      "vv": {
+      "label": "delegates",
+      "pv": {
         "edgeType": "DataFlow"
       }
     },
@@ -172,8 +158,8 @@
       "id": "cli-utils",
       "fromNode": "cli",
       "toNode": "utils",
-      "text": "uses",
-      "vv": {
+      "label": "uses",
+      "pv": {
         "edgeType": "Dependency"
       }
     },
@@ -181,8 +167,8 @@
       "id": "commands-filesystem",
       "fromNode": "commands",
       "toNode": "filesystem",
-      "text": "operations",
-      "vv": {
+      "label": "operations",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -190,8 +176,8 @@
       "id": "commands-core",
       "fromNode": "commands",
       "toNode": "core",
-      "text": "calls",
-      "vv": {
+      "label": "calls",
+      "pv": {
         "edgeType": "DataFlow"
       }
     },
@@ -199,8 +185,8 @@
       "id": "core-filesystem",
       "fromNode": "core",
       "toNode": "filesystem",
-      "text": "reads/writes",
-      "vv": {
+      "label": "reads/writes",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -208,8 +194,8 @@
       "id": "core-markdown",
       "fromNode": "core",
       "toNode": "markdown",
-      "text": "parses",
-      "vv": {
+      "label": "parses",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -217,8 +203,8 @@
       "id": "core-git",
       "fromNode": "core",
       "toNode": "git",
-      "text": "integrates",
-      "vv": {
+      "label": "integrates",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -226,8 +212,8 @@
       "id": "core-utils",
       "fromNode": "core",
       "toNode": "utils",
-      "text": "uses",
-      "vv": {
+      "label": "uses",
+      "pv": {
         "edgeType": "Dependency"
       }
     },
@@ -235,8 +221,8 @@
       "id": "mcp-core",
       "fromNode": "mcp",
       "toNode": "core",
-      "text": "exposes",
-      "vv": {
+      "label": "exposes",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -244,8 +230,8 @@
       "id": "mcp-markdown",
       "fromNode": "mcp",
       "toNode": "markdown",
-      "text": "processes",
-      "vv": {
+      "label": "processes",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -253,8 +239,8 @@
       "id": "server-core",
       "fromNode": "server",
       "toNode": "core",
-      "text": "serves",
-      "vv": {
+      "label": "serves",
+      "pv": {
         "edgeType": "API"
       }
     },
@@ -262,8 +248,8 @@
       "id": "server-webui",
       "fromNode": "server",
       "toNode": "webui",
-      "text": "hosts",
-      "vv": {
+      "label": "hosts",
+      "pv": {
         "edgeType": "DataFlow"
       }
     },
@@ -271,8 +257,8 @@
       "id": "webui-utils",
       "fromNode": "webui",
       "toNode": "utils",
-      "text": "uses",
-      "vv": {
+      "label": "uses",
+      "pv": {
         "edgeType": "Dependency"
       }
     }
