@@ -7,105 +7,113 @@
     {
       "id": "cli",
       "type": "text",
-      "x": 253,
-      "y": 56,
+      "x": 113,
+      "y": 42,
       "width": 120,
       "height": 60,
       "text": "CLI Interface",
       "pv": {
         "nodeType": "CLI",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/cli.ts - Entry point for CLI commands"
       }
     },
     {
       "id": "commands",
       "type": "text",
-      "x": -229,
-      "y": 176,
+      "x": -6,
+      "y": 177,
       "width": 120,
       "height": 60,
       "text": "Commands",
       "pv": {
         "nodeType": "Commands",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/commands/ - Command handlers (overview, configure, etc.)"
       }
     },
     {
       "id": "core",
       "type": "text",
       "x": 135,
-      "y": 397,
-      "width": 120,
-      "height": 60,
-      "text": "Core",
+      "y": 350,
+      "width": 160,
+      "height": 80,
+      "text": "Core API",
       "pv": {
         "nodeType": "Core",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/core/backlog.ts - Main API class. Composes FileSystem + GitOperations. Accepts adapter injection via options.adapters"
       }
     },
     {
       "id": "utils",
       "type": "text",
-      "x": 273,
-      "y": 668,
+      "x": 421,
+      "y": 532,
       "width": 120,
       "height": 60,
       "text": "Utils",
       "pv": {
         "nodeType": "Utils",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/utils/ - Pure utility functions (task-path, status, sorting, etc.)"
       }
     },
     {
-      "id": "filesystem",
+      "id": "filesystem-service",
       "type": "text",
-      "x": -227,
-      "y": 668,
-      "width": 120,
-      "height": 60,
-      "text": "File System",
+      "x": -91,
+      "y": 535,
+      "width": 160,
+      "height": 70,
+      "text": "FileSystem Service",
       "pv": {
         "nodeType": "FileSystem",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/file-system/operations.ts - Uses FileSystemAdapter + GlobAdapter"
+      }
+    },
+    {
+      "id": "git-service",
+      "type": "text",
+      "x": 234,
+      "y": 532,
+      "width": 160,
+      "height": 70,
+      "text": "GitOperations Service",
+      "pv": {
+        "nodeType": "Git",
+        "shape": "rectangle",
+        "description": "src/git/operations.ts - Uses GitAdapter"
       }
     },
     {
       "id": "markdown",
       "type": "text",
-      "x": -58,
-      "y": 670,
-      "width": 120,
+      "x": -72,
+      "y": 797,
+      "width": 140,
       "height": 60,
-      "text": "Markdown",
+      "text": "Markdown Parser",
       "pv": {
         "nodeType": "Markdown",
-        "shape": "rectangle"
-      }
-    },
-    {
-      "id": "git",
-      "type": "text",
-      "x": 136,
-      "y": 668,
-      "width": 120,
-      "height": 60,
-      "text": "Git",
-      "pv": {
-        "nodeType": "Git",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/markdown/ - Parser & serializer (pure functions, no adapters)"
       }
     },
     {
       "id": "mcp",
       "type": "text",
-      "x": -41,
-      "y": 173,
+      "x": 245,
+      "y": 166,
       "width": 120,
       "height": 60,
       "text": "MCP Server",
       "pv": {
         "nodeType": "MCP",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/mcp/server.ts - Uses Core API only (no direct adapter access)"
       }
     },
     {
@@ -118,62 +126,64 @@
       "text": "Web Server",
       "pv": {
         "nodeType": "Server",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/web/server.ts - Uses Core API"
       }
     },
     {
       "id": "webui",
       "type": "text",
-      "x": 430,
-      "y": 399,
+      "x": 429,
+      "y": 349,
       "width": 120,
       "height": 60,
       "text": "Web UI",
       "pv": {
         "nodeType": "WebUI",
-        "shape": "rectangle"
+        "shape": "rectangle",
+        "description": "src/web/components/ - React components"
       }
     },
     {
-      "id": "abstractions",
+      "id": "fs-adapter",
       "type": "text",
-      "x": -58,
-      "y": 850,
+      "x": -205,
+      "y": 695,
       "width": 160,
       "height": 60,
-      "text": "Pure Core Abstractions",
+      "text": "FileSystemAdapter",
       "pv": {
         "nodeType": "Abstractions",
         "shape": "rectangle",
-        "description": "FileSystemAdapter, GlobAdapter, GitAdapter interfaces"
+        "description": "src/pure-core/abstractions/FileSystemAdapter.ts - exists, readFile, writeFile, createDir, etc."
       }
     },
     {
-      "id": "bun-adapters",
+      "id": "glob-adapter",
       "type": "text",
-      "x": -227,
-      "y": 1000,
+      "x": 36,
+      "y": 692,
       "width": 140,
       "height": 60,
-      "text": "Bun Adapters",
+      "text": "GlobAdapter",
       "pv": {
-        "nodeType": "BunAdapters",
+        "nodeType": "Abstractions",
         "shape": "rectangle",
-        "description": "BunFileSystemAdapter, BunGlobAdapter, BunGitAdapter"
+        "description": "src/pure-core/abstractions/GlobAdapter.ts - scan, scanSync, match"
       }
     },
     {
-      "id": "test-adapters",
+      "id": "git-adapter",
       "type": "text",
-      "x": 100,
-      "y": 1000,
+      "x": 219,
+      "y": 688,
       "width": 140,
       "height": 60,
-      "text": "Test Adapters",
+      "text": "GitAdapter",
       "pv": {
-        "nodeType": "TestAdapters",
+        "nodeType": "Abstractions",
         "shape": "rectangle",
-        "description": "InMemoryFileSystemAdapter, InMemoryGlobAdapter, MockGitAdapter"
+        "description": "src/pure-core/abstractions/GitAdapter.ts - exec, isGitRepository, initRepository"
       }
     }
   ],
@@ -182,7 +192,7 @@
       "id": "cli-commands",
       "fromNode": "cli",
       "toNode": "commands",
-      "label": "routes",
+      "label": "routes to",
       "pv": {
         "edgeType": "DataFlow"
       }
@@ -191,88 +201,25 @@
       "id": "cli-core",
       "fromNode": "cli",
       "toNode": "core",
-      "label": "delegates",
+      "label": "uses Core",
       "pv": {
         "edgeType": "DataFlow"
-      }
-    },
-    {
-      "id": "cli-utils",
-      "fromNode": "cli",
-      "toNode": "utils",
-      "label": "uses",
-      "pv": {
-        "edgeType": "Dependency"
-      }
-    },
-    {
-      "id": "commands-filesystem",
-      "fromNode": "commands",
-      "toNode": "filesystem",
-      "label": "operations",
-      "pv": {
-        "edgeType": "API"
       }
     },
     {
       "id": "commands-core",
       "fromNode": "commands",
       "toNode": "core",
-      "label": "calls",
+      "label": "uses Core",
       "pv": {
         "edgeType": "DataFlow"
-      }
-    },
-    {
-      "id": "core-filesystem",
-      "fromNode": "core",
-      "toNode": "filesystem",
-      "label": "reads/writes",
-      "pv": {
-        "edgeType": "API"
-      }
-    },
-    {
-      "id": "core-markdown",
-      "fromNode": "core",
-      "toNode": "markdown",
-      "label": "parses",
-      "pv": {
-        "edgeType": "API"
-      }
-    },
-    {
-      "id": "core-git",
-      "fromNode": "core",
-      "toNode": "git",
-      "label": "integrates",
-      "pv": {
-        "edgeType": "API"
-      }
-    },
-    {
-      "id": "core-utils",
-      "fromNode": "core",
-      "toNode": "utils",
-      "label": "uses",
-      "pv": {
-        "edgeType": "Dependency"
       }
     },
     {
       "id": "mcp-core",
       "fromNode": "mcp",
       "toNode": "core",
-      "label": "exposes",
-      "pv": {
-        "edgeType": "API"
-      }
-    },
-    {
-      "id": "mcp-markdown",
-      "fromNode": "mcp",
-      "toNode": "markdown",
-      "label": "processes",
+      "label": "uses Core only",
       "pv": {
         "edgeType": "API"
       }
@@ -281,7 +228,7 @@
       "id": "server-core",
       "fromNode": "server",
       "toNode": "core",
-      "label": "serves",
+      "label": "uses Core",
       "pv": {
         "edgeType": "API"
       }
@@ -290,7 +237,7 @@
       "id": "server-webui",
       "fromNode": "server",
       "toNode": "webui",
-      "label": "hosts",
+      "label": "serves",
       "pv": {
         "edgeType": "DataFlow"
       }
@@ -305,48 +252,66 @@
       }
     },
     {
-      "id": "filesystem-abstractions",
-      "fromNode": "filesystem",
-      "toNode": "abstractions",
-      "label": "uses",
-      "pv": {
-        "edgeType": "Dependency"
-      }
-    },
-    {
-      "id": "git-abstractions",
-      "fromNode": "git",
-      "toNode": "abstractions",
-      "label": "uses",
-      "pv": {
-        "edgeType": "Dependency"
-      }
-    },
-    {
-      "id": "bun-adapters-abstractions",
-      "fromNode": "bun-adapters",
-      "toNode": "abstractions",
-      "label": "implements",
-      "pv": {
-        "edgeType": "Implementation"
-      }
-    },
-    {
-      "id": "test-adapters-abstractions",
-      "fromNode": "test-adapters",
-      "toNode": "abstractions",
-      "label": "implements",
-      "pv": {
-        "edgeType": "Implementation"
-      }
-    },
-    {
-      "id": "core-abstractions",
+      "id": "core-filesystem-service",
       "fromNode": "core",
-      "toNode": "abstractions",
-      "label": "injects",
+      "toNode": "filesystem-service",
+      "label": "composes (this.fs)",
       "pv": {
-        "edgeType": "DependencyInjection"
+        "edgeType": "Dependency"
+      }
+    },
+    {
+      "id": "core-git-service",
+      "fromNode": "core",
+      "toNode": "git-service",
+      "label": "composes (this.git)",
+      "pv": {
+        "edgeType": "Dependency"
+      }
+    },
+    {
+      "id": "core-utils",
+      "fromNode": "core",
+      "toNode": "utils",
+      "label": "uses",
+      "pv": {
+        "edgeType": "Dependency"
+      }
+    },
+    {
+      "id": "filesystem-service-markdown",
+      "fromNode": "filesystem-service",
+      "toNode": "markdown",
+      "label": "uses parser",
+      "pv": {
+        "edgeType": "API"
+      }
+    },
+    {
+      "id": "filesystem-service-fs-adapter",
+      "fromNode": "filesystem-service",
+      "toNode": "fs-adapter",
+      "label": "uses",
+      "pv": {
+        "edgeType": "Dependency"
+      }
+    },
+    {
+      "id": "filesystem-service-glob-adapter",
+      "fromNode": "filesystem-service",
+      "toNode": "glob-adapter",
+      "label": "uses",
+      "pv": {
+        "edgeType": "Dependency"
+      }
+    },
+    {
+      "id": "git-service-git-adapter",
+      "fromNode": "git-service",
+      "toNode": "git-adapter",
+      "label": "uses",
+      "pv": {
+        "edgeType": "Dependency"
       }
     }
   ]
