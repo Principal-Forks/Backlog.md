@@ -8,6 +8,7 @@ function normalizeFlowList(prefix: string, rawValue: string): string | null {
 	if (!match) return null;
 
 	const [, listBody, comment] = match;
+	if (listBody === undefined) return null;
 	const items = listBody
 		.split(",")
 		.map((entry) => entry.trim())
@@ -37,6 +38,7 @@ function preprocessFrontmatter(frontmatter: string): string {
 			if (!match) return line;
 
 			const [, prefix, raw] = match;
+			if (prefix === undefined) return line;
 			const value = raw?.trim() || "";
 
 			const normalizedFlowList = normalizeFlowList(prefix, value);

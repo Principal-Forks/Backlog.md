@@ -1,9 +1,8 @@
-import { mkdir, rename, unlink } from "node:fs/promises";
-import { homedir } from "node:os";
-import { dirname, join } from "node:path";
 import { DEFAULT_DIRECTORIES, DEFAULT_FILES, DEFAULT_STATUSES } from "../constants/index.ts";
 import { parseDecision, parseDocument, parseTask } from "../markdown/parser.ts";
 import { serializeDecision, serializeDocument, serializeTask } from "../markdown/serializer.ts";
+import type { FileSystemAdapter } from "../pure-core/abstractions/FileSystemAdapter.ts";
+import type { GlobAdapter } from "../pure-core/abstractions/GlobAdapter.ts";
 import type { BacklogConfig, Decision, Document, Task, TaskListFilter } from "../types/index.ts";
 import { documentIdsEqual, normalizeDocumentId } from "../utils/document-id.ts";
 import { getTaskFilename, getTaskPath, normalizeTaskId } from "../utils/task-path.ts";
@@ -16,14 +15,47 @@ interface TaskPathContext {
 	};
 }
 
+/**
+ * Lazy-load Bun adapters to avoid import errors in non-Bun environments
+ */
+function createDefaultAdapters(): { fs: FileSystemAdapter; glob: GlobAdapter } {
+	// Dynamic import to allow the module to load in non-Bun environments
+	const { BunFileSystemAdapter } = require("../bun-adapters/BunFileSystemAdapter.ts");
+	const { BunGlobAdapter } = require("../bun-adapters/BunGlobAdapter.ts");
+	return {
+		fs: new BunFileSystemAdapter(),
+		glob: new BunGlobAdapter(),
+	};
+}
+
+export interface FileSystemOptions {
+	/** Custom filesystem adapter (defaults to BunFileSystemAdapter) */
+	fsAdapter?: FileSystemAdapter;
+	/** Custom glob adapter (defaults to BunGlobAdapter) */
+	globAdapter?: GlobAdapter;
+}
+
 export class FileSystem {
 	private readonly backlogDir: string;
 	private readonly projectRoot: string;
 	private cachedConfig: BacklogConfig | null = null;
+	private readonly fsAdapter: FileSystemAdapter;
+	private readonly globAdapter: GlobAdapter;
 
-	constructor(projectRoot: string) {
+	constructor(projectRoot: string, options?: FileSystemOptions) {
 		this.projectRoot = projectRoot;
-		this.backlogDir = join(projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
+
+		// Use provided adapters or create defaults (Bun adapters for backward compatibility)
+		if (options?.fsAdapter && options?.globAdapter) {
+			this.fsAdapter = options.fsAdapter;
+			this.globAdapter = options.globAdapter;
+		} else {
+			const defaults = createDefaultAdapters();
+			this.fsAdapter = options?.fsAdapter ?? defaults.fs;
+			this.globAdapter = options?.globAdapter ?? defaults.glob;
+		}
+
+		this.backlogDir = this.fsAdapter.join(projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
 	}
 
 	private async getBacklogDir(): Promise<string> {
@@ -32,31 +64,28 @@ export class FileSystem {
 			this.cachedConfig = await this.loadConfigDirect();
 		}
 		// Always use "backlog" as the directory name - no configuration needed
-		return join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
+		return this.fsAdapter.join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
 	}
 
 	private async loadConfigDirect(): Promise<BacklogConfig | null> {
 		try {
 			// First try the standard "backlog" directory
-			let configPath = join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG, DEFAULT_FILES.CONFIG);
-			let file = Bun.file(configPath);
-			let exists = await file.exists();
+			let configPath = this.fsAdapter.join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG, DEFAULT_FILES.CONFIG);
+			let exists = await this.fsAdapter.exists(configPath);
 
 			// If not found, check for legacy ".backlog" directory and migrate it
 			if (!exists) {
-				const legacyBacklogDir = join(this.projectRoot, ".backlog");
-				const legacyConfigPath = join(legacyBacklogDir, DEFAULT_FILES.CONFIG);
-				const legacyFile = Bun.file(legacyConfigPath);
-				const legacyExists = await legacyFile.exists();
+				const legacyBacklogDir = this.fsAdapter.join(this.projectRoot, ".backlog");
+				const legacyConfigPath = this.fsAdapter.join(legacyBacklogDir, DEFAULT_FILES.CONFIG);
+				const legacyExists = await this.fsAdapter.exists(legacyConfigPath);
 
 				if (legacyExists) {
 					// Migrate legacy .backlog directory to backlog
-					const newBacklogDir = join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
-					await rename(legacyBacklogDir, newBacklogDir);
+					const newBacklogDir = this.fsAdapter.join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
+					await this.fsAdapter.rename(legacyBacklogDir, newBacklogDir);
 
 					// Update paths to use the new location
-					configPath = join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG, DEFAULT_FILES.CONFIG);
-					file = Bun.file(configPath);
+					configPath = this.fsAdapter.join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG, DEFAULT_FILES.CONFIG);
 					exists = true;
 				}
 			}
@@ -65,7 +94,7 @@ export class FileSystem {
 				return null;
 			}
 
-			const content = await file.text();
+			const content = await this.fsAdapter.readFile(configPath);
 			return this.parseConfig(content);
 		} catch (_error) {
 			if (process.env.DEBUG) {
@@ -77,25 +106,25 @@ export class FileSystem {
 
 	// Public accessors for directory paths
 	get tasksDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.TASKS);
+		return this.fsAdapter.join(this.backlogDir, DEFAULT_DIRECTORIES.TASKS);
 	}
 	get completedDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.COMPLETED);
+		return this.fsAdapter.join(this.backlogDir, DEFAULT_DIRECTORIES.COMPLETED);
 	}
 
 	get archiveTasksDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS);
+		return this.fsAdapter.join(this.backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS);
 	}
 	get decisionsDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.DECISIONS);
+		return this.fsAdapter.join(this.backlogDir, DEFAULT_DIRECTORIES.DECISIONS);
 	}
 
 	get docsDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.DOCS);
+		return this.fsAdapter.join(this.backlogDir, DEFAULT_DIRECTORIES.DOCS);
 	}
 
 	get configFilePath(): string {
-		return join(this.backlogDir, DEFAULT_FILES.CONFIG);
+		return this.fsAdapter.join(this.backlogDir, DEFAULT_FILES.CONFIG);
 	}
 
 	/** Get the project root directory */
@@ -109,54 +138,54 @@ export class FileSystem {
 
 	private async getTasksDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.TASKS);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.TASKS);
 	}
 
 	async getDraftsDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.DRAFTS);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.DRAFTS);
 	}
 
 	async getArchiveTasksDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS);
 	}
 
 	private async getArchiveDraftsDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_DRAFTS);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_DRAFTS);
 	}
 
 	private async getDecisionsDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.DECISIONS);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.DECISIONS);
 	}
 
 	private async getDocsDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.DOCS);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.DOCS);
 	}
 
 	private async getCompletedDir(): Promise<string> {
 		const backlogDir = await this.getBacklogDir();
-		return join(backlogDir, DEFAULT_DIRECTORIES.COMPLETED);
+		return this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.COMPLETED);
 	}
 
 	async ensureBacklogStructure(): Promise<void> {
 		const backlogDir = await this.getBacklogDir();
 		const directories = [
 			backlogDir,
-			join(backlogDir, DEFAULT_DIRECTORIES.TASKS),
-			join(backlogDir, DEFAULT_DIRECTORIES.DRAFTS),
-			join(backlogDir, DEFAULT_DIRECTORIES.COMPLETED),
-			join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS),
-			join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_DRAFTS),
-			join(backlogDir, DEFAULT_DIRECTORIES.DOCS),
-			join(backlogDir, DEFAULT_DIRECTORIES.DECISIONS),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.TASKS),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.DRAFTS),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.COMPLETED),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_DRAFTS),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.DOCS),
+			this.fsAdapter.join(backlogDir, DEFAULT_DIRECTORIES.DECISIONS),
 		];
 
 		for (const dir of directories) {
-			await mkdir(dir, { recursive: true });
+			await this.fsAdapter.createDir(dir, { recursive: true });
 		}
 	}
 
@@ -165,7 +194,7 @@ export class FileSystem {
 		const taskId = normalizeTaskId(task.id);
 		const filename = `${taskId} - ${this.sanitizeFilename(task.title)}.md`;
 		const tasksDir = await this.getTasksDir();
-		const filepath = join(tasksDir, filename);
+		const filepath = this.fsAdapter.join(tasksDir, filename);
 		const content = serializeTask(task);
 
 		// Delete any existing task files with the same ID but different filenames
@@ -173,14 +202,14 @@ export class FileSystem {
 			const core = { filesystem: { tasksDir } };
 			const existingPath = await getTaskPath(taskId, core as TaskPathContext);
 			if (existingPath && !existingPath.endsWith(filename)) {
-				await unlink(existingPath);
+				await this.fsAdapter.deleteFile(existingPath);
 			}
 		} catch {
 			// Ignore errors if no existing files found
 		}
 
-		await this.ensureDirectoryExists(dirname(filepath));
-		await Bun.write(filepath, content);
+		await this.ensureDirectoryExists(this.fsAdapter.dirname(filepath));
+		await this.fsAdapter.writeFile(filepath, content);
 		return filepath;
 	}
 
@@ -192,7 +221,7 @@ export class FileSystem {
 
 			if (!filepath) return null;
 
-			const content = await Bun.file(filepath).text();
+			const content = await this.fsAdapter.readFile(filepath);
 			const task = parseTask(content);
 			return { ...task, filePath: filepath };
 		} catch (_error) {
@@ -210,16 +239,16 @@ export class FileSystem {
 
 		let taskFiles: string[];
 		try {
-			taskFiles = await Array.fromAsync(new Bun.Glob("task-*.md").scan({ cwd: tasksDir }));
+			taskFiles = await this.globAdapter.scan("task-*.md", { cwd: tasksDir });
 		} catch (_error) {
 			return [];
 		}
 
 		let tasks: Task[] = [];
 		for (const file of taskFiles) {
-			const filepath = join(tasksDir, file);
+			const filepath = this.fsAdapter.join(tasksDir, file);
 			try {
-				const content = await Bun.file(filepath).text();
+				const content = await this.fsAdapter.readFile(filepath);
 				const task = parseTask(content);
 				tasks.push({ ...task, filePath: filepath });
 			} catch (error) {
@@ -252,16 +281,16 @@ export class FileSystem {
 
 		let taskFiles: string[];
 		try {
-			taskFiles = await Array.fromAsync(new Bun.Glob("task-*.md").scan({ cwd: completedDir }));
+			taskFiles = await this.globAdapter.scan("task-*.md", { cwd: completedDir });
 		} catch (_error) {
 			return [];
 		}
 
 		const tasks: Task[] = [];
 		for (const file of taskFiles) {
-			const filepath = join(completedDir, file);
+			const filepath = this.fsAdapter.join(completedDir, file);
 			try {
-				const content = await Bun.file(filepath).text();
+				const content = await this.fsAdapter.readFile(filepath);
 				const task = parseTask(content);
 				tasks.push({ ...task, filePath: filepath });
 			} catch (error) {
@@ -284,16 +313,16 @@ export class FileSystem {
 
 		let taskFiles: string[];
 		try {
-			taskFiles = await Array.fromAsync(new Bun.Glob("task-*.md").scan({ cwd: archiveTasksDir }));
+			taskFiles = await this.globAdapter.scan("task-*.md", { cwd: archiveTasksDir });
 		} catch (_error) {
 			return [];
 		}
 
 		const tasks: Task[] = [];
 		for (const file of taskFiles) {
-			const filepath = join(archiveTasksDir, file);
+			const filepath = this.fsAdapter.join(archiveTasksDir, file);
 			try {
-				const content = await Bun.file(filepath).text();
+				const content = await this.fsAdapter.readFile(filepath);
 				const task = parseTask(content);
 				tasks.push({ ...task, filePath: filepath });
 			} catch (error) {
@@ -316,13 +345,13 @@ export class FileSystem {
 
 			if (!sourcePath || !taskFile) return false;
 
-			const targetPath = join(archiveTasksDir, taskFile);
+			const targetPath = this.fsAdapter.join(archiveTasksDir, taskFile);
 
 			// Ensure target directory exists
-			await this.ensureDirectoryExists(dirname(targetPath));
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(targetPath));
 
 			// Use rename for proper Git move detection
-			await rename(sourcePath, targetPath);
+			await this.fsAdapter.rename(sourcePath, targetPath);
 
 			return true;
 		} catch (_error) {
@@ -340,13 +369,13 @@ export class FileSystem {
 
 			if (!sourcePath || !taskFile) return false;
 
-			const targetPath = join(completedDir, taskFile);
+			const targetPath = this.fsAdapter.join(completedDir, taskFile);
 
 			// Ensure target directory exists
-			await this.ensureDirectoryExists(dirname(targetPath));
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(targetPath));
 
 			// Use rename for proper Git move detection
-			await rename(sourcePath, targetPath);
+			await this.fsAdapter.rename(sourcePath, targetPath);
 
 			return true;
 		} catch (_error) {
@@ -364,13 +393,13 @@ export class FileSystem {
 
 			if (!sourcePath || !taskFile) return false;
 
-			const targetPath = join(archiveDraftsDir, taskFile);
+			const targetPath = this.fsAdapter.join(archiveDraftsDir, taskFile);
 
-			const content = await Bun.file(sourcePath).text();
-			await this.ensureDirectoryExists(dirname(targetPath));
-			await Bun.write(targetPath, content);
+			const content = await this.fsAdapter.readFile(sourcePath);
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(targetPath));
+			await this.fsAdapter.writeFile(targetPath, content);
 
-			await unlink(sourcePath);
+			await this.fsAdapter.deleteFile(sourcePath);
 
 			return true;
 		} catch {
@@ -388,13 +417,13 @@ export class FileSystem {
 
 			if (!sourcePath || !taskFile) return false;
 
-			const targetPath = join(tasksDir, taskFile);
+			const targetPath = this.fsAdapter.join(tasksDir, taskFile);
 
-			const content = await Bun.file(sourcePath).text();
-			await this.ensureDirectoryExists(dirname(targetPath));
-			await Bun.write(targetPath, content);
+			const content = await this.fsAdapter.readFile(sourcePath);
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(targetPath));
+			await this.fsAdapter.writeFile(targetPath, content);
 
-			await unlink(sourcePath);
+			await this.fsAdapter.deleteFile(sourcePath);
 
 			return true;
 		} catch {
@@ -412,13 +441,13 @@ export class FileSystem {
 
 			if (!sourcePath || !taskFile) return false;
 
-			const targetPath = join(draftsDir, taskFile);
+			const targetPath = this.fsAdapter.join(draftsDir, taskFile);
 
-			const content = await Bun.file(sourcePath).text();
-			await this.ensureDirectoryExists(dirname(targetPath));
-			await Bun.write(targetPath, content);
+			const content = await this.fsAdapter.readFile(sourcePath);
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(targetPath));
+			await this.fsAdapter.writeFile(targetPath, content);
 
-			await unlink(sourcePath);
+			await this.fsAdapter.deleteFile(sourcePath);
 
 			return true;
 		} catch {
@@ -431,21 +460,21 @@ export class FileSystem {
 		const taskId = normalizeTaskId(task.id);
 		const filename = `${taskId} - ${this.sanitizeFilename(task.title)}.md`;
 		const draftsDir = await this.getDraftsDir();
-		const filepath = join(draftsDir, filename);
+		const filepath = this.fsAdapter.join(draftsDir, filename);
 		const content = serializeTask(task);
 
 		try {
 			const core = { filesystem: { tasksDir: draftsDir } };
 			const existingPath = await getTaskPath(taskId, core as TaskPathContext);
 			if (existingPath && !existingPath.endsWith(filename)) {
-				await unlink(existingPath);
+				await this.fsAdapter.deleteFile(existingPath);
 			}
 		} catch {
 			// Ignore errors if no existing files found
 		}
 
-		await this.ensureDirectoryExists(dirname(filepath));
-		await Bun.write(filepath, content);
+		await this.ensureDirectoryExists(this.fsAdapter.dirname(filepath));
+		await this.fsAdapter.writeFile(filepath, content);
 		return filepath;
 	}
 
@@ -457,7 +486,7 @@ export class FileSystem {
 
 			if (!filepath) return null;
 
-			const content = await Bun.file(filepath).text();
+			const content = await this.fsAdapter.readFile(filepath);
 			const task = parseTask(content);
 			return { ...task, filePath: filepath };
 		} catch {
@@ -468,12 +497,12 @@ export class FileSystem {
 	async listDrafts(): Promise<Task[]> {
 		try {
 			const draftsDir = await this.getDraftsDir();
-			const taskFiles = await Array.fromAsync(new Bun.Glob("task-*.md").scan({ cwd: draftsDir }));
+			const taskFiles = await this.globAdapter.scan("task-*.md", { cwd: draftsDir });
 
 			const tasks: Task[] = [];
 			for (const file of taskFiles) {
-				const filepath = join(draftsDir, file);
-				const content = await Bun.file(filepath).text();
+				const filepath = this.fsAdapter.join(draftsDir, file);
+				const content = await this.fsAdapter.readFile(filepath);
 				const task = parseTask(content);
 				tasks.push({ ...task, filePath: filepath });
 			}
@@ -490,28 +519,28 @@ export class FileSystem {
 		const normalizedId = decision.id.replace(/^decision-/, "");
 		const filename = `decision-${normalizedId} - ${this.sanitizeFilename(decision.title)}.md`;
 		const decisionsDir = await this.getDecisionsDir();
-		const filepath = join(decisionsDir, filename);
+		const filepath = this.fsAdapter.join(decisionsDir, filename);
 		const content = serializeDecision(decision);
 
-		const matches = await Array.fromAsync(new Bun.Glob("decision-*.md").scan({ cwd: decisionsDir }));
+		const matches = await this.globAdapter.scan("decision-*.md", { cwd: decisionsDir });
 		for (const match of matches) {
 			if (match === filename) continue;
 			if (!match.startsWith(`decision-${normalizedId} -`)) continue;
 			try {
-				await unlink(join(decisionsDir, match));
+				await this.fsAdapter.deleteFile(this.fsAdapter.join(decisionsDir, match));
 			} catch {
 				// Ignore cleanup errors
 			}
 		}
 
-		await this.ensureDirectoryExists(dirname(filepath));
-		await Bun.write(filepath, content);
+		await this.ensureDirectoryExists(this.fsAdapter.dirname(filepath));
+		await this.fsAdapter.writeFile(filepath, content);
 	}
 
 	async loadDecision(decisionId: string): Promise<Decision | null> {
 		try {
 			const decisionsDir = await this.getDecisionsDir();
-			const files = await Array.fromAsync(new Bun.Glob("decision-*.md").scan({ cwd: decisionsDir }));
+			const files = await this.globAdapter.scan("decision-*.md", { cwd: decisionsDir });
 
 			// Normalize ID - remove "decision-" prefix if present
 			const normalizedId = decisionId.replace(/^decision-/, "");
@@ -519,8 +548,8 @@ export class FileSystem {
 
 			if (!decisionFile) return null;
 
-			const filepath = join(decisionsDir, decisionFile);
-			const content = await Bun.file(filepath).text();
+			const filepath = this.fsAdapter.join(decisionsDir, decisionFile);
+			const content = await this.fsAdapter.readFile(filepath);
 			return parseDecision(content);
 		} catch (_error) {
 			return null;
@@ -537,14 +566,13 @@ export class FileSystem {
 			.split(/[\\/]+/)
 			.map((segment) => segment.trim())
 			.filter((segment) => segment.length > 0 && segment !== "." && segment !== "..");
-		const relativePath = subPathSegments.length > 0 ? join(...subPathSegments, filename) : filename;
-		const filepath = join(docsDir, relativePath);
+		const relativePath = subPathSegments.length > 0 ? this.fsAdapter.join(...subPathSegments, filename) : filename;
+		const filepath = this.fsAdapter.join(docsDir, relativePath);
 		const content = serializeDocument(document);
 
-		await this.ensureDirectoryExists(dirname(filepath));
+		await this.ensureDirectoryExists(this.fsAdapter.dirname(filepath));
 
-		const glob = new Bun.Glob("**/doc-*.md");
-		const existingMatches = await Array.fromAsync(glob.scan({ cwd: docsDir }));
+		const existingMatches = await this.globAdapter.scan("**/doc-*.md", { cwd: docsDir });
 		const matchesForId = existingMatches.filter((relative) => {
 			const base = relative.split("/").pop() || relative;
 			const [candidateId] = base.split(" - ");
@@ -558,10 +586,10 @@ export class FileSystem {
 		}
 
 		if (sourceRelativePath && sourceRelativePath !== relativePath) {
-			const sourcePath = join(docsDir, sourceRelativePath);
+			const sourcePath = this.fsAdapter.join(docsDir, sourceRelativePath);
 			try {
-				await this.ensureDirectoryExists(dirname(filepath));
-				await rename(sourcePath, filepath);
+				await this.ensureDirectoryExists(this.fsAdapter.dirname(filepath));
+				await this.fsAdapter.rename(sourcePath, filepath);
 			} catch (error) {
 				const code = (error as NodeJS.ErrnoException | undefined)?.code;
 				if (code !== "ENOENT") {
@@ -571,18 +599,18 @@ export class FileSystem {
 		}
 
 		for (const match of matchesForId) {
-			const matchPath = join(docsDir, match);
+			const matchPath = this.fsAdapter.join(docsDir, match);
 			if (matchPath === filepath) {
 				continue;
 			}
 			try {
-				await unlink(matchPath);
+				await this.fsAdapter.deleteFile(matchPath);
 			} catch {
 				// Ignore cleanup errors - file may have been removed already
 			}
 		}
 
-		await Bun.write(filepath, content);
+		await this.fsAdapter.writeFile(filepath, content);
 
 		document.path = relativePath;
 		return relativePath;
@@ -591,15 +619,15 @@ export class FileSystem {
 	async listDecisions(): Promise<Decision[]> {
 		try {
 			const decisionsDir = await this.getDecisionsDir();
-			const decisionFiles = await Array.fromAsync(new Bun.Glob("decision-*.md").scan({ cwd: decisionsDir }));
+			const decisionFiles = await this.globAdapter.scan("decision-*.md", { cwd: decisionsDir });
 			const decisions: Decision[] = [];
 			for (const file of decisionFiles) {
 				// Filter out README files as they're just instruction files
 				if (file.toLowerCase().match(/^readme\.md$/i)) {
 					continue;
 				}
-				const filepath = join(decisionsDir, file);
-				const content = await Bun.file(filepath).text();
+				const filepath = this.fsAdapter.join(decisionsDir, file);
+				const content = await this.fsAdapter.readFile(filepath);
 				decisions.push(parseDecision(content));
 			}
 			return sortByTaskId(decisions);
@@ -612,14 +640,13 @@ export class FileSystem {
 		try {
 			const docsDir = await this.getDocsDir();
 			// Recursively include all markdown files under docs, excluding README.md variants
-			const glob = new Bun.Glob("**/*.md");
-			const docFiles = await Array.fromAsync(glob.scan({ cwd: docsDir }));
+			const docFiles = await this.globAdapter.scan("**/*.md", { cwd: docsDir });
 			const docs: Document[] = [];
 			for (const file of docFiles) {
 				const base = file.split("/").pop() || file;
 				if (base.toLowerCase() === "readme.md") continue;
-				const filepath = join(docsDir, file);
-				const content = await Bun.file(filepath).text();
+				const filepath = this.fsAdapter.join(docsDir, file);
+				const content = await this.fsAdapter.readFile(filepath);
 				const parsed = parseDocument(content);
 				docs.push({
 					...parsed,
@@ -652,17 +679,16 @@ export class FileSystem {
 
 		try {
 			const backlogDir = await this.getBacklogDir();
-			const configPath = join(backlogDir, DEFAULT_FILES.CONFIG);
+			const configPath = this.fsAdapter.join(backlogDir, DEFAULT_FILES.CONFIG);
 
 			// Check if file exists first to avoid hanging on Windows
-			const file = Bun.file(configPath);
-			const exists = await file.exists();
+			const exists = await this.fsAdapter.exists(configPath);
 
 			if (!exists) {
 				return null;
 			}
 
-			const content = await file.text();
+			const content = await this.fsAdapter.readFile(configPath);
 			const config = this.parseConfig(content);
 
 			// Cache the loaded config
@@ -675,9 +701,9 @@ export class FileSystem {
 
 	async saveConfig(config: BacklogConfig): Promise<void> {
 		const backlogDir = await this.getBacklogDir();
-		const configPath = join(backlogDir, DEFAULT_FILES.CONFIG);
+		const configPath = this.fsAdapter.join(backlogDir, DEFAULT_FILES.CONFIG);
 		const content = this.serializeConfig(config);
-		await Bun.write(configPath, content);
+		await this.fsAdapter.writeFile(configPath, content);
 		this.cachedConfig = config;
 	}
 
@@ -694,13 +720,13 @@ export class FileSystem {
 
 	private async loadUserSettings(global = false): Promise<Record<string, string> | null> {
 		const primaryPath = global
-			? join(homedir(), "backlog", DEFAULT_FILES.USER)
-			: join(this.projectRoot, DEFAULT_FILES.USER);
-		const fallbackPath = global ? join(this.projectRoot, "backlog", DEFAULT_FILES.USER) : undefined;
+			? this.fsAdapter.join(this.fsAdapter.homedir(), "backlog", DEFAULT_FILES.USER)
+			: this.fsAdapter.join(this.projectRoot, DEFAULT_FILES.USER);
+		const fallbackPath = global ? this.fsAdapter.join(this.projectRoot, "backlog", DEFAULT_FILES.USER) : undefined;
 		const tryPaths = fallbackPath ? [primaryPath, fallbackPath] : [primaryPath];
 		for (const filePath of tryPaths) {
 			try {
-				const content = await Bun.file(filePath).text();
+				const content = await this.fsAdapter.readFile(filePath);
 				const result: Record<string, string> = {};
 				for (const line of content.split(/\r?\n/)) {
 					const trimmed = line.trim();
@@ -723,24 +749,24 @@ export class FileSystem {
 
 	private async saveUserSettings(settings: Record<string, string>, global = false): Promise<void> {
 		const primaryPath = global
-			? join(homedir(), "backlog", DEFAULT_FILES.USER)
-			: join(this.projectRoot, DEFAULT_FILES.USER);
-		const fallbackPath = global ? join(this.projectRoot, "backlog", DEFAULT_FILES.USER) : undefined;
+			? this.fsAdapter.join(this.fsAdapter.homedir(), "backlog", DEFAULT_FILES.USER)
+			: this.fsAdapter.join(this.projectRoot, DEFAULT_FILES.USER);
+		const fallbackPath = global ? this.fsAdapter.join(this.projectRoot, "backlog", DEFAULT_FILES.USER) : undefined;
 
 		const lines = Object.entries(settings).map(([k, v]) => `${k}: ${v}`);
 		const data = `${lines.join("\n")}\n`;
 
 		try {
-			await this.ensureDirectoryExists(dirname(primaryPath));
-			await Bun.write(primaryPath, data);
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(primaryPath));
+			await this.fsAdapter.writeFile(primaryPath, data);
 			return;
 		} catch {
 			// Fall through to fallback when global write fails (e.g., sandboxed env)
 		}
 
 		if (fallbackPath) {
-			await this.ensureDirectoryExists(dirname(fallbackPath));
-			await Bun.write(fallbackPath, data);
+			await this.ensureDirectoryExists(this.fsAdapter.dirname(fallbackPath));
+			await this.fsAdapter.writeFile(fallbackPath, data);
 		}
 	}
 
@@ -760,7 +786,7 @@ export class FileSystem {
 
 	private async ensureDirectoryExists(dirPath: string): Promise<void> {
 		try {
-			await mkdir(dirPath, { recursive: true });
+			await this.fsAdapter.createDir(dirPath, { recursive: true });
 		} catch (_error) {
 			// Directory creation failed, ignore
 		}

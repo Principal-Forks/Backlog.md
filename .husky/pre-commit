@@ -4,5 +4,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 bun lint-staged
 
-# Run principal view linting
-privu lint --quiet
+# Run principal view validation (canvas files) and linting (yaml schema files)
+npx @principal-ai/principal-view-cli validate --quiet
+npx @principal-ai/principal-view-cli lint --quiet

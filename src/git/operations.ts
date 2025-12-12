@@ -1,13 +1,28 @@
-import { $ } from "bun";
+import type { GitAdapter } from "../pure-core/abstractions/GitAdapter.ts";
 import type { BacklogConfig } from "../types/index.ts";
+
+/**
+ * Lazy-load Bun git adapter to avoid import errors in non-Bun environments
+ */
+function createDefaultGitAdapter(projectRoot: string): GitAdapter {
+	const { BunGitAdapter } = require("../bun-adapters/BunGitAdapter.ts");
+	return new BunGitAdapter(projectRoot);
+}
+
+export interface GitOperationsOptions {
+	/** Custom git adapter (defaults to BunGitAdapter) */
+	gitAdapter?: GitAdapter;
+}
 
 export class GitOperations {
 	private projectRoot: string;
 	private config: BacklogConfig | null = null;
+	private readonly gitAdapter: GitAdapter;
 
-	constructor(projectRoot: string, config: BacklogConfig | null = null) {
+	constructor(projectRoot: string, config: BacklogConfig | null = null, options?: GitOperationsOptions) {
 		this.projectRoot = projectRoot;
 		this.config = config;
+		this.gitAdapter = options?.gitAdapter ?? createDefaultGitAdapter(projectRoot);
 	}
 
 	setConfig(config: BacklogConfig | null): void {
@@ -472,45 +487,23 @@ export class GitOperations {
 	}
 
 	private async execGit(args: string[], options?: { readOnly?: boolean }): Promise<{ stdout: string; stderr: string }> {
-		// Use Bun.spawn so we can explicitly control stdio behaviour on Windows. When running
-		// under the MCP stdio transport, delegating to git with inherited stdin can deadlock.
-		const env = options?.readOnly
-			? ({ ...process.env, GIT_OPTIONAL_LOCKS: "0" } as Record<string, string>)
-			: (process.env as Record<string, string>);
-
-		const subprocess = Bun.spawn(["git", ...args], {
+		// Delegate to the git adapter which handles environment-specific execution
+		const result = await this.gitAdapter.exec(args, {
 			cwd: this.projectRoot,
-			stdin: "ignore", // avoid inheriting MCP stdio pipes which can block on Windows
-			stdout: "pipe",
-			stderr: "pipe",
-			env,
+			readOnly: options?.readOnly,
 		});
-
-		const stdoutPromise = subprocess.stdout ? new Response(subprocess.stdout).text() : Promise.resolve("");
-		const stderrPromise = subprocess.stderr ? new Response(subprocess.stderr).text() : Promise.resolve("");
-		const [exitCode, stdout, stderr] = await Promise.all([subprocess.exited, stdoutPromise, stderrPromise]);
-
-		if (exitCode !== 0) {
-			throw new Error(`Git command failed (exit code ${exitCode}): git ${args.join(" ")}\n${stderr}`);
-		}
-
-		return { stdout, stderr };
+		return { stdout: result.stdout, stderr: result.stderr };
 	}
 }
 
 export async function isGitRepository(projectRoot: string): Promise<boolean> {
-	try {
-		await $`git rev-parse --git-dir`.cwd(projectRoot).quiet();
-		return true;
-	} catch {
-		return false;
-	}
+	const { BunGitAdapter } = require("../bun-adapters/BunGitAdapter.ts");
+	const adapter = new BunGitAdapter(projectRoot);
+	return adapter.isGitRepository(projectRoot);
 }
 
 export async function initializeGitRepository(projectRoot: string): Promise<void> {
-	try {
-		await $`git init`.cwd(projectRoot).quiet();
-	} catch (error) {
-		throw new Error(`Failed to initialize git repository: ${error}`);
-	}
+	const { BunGitAdapter } = require("../bun-adapters/BunGitAdapter.ts");
+	const adapter = new BunGitAdapter(projectRoot);
+	await adapter.initRepository(projectRoot);
 }

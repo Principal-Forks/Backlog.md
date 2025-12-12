@@ -1,4 +1,4 @@
-version: "1.0.0"
+version: "1.1.0"
 name: "Backlog.md Component Library"
 
 nodeComponents:
@@ -52,6 +52,21 @@ nodeComponents:
     icon: "server"
     color: "#E67E22"
 
+  Abstractions:
+    description: "Pure core abstractions (FileSystemAdapter, GlobAdapter, GitAdapter interfaces)"
+    icon: "interface"
+    color: "#8E44AD"
+
+  BunAdapters:
+    description: "Bun-specific adapter implementations using Bun APIs"
+    icon: "bun"
+    color: "#FBF0DF"
+
+  TestAdapters:
+    description: "In-memory adapter implementations for testing"
+    icon: "test"
+    color: "#2ECC71"
+
 edgeComponents:
   DataFlow:
     description: "Data flow between components"
@@ -72,3 +87,13 @@ edgeComponents:
     description: "API interface between components"
     style: "double"
     color: "#9B59B6"
+
+  Implementation:
+    description: "Interface implementation relationship"
+    style: "dashed"
+    color: "#27AE60"
+
+  DependencyInjection:
+    description: "Dependency injection configuration"
+    style: "dotted"
+    color: "#8E44AD"

@@ -1,7 +1,10 @@
 import { join } from "node:path";
 import { DEFAULT_DIRECTORIES, DEFAULT_STATUSES, FALLBACK_STATUS } from "../constants/index.ts";
-import { FileSystem } from "../file-system/operations.ts";
-import { GitOperations } from "../git/operations.ts";
+import { FileSystem, type FileSystemOptions } from "../file-system/operations.ts";
+import { GitOperations, type GitOperationsOptions } from "../git/operations.ts";
+import type { FileSystemAdapter } from "../pure-core/abstractions/FileSystemAdapter.ts";
+import type { GitAdapter } from "../pure-core/abstractions/GitAdapter.ts";
+import type { GlobAdapter } from "../pure-core/abstractions/GlobAdapter.ts";
 import type {
 	AcceptanceCriterion,
 	BacklogConfig,
@@ -110,6 +113,23 @@ function filterTasksByStateSnapshots(tasks: Task[], latestState: Map<string, Bra
 	});
 }
 
+/**
+ * Options for configuring the Core class
+ */
+export interface CoreOptions {
+	/** Enable file watchers for real-time updates (default: false) */
+	enableWatchers?: boolean;
+	/** Custom adapters for environment-agnostic operation */
+	adapters?: {
+		/** Custom filesystem adapter (defaults to BunFileSystemAdapter) */
+		fs?: FileSystemAdapter;
+		/** Custom glob adapter (defaults to BunGlobAdapter) */
+		glob?: GlobAdapter;
+		/** Custom git adapter (defaults to BunGitAdapter) */
+		git?: GitAdapter;
+	};
+}
+
 export class Core {
 	public fs: FileSystem;
 	public git: GitOperations;
@@ -117,9 +137,17 @@ export class Core {
 	private searchService?: SearchService;
 	private readonly enableWatchers: boolean;
 
-	constructor(projectRoot: string, options?: { enableWatchers?: boolean }) {
-		this.fs = new FileSystem(projectRoot);
-		this.git = new GitOperations(projectRoot);
+	constructor(projectRoot: string, options?: CoreOptions) {
+		// Build adapter options from the adapters configuration
+		const fsOptions: FileSystemOptions | undefined = options?.adapters
+			? { fsAdapter: options.adapters.fs, globAdapter: options.adapters.glob }
+			: undefined;
+		const gitOptions: GitOperationsOptions | undefined = options?.adapters?.git
+			? { gitAdapter: options.adapters.git }
+			: undefined;
+
+		this.fs = new FileSystem(projectRoot, fsOptions);
+		this.git = new GitOperations(projectRoot, null, gitOptions);
 		// Disable watchers by default for CLI commands (non-interactive)
 		// Interactive modes (TUI, browser, MCP) should explicitly pass enableWatchers: true
 		this.enableWatchers = options?.enableWatchers ?? false;
