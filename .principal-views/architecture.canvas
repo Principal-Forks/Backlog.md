@@ -191,7 +191,9 @@
     {
       "id": "cli-commands",
       "fromNode": "cli",
+      "fromSide": "bottom",
       "toNode": "commands",
+      "toSide": "top",
       "label": "routes to",
       "pv": {
         "edgeType": "DataFlow"
@@ -200,7 +202,9 @@
     {
       "id": "cli-core",
       "fromNode": "cli",
+      "fromSide": "bottom",
       "toNode": "core",
+      "toSide": "top",
       "label": "uses Core",
       "pv": {
         "edgeType": "DataFlow"
@@ -209,7 +213,9 @@
     {
       "id": "commands-core",
       "fromNode": "commands",
+      "fromSide": "bottom",
       "toNode": "core",
+      "toSide": "top",
       "label": "uses Core",
       "pv": {
         "edgeType": "DataFlow"
@@ -218,7 +224,9 @@
     {
       "id": "mcp-core",
       "fromNode": "mcp",
+      "fromSide": "bottom",
       "toNode": "core",
+      "toSide": "top",
       "label": "uses Core only",
       "pv": {
         "edgeType": "API"
@@ -227,7 +235,9 @@
     {
       "id": "server-core",
       "fromNode": "server",
+      "fromSide": "left",
       "toNode": "core",
+      "toSide": "right",
       "label": "uses Core",
       "pv": {
         "edgeType": "API"
@@ -236,7 +246,9 @@
     {
       "id": "server-webui",
       "fromNode": "server",
+      "fromSide": "bottom",
       "toNode": "webui",
+      "toSide": "top",
       "label": "serves",
       "pv": {
         "edgeType": "DataFlow"
@@ -245,7 +257,9 @@
     {
       "id": "webui-utils",
       "fromNode": "webui",
+      "fromSide": "bottom",
       "toNode": "utils",
+      "toSide": "top",
       "label": "uses",
       "pv": {
         "edgeType": "Dependency"
@@ -254,7 +268,9 @@
     {
       "id": "core-filesystem-service",
       "fromNode": "core",
+      "fromSide": "bottom",
       "toNode": "filesystem-service",
+      "toSide": "top",
       "label": "composes (this.fs)",
       "pv": {
         "edgeType": "Dependency"
@@ -263,7 +279,9 @@
     {
       "id": "core-git-service",
       "fromNode": "core",
+      "fromSide": "bottom",
       "toNode": "git-service",
+      "toSide": "top",
       "label": "composes (this.git)",
       "pv": {
         "edgeType": "Dependency"
@@ -272,7 +290,9 @@
     {
       "id": "core-utils",
       "fromNode": "core",
+      "fromSide": "bottom",
       "toNode": "utils",
+      "toSide": "top",
       "label": "uses",
       "pv": {
         "edgeType": "Dependency"
@@ -281,7 +301,9 @@
     {
       "id": "filesystem-service-markdown",
       "fromNode": "filesystem-service",
+      "fromSide": "bottom",
       "toNode": "markdown",
+      "toSide": "top",
       "label": "uses parser",
       "pv": {
         "edgeType": "API"
@@ -290,7 +312,9 @@
     {
       "id": "filesystem-service-fs-adapter",
       "fromNode": "filesystem-service",
+      "fromSide": "bottom",
       "toNode": "fs-adapter",
+      "toSide": "top",
       "label": "uses",
       "pv": {
         "edgeType": "Dependency"
@@ -299,7 +323,9 @@
     {
       "id": "filesystem-service-glob-adapter",
       "fromNode": "filesystem-service",
+      "fromSide": "bottom",
       "toNode": "glob-adapter",
+      "toSide": "top",
       "label": "uses",
       "pv": {
         "edgeType": "Dependency"
@@ -308,7 +334,9 @@
     {
       "id": "git-service-git-adapter",
       "fromNode": "git-service",
+      "fromSide": "bottom",
       "toNode": "git-adapter",
+      "toSide": "top",
       "label": "uses",
       "pv": {
         "edgeType": "Dependency"

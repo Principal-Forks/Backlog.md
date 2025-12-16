@@ -4,67 +4,67 @@ name: "Backlog.md Component Library"
 nodeComponents:
   CLI:
     description: "Main CLI interface and command router"
-    icon: "terminal"
+    icon: "Terminal"
     color: "#007ACC"
     
   Core:
     description: "Core backlog functionality and task management"
-    icon: "core"
+    icon: "Core"
     color: "#FF6B35"
     
   FileSystem:
     description: "File system operations and management"
-    icon: "folder"
+    icon: "Folder"
     color: "#4ECDC4"
     
   Markdown:
     description: "Markdown parsing and serialization"
-    icon: "document"
+    icon: "Document"
     color: "#45B7D1"
     
   MCP:
     description: "Model Context Protocol server implementation"
-    icon: "server"
+    icon: "Server"
     color: "#9B59B6"
     
   WebUI:
     description: "React-based web interface components"
-    icon: "web"
+    icon: "Web"
     color: "#E74C3C"
     
   Utils:
     description: "Utility functions and helpers"
-    icon: "tools"
+    icon: "Tools"
     color: "#95A5A6"
     
   Commands:
     description: "CLI command implementations"
-    icon: "command"
+    icon: "Command"
     color: "#F39C12"
     
   Git:
     description: "Git operations and integration"
-    icon: "git"
+    icon: "Git"
     color: "#27AE60"
     
   Server:
     description: "HTTP server for web interface"
-    icon: "server"
+    icon: "Server"
     color: "#E67E22"
 
   Abstractions:
     description: "Pure core abstractions (FileSystemAdapter, GlobAdapter, GitAdapter interfaces)"
-    icon: "interface"
+    icon: "Interface"
     color: "#8E44AD"
 
   BunAdapters:
     description: "Bun-specific adapter implementations using Bun APIs"
-    icon: "bun"
+    icon: "Bun"
     color: "#FBF0DF"
 
   TestAdapters:
     description: "In-memory adapter implementations for testing"
-    icon: "test"
+    icon: "Test"
     color: "#2ECC71"
 
 edgeComponents:
