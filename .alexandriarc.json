@@ -1,0 +1,10 @@
+{
+	"$schema": "https://raw.githubusercontent.com/a24z-ai/alexandria-cli/main/schema/alexandriarc.json",
+	"version": "1.0.0",
+	"context": {
+		"useGitignore": true,
+		"patterns": {
+			"exclude": [".alexandria/**", "**/backlog/**", "backlog/**", "backlog/"]
+		}
+	}
+}

@@ -189,17 +189,6 @@
   ],
   "edges": [
     {
-      "id": "cli-commands",
-      "fromNode": "cli",
-      "fromSide": "bottom",
-      "toNode": "commands",
-      "toSide": "top",
-      "label": "routes to",
-      "pv": {
-        "edgeType": "DataFlow"
-      }
-    },
-    {
       "id": "cli-core",
       "fromNode": "cli",
       "fromSide": "bottom",
@@ -340,6 +329,16 @@
       "label": "uses",
       "pv": {
         "edgeType": "Dependency"
+      }
+    },
+    {
+      "id": "edge-cli-commands-1766111218642",
+      "fromNode": "cli",
+      "toNode": "commands",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "DataFlow"
       }
     }
   ]
