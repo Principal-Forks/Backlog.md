@@ -1,0 +1,929 @@
+{
+	"nodes": [
+		{
+			"id": "document-create-started",
+			"type": "text",
+			"x": 100,
+			"y": 50,
+			"width": 220,
+			"height": 110,
+			"text": "# document.create.started\n\nDocument creation initiated with title and content.",
+			"pv": {
+				"event": "document.create.started",
+				"sources": ["src/core/backlog.ts", "src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"title": {
+						"type": "string",
+						"required": true
+					},
+					"content": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-create-validated",
+			"type": "text",
+			"x": 100,
+			"y": 200,
+			"width": 220,
+			"height": 110,
+			"text": "# document.create.validated\n\nDocument ID generated and validated.",
+			"pv": {
+				"event": "document.create.validated",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "validation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"normalizedId": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-create-saved",
+			"type": "text",
+			"x": 100,
+			"y": 350,
+			"width": 220,
+			"height": 110,
+			"text": "# document.create.saved\n\nDocument file saved to disk.",
+			"pv": {
+				"event": "document.create.saved",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentPath": {
+						"type": "string",
+						"required": true
+					},
+					"filename": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-create-committed",
+			"type": "text",
+			"x": 100,
+			"y": 500,
+			"width": 220,
+			"height": 110,
+			"text": "# document.create.committed\n\nDocument creation committed to git.",
+			"pv": {
+				"event": "document.create.committed",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "git"
+				},
+				"shape": "rectangle",
+				"fill": "#8b5cf6",
+				"stroke": "#7c3aed",
+				"dataSchema": {
+					"commitMessage": {
+						"type": "string",
+						"required": true
+					},
+					"commitSha": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-create-complete",
+			"type": "text",
+			"x": 100,
+			"y": 650,
+			"width": 220,
+			"height": 110,
+			"text": "# document.create.complete\n\nDocument creation completed successfully.",
+			"pv": {
+				"event": "document.create.complete",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					},
+					"duration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-view-started",
+			"type": "text",
+			"x": 400,
+			"y": 50,
+			"width": 220,
+			"height": 110,
+			"text": "# document.view.started\n\nDocument view initiated.",
+			"pv": {
+				"event": "document.view.started",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-view-loaded",
+			"type": "text",
+			"x": 400,
+			"y": 200,
+			"width": 220,
+			"height": 110,
+			"text": "# document.view.loaded\n\nDocument loaded from filesystem.",
+			"pv": {
+				"event": "document.view.loaded",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"documentPath": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-view-complete",
+			"type": "text",
+			"x": 400,
+			"y": 350,
+			"width": 220,
+			"height": 110,
+			"text": "# document.view.complete\n\nDocument view completed.",
+			"pv": {
+				"event": "document.view.complete",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-list-started",
+			"type": "text",
+			"x": 700,
+			"y": 50,
+			"width": 220,
+			"height": 110,
+			"text": "# document.list.started\n\nDocument list operation initiated.",
+			"pv": {
+				"event": "document.list.started",
+				"sources": ["src/file-system/operations.ts", "src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"search": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-list-loaded",
+			"type": "text",
+			"x": 700,
+			"y": 200,
+			"width": 220,
+			"height": 110,
+			"text": "# document.list.loaded\n\nDocuments loaded from filesystem.",
+			"pv": {
+				"event": "document.list.loaded",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentCount": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-list-filtered",
+			"type": "text",
+			"x": 700,
+			"y": 350,
+			"width": 220,
+			"height": 110,
+			"text": "# document.list.filtered\n\nDocuments filtered by search criteria.",
+			"pv": {
+				"event": "document.list.filtered",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"matchedCount": {
+						"type": "number",
+						"required": true
+					},
+					"search": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-list-complete",
+			"type": "text",
+			"x": 700,
+			"y": 500,
+			"width": 220,
+			"height": 110,
+			"text": "# document.list.complete\n\nDocument list operation completed.",
+			"pv": {
+				"event": "document.list.complete",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"documentCount": {
+						"type": "number",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-update-started",
+			"type": "text",
+			"x": 1000,
+			"y": 50,
+			"width": 220,
+			"height": 110,
+			"text": "# document.update.started\n\nDocument update initiated.",
+			"pv": {
+				"event": "document.update.started",
+				"sources": ["src/core/backlog.ts", "src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"title": {
+						"type": "string",
+						"required": false
+					},
+					"content": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-update-loaded",
+			"type": "text",
+			"x": 1000,
+			"y": 200,
+			"width": 220,
+			"height": 110,
+			"text": "# document.update.loaded\n\nExisting document loaded for update.",
+			"pv": {
+				"event": "document.update.loaded",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"documentPath": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-update-validated",
+			"type": "text",
+			"x": 1000,
+			"y": 350,
+			"width": 220,
+			"height": 110,
+			"text": "# document.update.validated\n\nDocument update validated.",
+			"pv": {
+				"event": "document.update.validated",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "validation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"updatedDate": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-update-saved",
+			"type": "text",
+			"x": 1000,
+			"y": 500,
+			"width": 220,
+			"height": 110,
+			"text": "# document.update.saved\n\nUpdated document saved to disk.",
+			"pv": {
+				"event": "document.update.saved",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"documentPath": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-update-committed",
+			"type": "text",
+			"x": 1000,
+			"y": 650,
+			"width": 220,
+			"height": 110,
+			"text": "# document.update.committed\n\nDocument update committed to git.",
+			"pv": {
+				"event": "document.update.committed",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "git"
+				},
+				"shape": "rectangle",
+				"fill": "#8b5cf6",
+				"stroke": "#7c3aed",
+				"dataSchema": {
+					"commitMessage": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-update-complete",
+			"type": "text",
+			"x": 1000,
+			"y": 800,
+			"width": 220,
+			"height": 110,
+			"text": "# document.update.complete\n\nDocument update completed successfully.",
+			"pv": {
+				"event": "document.update.complete",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"documentId": {
+						"type": "string",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					},
+					"duration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-search-started",
+			"type": "text",
+			"x": 1300,
+			"y": 50,
+			"width": 220,
+			"height": 110,
+			"text": "# document.search.started\n\nDocument search initiated.",
+			"pv": {
+				"event": "document.search.started",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"query": {
+						"type": "string",
+						"required": true
+					},
+					"limit": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-search-executed",
+			"type": "text",
+			"x": 1300,
+			"y": 200,
+			"width": 220,
+			"height": 110,
+			"text": "# document.search.executed\n\nSearch query executed.",
+			"pv": {
+				"event": "document.search.executed",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"query": {
+						"type": "string",
+						"required": true
+					},
+					"resultCount": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "document-search-complete",
+			"type": "text",
+			"x": 1300,
+			"y": 350,
+			"width": 220,
+			"height": 110,
+			"text": "# document.search.complete\n\nDocument search completed.",
+			"pv": {
+				"event": "document.search.complete",
+				"sources": ["src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"resultCount": {
+						"type": "number",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					},
+					"duration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "document-error",
+			"type": "text",
+			"x": 1600,
+			"y": 400,
+			"width": 220,
+			"height": 130,
+			"text": "# document.error\n\nDocument operation error occurred.",
+			"pv": {
+				"event": "document.error",
+				"sources": ["src/core/backlog.ts", "src/mcp/tools/documents/handlers.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "error"
+				},
+				"shape": "rectangle",
+				"fill": "#ef4444",
+				"stroke": "#dc2626",
+				"dataSchema": {
+					"operation": {
+						"type": "string",
+						"required": true
+					},
+					"error.type": {
+						"type": "string",
+						"required": false
+					},
+					"error.message": {
+						"type": "string",
+						"required": true
+					},
+					"error.stage": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "create-start-to-validate",
+			"fromNode": "document-create-started",
+			"fromSide": "bottom",
+			"toNode": "document-create-validated",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-validate-to-save",
+			"fromNode": "document-create-validated",
+			"fromSide": "bottom",
+			"toNode": "document-create-saved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-save-to-commit",
+			"fromNode": "document-create-saved",
+			"fromSide": "bottom",
+			"toNode": "document-create-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-commit-to-complete",
+			"fromNode": "document-create-committed",
+			"fromSide": "bottom",
+			"toNode": "document-create-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-save-to-complete",
+			"fromNode": "document-create-saved",
+			"fromSide": "right",
+			"toNode": "document-create-complete",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-to-error",
+			"fromNode": "document-create-started",
+			"fromSide": "right",
+			"toNode": "document-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "view-start-to-load",
+			"fromNode": "document-view-started",
+			"fromSide": "bottom",
+			"toNode": "document-view-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "view-load-to-complete",
+			"fromNode": "document-view-loaded",
+			"fromSide": "bottom",
+			"toNode": "document-view-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "view-to-error",
+			"fromNode": "document-view-started",
+			"fromSide": "right",
+			"toNode": "document-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "list-start-to-load",
+			"fromNode": "document-list-started",
+			"fromSide": "bottom",
+			"toNode": "document-list-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-load-to-filter",
+			"fromNode": "document-list-loaded",
+			"fromSide": "bottom",
+			"toNode": "document-list-filtered",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-filter-to-complete",
+			"fromNode": "document-list-filtered",
+			"fromSide": "bottom",
+			"toNode": "document-list-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-load-to-complete",
+			"fromNode": "document-list-loaded",
+			"fromSide": "right",
+			"toNode": "document-list-complete",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-to-error",
+			"fromNode": "document-list-started",
+			"fromSide": "right",
+			"toNode": "document-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "update-start-to-load",
+			"fromNode": "document-update-started",
+			"fromSide": "bottom",
+			"toNode": "document-update-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-load-to-validate",
+			"fromNode": "document-update-loaded",
+			"fromSide": "bottom",
+			"toNode": "document-update-validated",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-validate-to-save",
+			"fromNode": "document-update-validated",
+			"fromSide": "bottom",
+			"toNode": "document-update-saved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-save-to-commit",
+			"fromNode": "document-update-saved",
+			"fromSide": "bottom",
+			"toNode": "document-update-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-commit-to-complete",
+			"fromNode": "document-update-committed",
+			"fromSide": "bottom",
+			"toNode": "document-update-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-save-to-complete",
+			"fromNode": "document-update-saved",
+			"fromSide": "right",
+			"toNode": "document-update-complete",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-to-error",
+			"fromNode": "document-update-started",
+			"fromSide": "right",
+			"toNode": "document-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "search-start-to-execute",
+			"fromNode": "document-search-started",
+			"fromSide": "bottom",
+			"toNode": "document-search-executed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "search-execute-to-complete",
+			"fromNode": "document-search-executed",
+			"fromSide": "bottom",
+			"toNode": "document-search-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "search-to-error",
+			"fromNode": "document-search-started",
+			"fromSide": "right",
+			"toNode": "document-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		}
+	],
+	"pv": {
+		"name": "Document Management",
+		"version": "1.0.0",
+		"description": "OpenTelemetry event schema for document lifecycle operations",
+		"edgeTypes": {
+			"flow": {
+				"label": "Flow",
+				"style": "solid",
+				"width": 2,
+				"color": "#64748b"
+			},
+			"error": {
+				"label": "Error Path",
+				"style": "dashed",
+				"width": 2,
+				"color": "#ef4444"
+			}
+		}
+	}
+}

@@ -1,0 +1,104 @@
+{
+	"version": "1.0.0",
+	"canvas": "document-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Document Update",
+	"description": "Updating an existing document's content or title",
+	"scenarios": [
+		{
+			"id": "update-success-with-commit",
+			"priority": 1,
+			"condition": {
+				"requires": ["document.update.complete", "document.update.committed"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Updated document {documentId} and committed to git (completed in {duration.ms}ms)",
+				"events": {
+					"document.update.started": "Updating document: {{documentId}}",
+					"document.update.loaded": "Loaded existing document from {{documentPath}}",
+					"document.update.validated": "Validated update (timestamp: {{updatedDate}})",
+					"document.update.saved": "Saved to {{documentPath}}",
+					"document.update.committed": "Committed: {{commitMessage}}",
+					"document.update.complete": "Document updated successfully in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "update-success-no-commit",
+			"priority": 2,
+			"condition": {
+				"requires": ["document.update.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Updated document {documentId} (completed in {duration.ms}ms)",
+				"events": {
+					"document.update.started": "Updating document: {{documentId}}",
+					"document.update.loaded": "Loaded existing document from {{documentPath}}",
+					"document.update.validated": "Validated update (timestamp: {{updatedDate}})",
+					"document.update.saved": "Saved to {{documentPath}}",
+					"document.update.complete": "Document updated successfully in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "update-not-found",
+			"priority": 3,
+			"condition": {
+				"requires": ["document.error"],
+				"assertions": {
+					"operation": "update",
+					"error.type": "DocumentNotFound"
+				}
+			},
+			"template": {
+				"summary": "❌ Document {documentId} not found - cannot update",
+				"events": {
+					"document.update.started": "Updating document: {{documentId}}",
+					"document.error": "Document not found: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "update-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["document.error"],
+				"assertions": {
+					"operation": "update"
+				}
+			},
+			"template": {
+				"summary": "❌ Document update failed at {error.stage}: {error.message}",
+				"events": {
+					"document.update.started": "Updating document: {{documentId}}",
+					"document.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Document update execution captured",
+				"events": {
+					"document.update.started": "Update operation started",
+					"document.update.loaded": "Document loaded",
+					"document.update.validated": "Update validated",
+					"document.update.saved": "Document saved",
+					"document.update.committed": "Changes committed",
+					"document.update.complete": "Operation complete",
+					"document.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

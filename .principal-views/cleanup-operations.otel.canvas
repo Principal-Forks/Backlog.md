@@ -1,0 +1,668 @@
+{
+	"nodes": [
+		{
+			"id": "cleanup-preview-started",
+			"type": "text",
+			"x": 100,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# cleanup.preview.started\n\nCleanup preview initiated to identify old tasks.",
+			"pv": {
+				"event": "cleanup.preview.started",
+				"sources": ["src/core/backlog.ts", "src/server/index.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"olderThanDays": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "cleanup-preview-filtered",
+			"type": "text",
+			"x": 100,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# cleanup.preview.filtered\n\nTasks filtered by status and age.",
+			"pv": {
+				"event": "cleanup.preview.filtered",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"totalTasks": {
+						"type": "number",
+						"required": true
+					},
+					"matchedTasks": {
+						"type": "number",
+						"required": true
+					},
+					"cutoffDate": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "cleanup-preview-complete",
+			"type": "text",
+			"x": 100,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# cleanup.preview.complete\n\nPreview generation completed.",
+			"pv": {
+				"event": "cleanup.preview.complete",
+				"sources": ["src/server/index.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"taskCount": {
+						"type": "number",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "cleanup-batch-started",
+			"type": "text",
+			"x": 450,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# cleanup.batch.started\n\nBatch cleanup execution initiated.",
+			"pv": {
+				"event": "cleanup.batch.started",
+				"sources": ["src/server/index.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"olderThanDays": {
+						"type": "number",
+						"required": true
+					},
+					"taskCount": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "cleanup-batch-processing",
+			"type": "text",
+			"x": 450,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# cleanup.batch.processing\n\nProcessing tasks in batch operation.",
+			"pv": {
+				"event": "cleanup.batch.processing",
+				"sources": ["src/server/index.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"currentIndex": {
+						"type": "number",
+						"required": true
+					},
+					"totalCount": {
+						"type": "number",
+						"required": true
+					},
+					"taskId": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "cleanup-batch-complete",
+			"type": "text",
+			"x": 450,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# cleanup.batch.complete\n\nBatch cleanup completed with results.",
+			"pv": {
+				"event": "cleanup.batch.complete",
+				"sources": ["src/server/index.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"movedCount": {
+						"type": "number",
+						"required": true
+					},
+					"totalCount": {
+						"type": "number",
+						"required": true
+					},
+					"failedCount": {
+						"type": "number",
+						"required": false
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					},
+					"duration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "task-complete-started",
+			"type": "text",
+			"x": 800,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# task.complete.started\n\nSingle task completion initiated.",
+			"pv": {
+				"event": "task.complete.started",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"taskId": {
+						"type": "string",
+						"required": true
+					},
+					"autoCommit": {
+						"type": "boolean",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "task-complete-located",
+			"type": "text",
+			"x": 800,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# task.complete.located\n\nTask file located in tasks directory.",
+			"pv": {
+				"event": "task.complete.located",
+				"sources": ["src/core/backlog.ts", "src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"taskId": {
+						"type": "string",
+						"required": true
+					},
+					"sourcePath": {
+						"type": "string",
+						"required": true
+					},
+					"filename": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "task-complete-moved",
+			"type": "text",
+			"x": 800,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# task.complete.moved\n\nTask file moved to completed directory.",
+			"pv": {
+				"event": "task.complete.moved",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"taskId": {
+						"type": "string",
+						"required": true
+					},
+					"fromPath": {
+						"type": "string",
+						"required": true
+					},
+					"toPath": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "task-complete-committed",
+			"type": "text",
+			"x": 800,
+			"y": 500,
+			"width": 240,
+			"height": 110,
+			"text": "# task.complete.committed\n\nTask completion committed to git.",
+			"pv": {
+				"event": "task.complete.committed",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "git"
+				},
+				"shape": "rectangle",
+				"fill": "#8b5cf6",
+				"stroke": "#7c3aed",
+				"dataSchema": {
+					"taskId": {
+						"type": "string",
+						"required": true
+					},
+					"commitMessage": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "task-complete-complete",
+			"type": "text",
+			"x": 800,
+			"y": 650,
+			"width": 240,
+			"height": 110,
+			"text": "# task.complete.complete\n\nTask completion operation finished.",
+			"pv": {
+				"event": "task.complete.complete",
+				"sources": ["src/core/backlog.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"taskId": {
+						"type": "string",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "completed-tasks-list-started",
+			"type": "text",
+			"x": 1150,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# completed.tasks.list.started\n\nList completed tasks operation started.",
+			"pv": {
+				"event": "completed.tasks.list.started",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {}
+			}
+		},
+		{
+			"id": "completed-tasks-list-loaded",
+			"type": "text",
+			"x": 1150,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# completed.tasks.list.loaded\n\nCompleted tasks loaded from directory.",
+			"pv": {
+				"event": "completed.tasks.list.loaded",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"taskCount": {
+						"type": "number",
+						"required": true
+					},
+					"completedDir": {
+						"type": "string",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "completed-tasks-list-complete",
+			"type": "text",
+			"x": 1150,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# completed.tasks.list.complete\n\nCompleted tasks list operation finished.",
+			"pv": {
+				"event": "completed.tasks.list.complete",
+				"sources": ["src/file-system/operations.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"taskCount": {
+						"type": "number",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "cleanup-error",
+			"type": "text",
+			"x": 1450,
+			"y": 300,
+			"width": 240,
+			"height": 130,
+			"text": "# cleanup.error\n\nCleanup operation error occurred.",
+			"pv": {
+				"event": "cleanup.error",
+				"sources": ["src/core/backlog.ts", "src/server/index.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "error"
+				},
+				"shape": "rectangle",
+				"fill": "#ef4444",
+				"stroke": "#dc2626",
+				"dataSchema": {
+					"operation": {
+						"type": "string",
+						"required": true
+					},
+					"error.type": {
+						"type": "string",
+						"required": false
+					},
+					"error.message": {
+						"type": "string",
+						"required": true
+					},
+					"error.stage": {
+						"type": "string",
+						"required": false
+					},
+					"taskId": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "preview-start-to-filtered",
+			"fromNode": "cleanup-preview-started",
+			"fromSide": "bottom",
+			"toNode": "cleanup-preview-filtered",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "preview-filtered-to-complete",
+			"fromNode": "cleanup-preview-filtered",
+			"fromSide": "bottom",
+			"toNode": "cleanup-preview-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "preview-to-error",
+			"fromNode": "cleanup-preview-started",
+			"fromSide": "right",
+			"toNode": "cleanup-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "batch-start-to-processing",
+			"fromNode": "cleanup-batch-started",
+			"fromSide": "bottom",
+			"toNode": "cleanup-batch-processing",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "batch-processing-to-complete",
+			"fromNode": "cleanup-batch-processing",
+			"fromSide": "bottom",
+			"toNode": "cleanup-batch-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "batch-to-task-complete",
+			"fromNode": "cleanup-batch-processing",
+			"fromSide": "right",
+			"toNode": "task-complete-started",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "child-span"
+			}
+		},
+		{
+			"id": "batch-to-error",
+			"fromNode": "cleanup-batch-started",
+			"fromSide": "right",
+			"toNode": "cleanup-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "complete-start-to-located",
+			"fromNode": "task-complete-started",
+			"fromSide": "bottom",
+			"toNode": "task-complete-located",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-located-to-moved",
+			"fromNode": "task-complete-located",
+			"fromSide": "bottom",
+			"toNode": "task-complete-moved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-moved-to-committed",
+			"fromNode": "task-complete-moved",
+			"fromSide": "bottom",
+			"toNode": "task-complete-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-committed-to-complete",
+			"fromNode": "task-complete-committed",
+			"fromSide": "bottom",
+			"toNode": "task-complete-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-moved-to-complete",
+			"fromNode": "task-complete-moved",
+			"fromSide": "right",
+			"toNode": "task-complete-complete",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-to-error",
+			"fromNode": "task-complete-started",
+			"fromSide": "right",
+			"toNode": "cleanup-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "list-start-to-loaded",
+			"fromNode": "completed-tasks-list-started",
+			"fromSide": "bottom",
+			"toNode": "completed-tasks-list-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-loaded-to-complete",
+			"fromNode": "completed-tasks-list-loaded",
+			"fromSide": "bottom",
+			"toNode": "completed-tasks-list-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-to-error",
+			"fromNode": "completed-tasks-list-started",
+			"fromSide": "right",
+			"toNode": "cleanup-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		}
+	],
+	"pv": {
+		"name": "Cleanup Operations",
+		"version": "1.0.0",
+		"description": "OpenTelemetry event schema for cleanup operations including preview, batch completion, and completed task management",
+		"edgeTypes": {
+			"flow": {
+				"label": "Flow",
+				"style": "solid",
+				"width": 2,
+				"color": "#64748b"
+			},
+			"child-span": {
+				"label": "Child Span",
+				"style": "dashed",
+				"width": 2,
+				"color": "#8b5cf6"
+			},
+			"error": {
+				"label": "Error Path",
+				"style": "dashed",
+				"width": 2,
+				"color": "#ef4444"
+			}
+		}
+	}
+}

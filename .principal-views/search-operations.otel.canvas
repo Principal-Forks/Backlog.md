@@ -1,0 +1,602 @@
+{
+	"nodes": [
+		{
+			"id": "search-initialize-started",
+			"type": "text",
+			"x": 100,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# search.initialize.started\n\nSearch service initialization initiated.",
+			"pv": {
+				"event": "search.initialize.started",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {}
+			}
+		},
+		{
+			"id": "search-initialize-snapshot",
+			"type": "text",
+			"x": 100,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# search.initialize.snapshot\n\nContent snapshot loaded from store.",
+			"pv": {
+				"event": "search.initialize.snapshot",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "io"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"taskCount": {
+						"type": "number",
+						"required": true
+					},
+					"documentCount": {
+						"type": "number",
+						"required": true
+					},
+					"decisionCount": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "search-initialize-indexed",
+			"type": "text",
+			"x": 100,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# search.initialize.indexed\n\nSearch index built with Fuse.js.",
+			"pv": {
+				"event": "search.initialize.indexed",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"totalEntities": {
+						"type": "number",
+						"required": true
+					},
+					"taskVariants": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-initialize-complete",
+			"type": "text",
+			"x": 100,
+			"y": 500,
+			"width": 240,
+			"height": 110,
+			"text": "# search.initialize.complete\n\nSearch service ready for queries.",
+			"pv": {
+				"event": "search.initialize.complete",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"success": {
+						"type": "boolean",
+						"required": true
+					},
+					"duration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-query-started",
+			"type": "text",
+			"x": 450,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# search.query.started\n\nSearch query initiated.",
+			"pv": {
+				"event": "search.query.started",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"query": {
+						"type": "string",
+						"required": true
+					},
+					"types": {
+						"type": "array",
+						"required": false
+					},
+					"limit": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-query-normalized",
+			"type": "text",
+			"x": 450,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# search.query.normalized\n\nQuery and filters normalized.",
+			"pv": {
+				"event": "search.query.normalized",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"trimmedQuery": {
+						"type": "string",
+						"required": true
+					},
+					"types": {
+						"type": "array",
+						"required": true
+					},
+					"filters": {
+						"type": "object",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-query-executed",
+			"type": "text",
+			"x": 450,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# search.query.executed\n\nFuse.js search executed on index.",
+			"pv": {
+				"event": "search.query.executed",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"rawResultCount": {
+						"type": "number",
+						"required": true
+					},
+					"searchDuration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-query-filtered",
+			"type": "text",
+			"x": 450,
+			"y": 500,
+			"width": 240,
+			"height": 110,
+			"text": "# search.query.filtered\n\nResults filtered by type and criteria.",
+			"pv": {
+				"event": "search.query.filtered",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"filteredCount": {
+						"type": "number",
+						"required": true
+					},
+					"taskCount": {
+						"type": "number",
+						"required": false
+					},
+					"documentCount": {
+						"type": "number",
+						"required": false
+					},
+					"decisionCount": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-query-complete",
+			"type": "text",
+			"x": 450,
+			"y": 650,
+			"width": 240,
+			"height": 110,
+			"text": "# search.query.complete\n\nSearch query completed with results.",
+			"pv": {
+				"event": "search.query.complete",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"resultCount": {
+						"type": "number",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					},
+					"duration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-index-update-started",
+			"type": "text",
+			"x": 800,
+			"y": 50,
+			"width": 240,
+			"height": 110,
+			"text": "# search.index.update.started\n\nIndex update triggered by content change.",
+			"pv": {
+				"event": "search.index.update.started",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"trigger": {
+						"type": "string",
+						"required": true
+					},
+					"version": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "search-index-snapshot-applied",
+			"type": "text",
+			"x": 800,
+			"y": 200,
+			"width": 240,
+			"height": 110,
+			"text": "# search.index.snapshot.applied\n\nNew snapshot applied to search entities.",
+			"pv": {
+				"event": "search.index.snapshot.applied",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"taskCount": {
+						"type": "number",
+						"required": true
+					},
+					"documentCount": {
+						"type": "number",
+						"required": true
+					},
+					"decisionCount": {
+						"type": "number",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "search-index-rebuilt",
+			"type": "text",
+			"x": 800,
+			"y": 350,
+			"width": 240,
+			"height": 110,
+			"text": "# search.index.rebuilt\n\nFuse.js index rebuilt with new data.",
+			"pv": {
+				"event": "search.index.rebuilt",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"dataSchema": {
+					"totalEntities": {
+						"type": "number",
+						"required": true
+					},
+					"rebuildDuration.ms": {
+						"type": "number",
+						"required": false
+					}
+				}
+			}
+		},
+		{
+			"id": "search-index-update-complete",
+			"type": "text",
+			"x": 800,
+			"y": 500,
+			"width": 240,
+			"height": 110,
+			"text": "# search.index.update.complete\n\nIndex update completed successfully.",
+			"pv": {
+				"event": "search.index.update.complete",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"dataSchema": {
+					"version": {
+						"type": "number",
+						"required": true
+					},
+					"success": {
+						"type": "boolean",
+						"required": true
+					}
+				}
+			}
+		},
+		{
+			"id": "search-error",
+			"type": "text",
+			"x": 1100,
+			"y": 300,
+			"width": 240,
+			"height": 130,
+			"text": "# search.error\n\nSearch operation error occurred.",
+			"pv": {
+				"event": "search.error",
+				"sources": ["src/core/search-service.ts"],
+				"otel": {
+					"kind": "event",
+					"category": "error"
+				},
+				"shape": "rectangle",
+				"fill": "#ef4444",
+				"stroke": "#dc2626",
+				"dataSchema": {
+					"operation": {
+						"type": "string",
+						"required": true
+					},
+					"error.type": {
+						"type": "string",
+						"required": false
+					},
+					"error.message": {
+						"type": "string",
+						"required": true
+					},
+					"error.stage": {
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "init-start-to-snapshot",
+			"fromNode": "search-initialize-started",
+			"fromSide": "bottom",
+			"toNode": "search-initialize-snapshot",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "init-snapshot-to-indexed",
+			"fromNode": "search-initialize-snapshot",
+			"fromSide": "bottom",
+			"toNode": "search-initialize-indexed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "init-indexed-to-complete",
+			"fromNode": "search-initialize-indexed",
+			"fromSide": "bottom",
+			"toNode": "search-initialize-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "init-to-error",
+			"fromNode": "search-initialize-started",
+			"fromSide": "right",
+			"toNode": "search-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "query-start-to-normalized",
+			"fromNode": "search-query-started",
+			"fromSide": "bottom",
+			"toNode": "search-query-normalized",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "query-normalized-to-executed",
+			"fromNode": "search-query-normalized",
+			"fromSide": "bottom",
+			"toNode": "search-query-executed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "query-executed-to-filtered",
+			"fromNode": "search-query-executed",
+			"fromSide": "bottom",
+			"toNode": "search-query-filtered",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "query-filtered-to-complete",
+			"fromNode": "search-query-filtered",
+			"fromSide": "bottom",
+			"toNode": "search-query-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "query-to-error",
+			"fromNode": "search-query-started",
+			"fromSide": "right",
+			"toNode": "search-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "update-start-to-snapshot",
+			"fromNode": "search-index-update-started",
+			"fromSide": "bottom",
+			"toNode": "search-index-snapshot-applied",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-snapshot-to-rebuilt",
+			"fromNode": "search-index-snapshot-applied",
+			"fromSide": "bottom",
+			"toNode": "search-index-rebuilt",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-rebuilt-to-complete",
+			"fromNode": "search-index-rebuilt",
+			"fromSide": "bottom",
+			"toNode": "search-index-update-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "update-to-error",
+			"fromNode": "search-index-update-started",
+			"fromSide": "right",
+			"toNode": "search-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		}
+	],
+	"pv": {
+		"name": "Search Operations",
+		"version": "1.0.0",
+		"description": "OpenTelemetry event schema for cross-entity search initialization, querying, and index updates",
+		"edgeTypes": {
+			"flow": {
+				"label": "Flow",
+				"style": "solid",
+				"width": 2,
+				"color": "#64748b"
+			},
+			"error": {
+				"label": "Error Path",
+				"style": "dashed",
+				"width": 2,
+				"color": "#ef4444"
+			}
+		}
+	}
+}

@@ -1,0 +1,97 @@
+{
+	"version": "1.0.0",
+	"canvas": "task-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Task View",
+	"description": "Viewing task details",
+	"scenarios": [
+		{
+			"id": "view-success-with-subtasks",
+			"priority": 1,
+			"condition": {
+				"requires": ["task.view.complete"],
+				"assertions": {
+					"success": true,
+					"hasSubtasks": true
+				}
+			},
+			"template": {
+				"summary": "✅ Viewed task {taskId} with subtasks (completed in {duration.ms}ms)",
+				"events": {
+					"task.view.started": "Viewing task {{taskId}}",
+					"task.view.loaded": "Loaded task with subtasks from {{source}}",
+					"task.view.complete": "View complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "view-success",
+			"priority": 2,
+			"condition": {
+				"requires": ["task.view.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Viewed task {taskId} (completed in {duration.ms}ms)",
+				"events": {
+					"task.view.started": "Viewing task {{taskId}}",
+					"task.view.loaded": "Loaded task from {{source}}",
+					"task.view.complete": "View complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "view-not-found",
+			"priority": 3,
+			"condition": {
+				"requires": ["task.error"],
+				"assertions": {
+					"operation": "view",
+					"error.type": "TaskNotFound"
+				}
+			},
+			"template": {
+				"summary": "❌ Task {taskId} not found",
+				"events": {
+					"task.view.started": "Viewing task {{taskId}}",
+					"task.error": "Task not found: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "view-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["task.error"],
+				"assertions": {
+					"operation": "view"
+				}
+			},
+			"template": {
+				"summary": "❌ Failed to view task {taskId}: {error.message}",
+				"events": {
+					"task.view.started": "Viewing task {{taskId}}",
+					"task.error": "Error: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Task view execution captured",
+				"events": {
+					"task.view.started": "View started",
+					"task.view.loaded": "Task loaded",
+					"task.view.complete": "View complete",
+					"task.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

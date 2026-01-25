@@ -1,0 +1,84 @@
+{
+	"version": "1.0.0",
+	"canvas": "entry-points.otel.canvas",
+	"mode": "span-tree",
+	"name": "MCP Tool Call",
+	"description": "Model Context Protocol tool invocation lifecycle",
+	"scenarios": [
+		{
+			"id": "mcp-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["mcp.tool.response", "operation.executed"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ MCP tool {toolName} completed successfully (operation: {operation}, {duration.ms}ms)",
+				"events": {
+					"mcp.tool.invoked": "Tool invoked: {{toolName}}{{#if clientId}} from {{clientId}}{{/if}}",
+					"mcp.tool.validated": "Parameters validated for operation: {{operation}}",
+					"mcp.operation.dispatched": "Dispatched to handler: {{handler}}",
+					"operation.executed": "Executed {{operation}} on {{entityType}}{{#if entityId}} {{entityId}}{{/if}} ({{duration.ms}}ms)",
+					"mcp.tool.response": "Response sent ({{contentLength}} bytes, {{duration.ms}}ms total)"
+				}
+			}
+		},
+		{
+			"id": "mcp-validation-error",
+			"priority": 2,
+			"condition": {
+				"requires": ["entry.error"],
+				"assertions": {
+					"entryPoint": "mcp",
+					"error.stage": "validation"
+				}
+			},
+			"template": {
+				"summary": "❌ MCP tool {toolName} validation failed: {error.message}",
+				"events": {
+					"mcp.tool.invoked": "Tool invoked: {{toolName}}",
+					"entry.error": "Parameter validation failed: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "mcp-operation-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["entry.error"],
+				"assertions": {
+					"entryPoint": "mcp"
+				}
+			},
+			"template": {
+				"summary": "❌ MCP {toolName} failed: {error.message}",
+				"events": {
+					"mcp.tool.invoked": "Tool invoked: {{toolName}}",
+					"mcp.tool.validated": "Parameters validated",
+					"mcp.operation.dispatched": "Operation dispatched",
+					"entry.error": "Operation failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 MCP tool execution captured",
+				"events": {
+					"mcp.tool.invoked": "Tool invoked",
+					"mcp.tool.validated": "Parameters validated",
+					"mcp.operation.dispatched": "Operation dispatched",
+					"operation.executed": "Operation executed",
+					"mcp.tool.response": "Response sent",
+					"entry.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

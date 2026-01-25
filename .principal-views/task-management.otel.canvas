@@ -1,0 +1,1231 @@
+{
+  "nodes": [
+    {
+      "id": "task-create-started",
+      "type": "text",
+      "x": 100,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# task.create.started\n\nTask creation initiated with title and metadata.",
+      "pv": {
+        "event": "task.create.started",
+        "sources": ["src/core/backlog.ts", "src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "title": {
+            "type": "string",
+            "required": true
+          },
+          "status": {
+            "type": "string",
+            "required": false
+          },
+          "autoCommit": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-create-validated",
+      "type": "text",
+      "x": 100,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# task.create.validated\n\nTask data validated and ID generated.",
+      "pv": {
+        "event": "task.create.validated",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "normalizedId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-create-saved",
+      "type": "text",
+      "x": 100,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# task.create.saved\n\nTask file written to filesystem.",
+      "pv": {
+        "event": "task.create.saved",
+        "sources": ["src/file-system/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "filepath": {
+            "type": "string",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-create-committed",
+      "type": "text",
+      "x": 100,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "text": "# task.create.committed\n\nChanges committed to git (if autoCommit enabled).",
+      "pv": {
+        "event": "task.create.committed",
+        "sources": ["src/git/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "integration"
+        },
+        "shape": "rectangle",
+        "fill": "#f59e0b",
+        "stroke": "#d97706",
+        "dataSchema": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-create-complete",
+      "type": "text",
+      "x": 100,
+      "y": 650,
+      "width": 200,
+      "height": 100,
+      "text": "# task.create.complete\n\nTask creation completed successfully.",
+      "pv": {
+        "event": "task.create.complete",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-edit-started",
+      "type": "text",
+      "x": 400,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# task.edit.started\n\nTask edit operation initiated.",
+      "pv": {
+        "event": "task.edit.started",
+        "sources": ["src/core/backlog.ts", "src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "updateFields": {
+            "type": "array",
+            "required": false
+          },
+          "autoCommit": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-edit-loaded",
+      "type": "text",
+      "x": 400,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# task.edit.loaded\n\nExisting task loaded from filesystem.",
+      "pv": {
+        "event": "task.edit.loaded",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "currentStatus": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-edit-validated",
+      "type": "text",
+      "x": 400,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# task.edit.validated\n\nUpdate inputs validated.",
+      "pv": {
+        "event": "task.edit.validated",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "hasChanges": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-edit-updated",
+      "type": "text",
+      "x": 400,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "text": "# task.edit.updated\n\nTask file updated with changes.",
+      "pv": {
+        "event": "task.edit.updated",
+        "sources": ["src/file-system/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "updatedFields": {
+            "type": "array",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-edit-committed",
+      "type": "text",
+      "x": 400,
+      "y": 650,
+      "width": 200,
+      "height": 100,
+      "text": "# task.edit.committed\n\nChanges committed to git (if autoCommit enabled).",
+      "pv": {
+        "event": "task.edit.committed",
+        "sources": ["src/git/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "integration"
+        },
+        "shape": "rectangle",
+        "fill": "#f59e0b",
+        "stroke": "#d97706",
+        "dataSchema": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-edit-complete",
+      "type": "text",
+      "x": 400,
+      "y": 800,
+      "width": 200,
+      "height": 100,
+      "text": "# task.edit.complete\n\nTask edit completed successfully.",
+      "pv": {
+        "event": "task.edit.complete",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-view-started",
+      "type": "text",
+      "x": 700,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# task.view.started\n\nTask view operation initiated.",
+      "pv": {
+        "event": "task.view.started",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "format": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-view-loaded",
+      "type": "text",
+      "x": 700,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# task.view.loaded\n\nTask data loaded from filesystem or content store.",
+      "pv": {
+        "event": "task.view.loaded",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "hasSubtasks": {
+            "type": "boolean",
+            "required": false
+          },
+          "source": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-view-complete",
+      "type": "text",
+      "x": 700,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# task.view.complete\n\nTask view completed successfully.",
+      "pv": {
+        "event": "task.view.complete",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-list-started",
+      "type": "text",
+      "x": 1000,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# task.list.started\n\nTask list operation initiated with filters.",
+      "pv": {
+        "event": "task.list.started",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "filters": {
+            "type": "object",
+            "required": false
+          },
+          "format": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-list-loaded",
+      "type": "text",
+      "x": 1000,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# task.list.loaded\n\nTasks loaded from filesystem and content store.",
+      "pv": {
+        "event": "task.list.loaded",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "totalCount": {
+            "type": "number",
+            "required": true
+          },
+          "includeCrossBranch": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-list-filtered",
+      "type": "text",
+      "x": 1000,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# task.list.filtered\n\nFilters applied to task list.",
+      "pv": {
+        "event": "task.list.filtered",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "resultCount": {
+            "type": "number",
+            "required": true
+          },
+          "appliedFilters": {
+            "type": "object",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-list-complete",
+      "type": "text",
+      "x": 1000,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "text": "# task.list.complete\n\nTask list operation completed successfully.",
+      "pv": {
+        "event": "task.list.complete",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "resultCount": {
+            "type": "number",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-demote-started",
+      "type": "text",
+      "x": 700,
+      "y": 550,
+      "width": 200,
+      "height": 100,
+      "text": "# task.demote.started\n\nTask demotion to draft initiated.",
+      "pv": {
+        "event": "task.demote.started",
+        "sources": ["src/cli.ts", "src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "autoCommit": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-demote-loaded",
+      "type": "text",
+      "x": 700,
+      "y": 700,
+      "width": 200,
+      "height": 100,
+      "text": "# task.demote.loaded\n\nTask file located for demotion.",
+      "pv": {
+        "event": "task.demote.loaded",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "fromPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-demote-moved",
+      "type": "text",
+      "x": 700,
+      "y": 850,
+      "width": 200,
+      "height": 100,
+      "text": "# task.demote.moved\n\nTask file moved to drafts directory.",
+      "pv": {
+        "event": "task.demote.moved",
+        "sources": ["src/file-system/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "fromPath": {
+            "type": "string",
+            "required": true
+          },
+          "toPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-demote-committed",
+      "type": "text",
+      "x": 700,
+      "y": 1000,
+      "width": 200,
+      "height": 100,
+      "text": "# task.demote.committed\n\nChanges committed to git (if autoCommit enabled).",
+      "pv": {
+        "event": "task.demote.committed",
+        "sources": ["src/git/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "integration"
+        },
+        "shape": "rectangle",
+        "fill": "#f59e0b",
+        "stroke": "#d97706",
+        "dataSchema": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-demote-complete",
+      "type": "text",
+      "x": 700,
+      "y": 1150,
+      "width": 200,
+      "height": 100,
+      "text": "# task.demote.complete\n\nTask demotion completed successfully.",
+      "pv": {
+        "event": "task.demote.complete",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-error",
+      "type": "text",
+      "x": 1300,
+      "y": 500,
+      "width": 200,
+      "height": 150,
+      "text": "# task.error\n\nTask operation failed with an error.",
+      "pv": {
+        "event": "task.error",
+        "sources": ["src/cli.ts", "src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "error"
+        },
+        "shape": "rectangle",
+        "fill": "#ef4444",
+        "stroke": "#dc2626",
+        "dataSchema": {
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": false
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          },
+          "error.stack": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-archive-started",
+      "type": "text",
+      "x": 100,
+      "y": 1350,
+      "width": 200,
+      "height": 100,
+      "text": "# task.archive.started\n\nTask archive command invoked with task ID.",
+      "pv": {
+        "event": "task.archive.started",
+        "sources": ["src/cli.ts", "src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "autoCommit": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "task-archive-located",
+      "type": "text",
+      "x": 100,
+      "y": 1500,
+      "width": 200,
+      "height": 100,
+      "text": "# task.archive.located\n\nTask file found and path resolved.",
+      "pv": {
+        "event": "task.archive.located",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "taskPath": {
+            "type": "string",
+            "required": true
+          },
+          "taskFilename": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-archive-moved",
+      "type": "text",
+      "x": 100,
+      "y": 1650,
+      "width": 200,
+      "height": 100,
+      "text": "# task.archive.moved\n\nTask file moved to archive directory.",
+      "pv": {
+        "event": "task.archive.moved",
+        "sources": ["src/core/backlog.ts", "src/file-system/operations.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "fromPath": {
+            "type": "string",
+            "required": true
+          },
+          "toPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-archive-committed",
+      "type": "text",
+      "x": 100,
+      "y": 1800,
+      "width": 200,
+      "height": 100,
+      "text": "# task.archive.committed\n\nGit commit created for archive operation.",
+      "pv": {
+        "event": "task.archive.committed",
+        "sources": ["src/core/backlog.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "integration"
+        },
+        "shape": "rectangle",
+        "fill": "#f59e0b",
+        "stroke": "#d97706",
+        "dataSchema": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "normalizedTaskId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "task-archive-complete",
+      "type": "text",
+      "x": 100,
+      "y": 1950,
+      "width": 200,
+      "height": 100,
+      "text": "# task.archive.complete\n\nTask archived successfully.",
+      "pv": {
+        "event": "task.archive.complete",
+        "sources": ["src/cli.ts"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "create-started-validated",
+      "fromNode": "task-create-started",
+      "fromSide": "bottom",
+      "toNode": "task-create-validated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-validated-saved",
+      "fromNode": "task-create-validated",
+      "fromSide": "bottom",
+      "toNode": "task-create-saved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-saved-committed",
+      "fromNode": "task-create-saved",
+      "fromSide": "bottom",
+      "toNode": "task-create-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-committed-complete",
+      "fromNode": "task-create-committed",
+      "fromSide": "bottom",
+      "toNode": "task-create-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edit-started-loaded",
+      "fromNode": "task-edit-started",
+      "fromSide": "bottom",
+      "toNode": "task-edit-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edit-loaded-validated",
+      "fromNode": "task-edit-loaded",
+      "fromSide": "bottom",
+      "toNode": "task-edit-validated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edit-validated-updated",
+      "fromNode": "task-edit-validated",
+      "fromSide": "bottom",
+      "toNode": "task-edit-updated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edit-updated-committed",
+      "fromNode": "task-edit-updated",
+      "fromSide": "bottom",
+      "toNode": "task-edit-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edit-committed-complete",
+      "fromNode": "task-edit-committed",
+      "fromSide": "bottom",
+      "toNode": "task-edit-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "view-started-loaded",
+      "fromNode": "task-view-started",
+      "fromSide": "bottom",
+      "toNode": "task-view-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "view-loaded-complete",
+      "fromNode": "task-view-loaded",
+      "fromSide": "bottom",
+      "toNode": "task-view-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-started-loaded",
+      "fromNode": "task-list-started",
+      "fromSide": "bottom",
+      "toNode": "task-list-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-loaded-filtered",
+      "fromNode": "task-list-loaded",
+      "fromSide": "bottom",
+      "toNode": "task-list-filtered",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-filtered-complete",
+      "fromNode": "task-list-filtered",
+      "fromSide": "bottom",
+      "toNode": "task-list-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "demote-started-loaded",
+      "fromNode": "task-demote-started",
+      "fromSide": "bottom",
+      "toNode": "task-demote-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "demote-loaded-moved",
+      "fromNode": "task-demote-loaded",
+      "fromSide": "bottom",
+      "toNode": "task-demote-moved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "demote-moved-committed",
+      "fromNode": "task-demote-moved",
+      "fromSide": "bottom",
+      "toNode": "task-demote-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "demote-committed-complete",
+      "fromNode": "task-demote-committed",
+      "fromSide": "bottom",
+      "toNode": "task-demote-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-started-error",
+      "fromNode": "task-create-started",
+      "fromSide": "right",
+      "toNode": "task-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "edit-started-error",
+      "fromNode": "task-edit-started",
+      "fromSide": "right",
+      "toNode": "task-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "view-started-error",
+      "fromNode": "task-view-started",
+      "fromSide": "right",
+      "toNode": "task-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "list-started-error",
+      "fromNode": "task-list-started",
+      "fromSide": "right",
+      "toNode": "task-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "demote-started-error",
+      "fromNode": "task-demote-started",
+      "fromSide": "right",
+      "toNode": "task-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "archive-started-located",
+      "fromNode": "task-archive-started",
+      "fromSide": "bottom",
+      "toNode": "task-archive-located",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-located-moved",
+      "fromNode": "task-archive-located",
+      "fromSide": "bottom",
+      "toNode": "task-archive-moved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-moved-committed",
+      "fromNode": "task-archive-moved",
+      "fromSide": "bottom",
+      "toNode": "task-archive-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-committed-complete",
+      "fromNode": "task-archive-committed",
+      "fromSide": "bottom",
+      "toNode": "task-archive-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-started-error",
+      "fromNode": "task-archive-started",
+      "fromSide": "right",
+      "toNode": "task-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Task Management",
+    "version": "1.0.0",
+    "description": "Comprehensive task management operations including create, edit, view, list, demote, and archive",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    }
+  }
+}

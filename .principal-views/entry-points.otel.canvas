@@ -1,0 +1,711 @@
+{
+  "nodes": [
+    {
+      "id": "cli-request-received",
+      "type": "text",
+      "x": 100,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# cli.request.received\n\nCLI command received with arguments.",
+      "pv": {
+        "event": "cli.request.received",
+        "sources": [
+          "src/cli.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "command": {
+            "type": "string",
+            "required": true
+          },
+          "subcommand": {
+            "type": "string",
+            "required": false
+          },
+          "args": {
+            "type": "object",
+            "required": false
+          },
+          "cwd": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "cli-request-parsed",
+      "type": "text",
+      "x": 100,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# cli.request.parsed\n\nCommand arguments parsed and validated.",
+      "pv": {
+        "event": "cli.request.parsed",
+        "sources": [
+          "src/cli.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "entityType": {
+            "type": "string",
+            "required": false
+          },
+          "validationPassed": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "cli-operation-dispatched",
+      "type": "text",
+      "x": 100,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# cli.operation.dispatched\n\nRequest routed to core operation handler.",
+      "pv": {
+        "event": "cli.operation.dispatched",
+        "sources": [
+          "src/cli.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "cli-request-complete",
+      "type": "text",
+      "x": 92,
+      "y": 782,
+      "width": 200,
+      "height": 100,
+      "text": "# cli.request.complete\n\nCLI command completed successfully.",
+      "pv": {
+        "event": "cli.request.complete",
+        "sources": [
+          "src/cli.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "exitCode": {
+            "type": "number",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "mcp-tool-invoked",
+      "type": "text",
+      "x": 400,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# mcp.tool.invoked\n\nMCP tool called with parameters.",
+      "pv": {
+        "event": "mcp.tool.invoked",
+        "sources": [
+          "src/mcp/server.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "parameters": {
+            "type": "object",
+            "required": false
+          },
+          "clientId": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "mcp-tool-validated",
+      "type": "text",
+      "x": 400,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# mcp.tool.validated\n\nTool parameters validated against schema.",
+      "pv": {
+        "event": "mcp.tool.validated",
+        "sources": [
+          "src/mcp/server.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "validationPassed": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "mcp-operation-dispatched",
+      "type": "text",
+      "x": 400,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# mcp.operation.dispatched\n\nTool request routed to core operation.",
+      "pv": {
+        "event": "mcp.operation.dispatched",
+        "sources": [
+          "src/mcp/server.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "mcp-tool-response",
+      "type": "text",
+      "x": 402,
+      "y": 805,
+      "width": 200,
+      "height": 100,
+      "text": "# mcp.tool.response\n\nMCP tool response sent to client.",
+      "pv": {
+        "event": "mcp.tool.response",
+        "sources": [
+          "src/mcp/server.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "contentLength": {
+            "type": "number",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "http-request-received",
+      "type": "text",
+      "x": 700,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "text": "# http.request.received\n\nHTTP request received from browser client.",
+      "pv": {
+        "event": "http.request.received",
+        "sources": [
+          "src/server/index.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "method": {
+            "type": "string",
+            "required": true
+          },
+          "path": {
+            "type": "string",
+            "required": true
+          },
+          "clientIp": {
+            "type": "string",
+            "required": false
+          },
+          "userAgent": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "http-request-routed",
+      "type": "text",
+      "x": 700,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "text": "# http.request.routed\n\nRequest routed to API endpoint handler.",
+      "pv": {
+        "event": "http.request.routed",
+        "sources": [
+          "src/server/index.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "route": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "http-operation-dispatched",
+      "type": "text",
+      "x": 700,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "text": "# http.operation.dispatched\n\nAPI request dispatched to core operation.",
+      "pv": {
+        "event": "http.operation.dispatched",
+        "sources": [
+          "src/server/index.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "dataSchema": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          },
+          "requestBody": {
+            "type": "object",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "http-response-sent",
+      "type": "text",
+      "x": 714,
+      "y": 785,
+      "width": 200,
+      "height": 100,
+      "text": "# http.response.sent\n\nHTTP response sent to client.",
+      "pv": {
+        "event": "http.response.sent",
+        "sources": [
+          "src/server/index.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "shape": "rectangle",
+        "fill": "#22c55e",
+        "stroke": "#16a34a",
+        "dataSchema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "statusCode": {
+            "type": "number",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "responseSize": {
+            "type": "number",
+            "required": false
+          }
+        }
+      }
+    },
+    {
+      "id": "operation-executed",
+      "type": "text",
+      "x": 400,
+      "y": 561,
+      "width": 200,
+      "height": 120,
+      "text": "# operation.executed\n\nCore operation completed (child span).\n\nLinks to domain canvases:\n- task.*\n- draft.*\n- milestone.*",
+      "pv": {
+        "event": "operation.executed",
+        "sources": [
+          "src/core/backlog.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "operation"
+        },
+        "shape": "rectangle",
+        "fill": "#8b5cf6",
+        "stroke": "#6d28d9",
+        "dataSchema": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "entityType": {
+            "type": "string",
+            "required": true
+          },
+          "entityId": {
+            "type": "string",
+            "required": false
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      }
+    },
+    {
+      "id": "entry-error",
+      "type": "text",
+      "x": 1000,
+      "y": 350,
+      "width": 200,
+      "height": 150,
+      "text": "# entry.error\n\nEntry point request failed with error.",
+      "pv": {
+        "event": "entry.error",
+        "sources": [
+          "src/cli.ts",
+          "src/mcp/server.ts",
+          "src/server/index.ts"
+        ],
+        "otel": {
+          "kind": "event",
+          "category": "error"
+        },
+        "shape": "rectangle",
+        "fill": "#ef4444",
+        "stroke": "#dc2626",
+        "dataSchema": {
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "entryPoint": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": false
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          },
+          "error.stack": {
+            "type": "string",
+            "required": false
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "cli-received-parsed",
+      "fromNode": "cli-request-received",
+      "fromSide": "bottom",
+      "toNode": "cli-request-parsed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "cli-parsed-dispatched",
+      "fromNode": "cli-request-parsed",
+      "fromSide": "bottom",
+      "toNode": "cli-operation-dispatched",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "cli-dispatched-operation",
+      "fromNode": "cli-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "operation-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    },
+    {
+      "id": "mcp-invoked-validated",
+      "fromNode": "mcp-tool-invoked",
+      "fromSide": "bottom",
+      "toNode": "mcp-tool-validated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "mcp-validated-dispatched",
+      "fromNode": "mcp-tool-validated",
+      "fromSide": "bottom",
+      "toNode": "mcp-operation-dispatched",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "mcp-dispatched-operation",
+      "fromNode": "mcp-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "operation-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    },
+    {
+      "id": "http-received-routed",
+      "fromNode": "http-request-received",
+      "fromSide": "bottom",
+      "toNode": "http-request-routed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "http-routed-dispatched",
+      "fromNode": "http-request-routed",
+      "fromSide": "bottom",
+      "toNode": "http-operation-dispatched",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "http-dispatched-operation",
+      "fromNode": "http-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "operation-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    },
+    {
+      "id": "cli-received-error",
+      "fromNode": "cli-request-received",
+      "fromSide": "right",
+      "toNode": "entry-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "mcp-invoked-error",
+      "fromNode": "mcp-tool-invoked",
+      "fromSide": "right",
+      "toNode": "entry-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "http-received-error",
+      "fromNode": "http-request-received",
+      "fromSide": "right",
+      "toNode": "entry-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "edge-operation-executed-http-response-sent-1769318159019",
+      "fromNode": "operation-executed",
+      "toNode": "http-response-sent",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edge-operation-executed-mcp-tool-response-1769318159019",
+      "fromNode": "operation-executed",
+      "toNode": "mcp-tool-response",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edge-operation-executed-cli-request-complete-1769318159019",
+      "fromNode": "operation-executed",
+      "toNode": "cli-request-complete",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Entry Points",
+    "version": "1.0.0",
+    "description": "Root span lifecycle for CLI, MCP, and HTTP entry points. Child operations link to domain canvases (task, draft, milestone).",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "child-span": {
+        "label": "Creates Child Span",
+        "style": "dashed",
+        "width": 2,
+        "color": "#8b5cf6"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    }
+  }
+}
