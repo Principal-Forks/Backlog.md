@@ -1,971 +1,1068 @@
 {
-  "nodes": [
-    {
-      "id": "draft-create-started",
-      "type": "text",
-      "x": 100,
-      "y": 50,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.create.started\n\nDraft creation initiated with title.",
-      "pv": {
-        "event": "draft.create.started",
-        "sources": ["src/core/backlog.ts", "src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "title": {
-            "type": "string",
-            "required": true
-          },
-          "autoCommit": {
-            "type": "boolean",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-create-validated",
-      "type": "text",
-      "x": 100,
-      "y": 200,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.create.validated\n\nDraft data validated and ID generated.",
-      "pv": {
-        "event": "draft.create.validated",
-        "sources": ["src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "normalizedId": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-create-saved",
-      "type": "text",
-      "x": 100,
-      "y": 350,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.create.saved\n\nDraft file written to drafts directory.",
-      "pv": {
-        "event": "draft.create.saved",
-        "sources": ["src/file-system/operations.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "filepath": {
-            "type": "string",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-create-committed",
-      "type": "text",
-      "x": 100,
-      "y": 500,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.create.committed\n\nChanges committed to git (if autoCommit enabled).",
-      "pv": {
-        "event": "draft.create.committed",
-        "sources": ["src/git/operations.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "integration"
-        },
-        "shape": "rectangle",
-        "fill": "#f59e0b",
-        "stroke": "#d97706",
-        "dataSchema": {
-          "commitMessage": {
-            "type": "string",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-create-complete",
-      "type": "text",
-      "x": 100,
-      "y": 650,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.create.complete\n\nDraft creation completed successfully.",
-      "pv": {
-        "event": "draft.create.complete",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "success": {
-            "type": "boolean",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "duration.ms": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-view-started",
-      "type": "text",
-      "x": 400,
-      "y": 50,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.view.started\n\nDraft view operation initiated.",
-      "pv": {
-        "event": "draft.view.started",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "format": {
-            "type": "string",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-view-loaded",
-      "type": "text",
-      "x": 400,
-      "y": 200,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.view.loaded\n\nDraft data loaded from filesystem.",
-      "pv": {
-        "event": "draft.view.loaded",
-        "sources": ["src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "source": {
-            "type": "string",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-view-complete",
-      "type": "text",
-      "x": 400,
-      "y": 350,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.view.complete\n\nDraft view completed successfully.",
-      "pv": {
-        "event": "draft.view.complete",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "success": {
-            "type": "boolean",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "duration.ms": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-list-started",
-      "type": "text",
-      "x": 700,
-      "y": 50,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.list.started\n\nDraft list operation initiated with filters.",
-      "pv": {
-        "event": "draft.list.started",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "filters": {
-            "type": "object",
-            "required": false
-          },
-          "format": {
-            "type": "string",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-list-loaded",
-      "type": "text",
-      "x": 700,
-      "y": 200,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.list.loaded\n\nDrafts loaded from filesystem.",
-      "pv": {
-        "event": "draft.list.loaded",
-        "sources": ["src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "totalCount": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-list-filtered",
-      "type": "text",
-      "x": 700,
-      "y": 350,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.list.filtered\n\nFilters applied to draft list.",
-      "pv": {
-        "event": "draft.list.filtered",
-        "sources": ["src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "resultCount": {
-            "type": "number",
-            "required": true
-          },
-          "appliedFilters": {
-            "type": "object",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-list-complete",
-      "type": "text",
-      "x": 700,
-      "y": 500,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.list.complete\n\nDraft list operation completed successfully.",
-      "pv": {
-        "event": "draft.list.complete",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "success": {
-            "type": "boolean",
-            "required": true
-          },
-          "resultCount": {
-            "type": "number",
-            "required": true
-          },
-          "duration.ms": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-promote-started",
-      "type": "text",
-      "x": 100,
-      "y": 850,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.promote.started\n\nDraft promotion to task initiated.",
-      "pv": {
-        "event": "draft.promote.started",
-        "sources": ["src/cli.ts", "src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "autoCommit": {
-            "type": "boolean",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-promote-loaded",
-      "type": "text",
-      "x": 100,
-      "y": 1000,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.promote.loaded\n\nDraft file located for promotion.",
-      "pv": {
-        "event": "draft.promote.loaded",
-        "sources": ["src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "fromPath": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-promote-moved",
-      "type": "text",
-      "x": 100,
-      "y": 1150,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.promote.moved\n\nDraft file moved to tasks directory.",
-      "pv": {
-        "event": "draft.promote.moved",
-        "sources": ["src/file-system/operations.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "fromPath": {
-            "type": "string",
-            "required": true
-          },
-          "toPath": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-promote-committed",
-      "type": "text",
-      "x": 100,
-      "y": 1300,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.promote.committed\n\nChanges committed to git (if autoCommit enabled).",
-      "pv": {
-        "event": "draft.promote.committed",
-        "sources": ["src/git/operations.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "integration"
-        },
-        "shape": "rectangle",
-        "fill": "#f59e0b",
-        "stroke": "#d97706",
-        "dataSchema": {
-          "commitMessage": {
-            "type": "string",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-promote-complete",
-      "type": "text",
-      "x": 100,
-      "y": 1450,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.promote.complete\n\nDraft promotion completed successfully.",
-      "pv": {
-        "event": "draft.promote.complete",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "success": {
-            "type": "boolean",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "duration.ms": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-archive-started",
-      "type": "text",
-      "x": 400,
-      "y": 850,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.archive.started\n\nDraft archive command invoked.",
-      "pv": {
-        "event": "draft.archive.started",
-        "sources": ["src/cli.ts", "src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "autoCommit": {
-            "type": "boolean",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-archive-located",
-      "type": "text",
-      "x": 400,
-      "y": 1000,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.archive.located\n\nDraft file found and path resolved.",
-      "pv": {
-        "event": "draft.archive.located",
-        "sources": ["src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "draftPath": {
-            "type": "string",
-            "required": true
-          },
-          "draftFilename": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-archive-moved",
-      "type": "text",
-      "x": 400,
-      "y": 1150,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.archive.moved\n\nDraft file moved to archive directory.",
-      "pv": {
-        "event": "draft.archive.moved",
-        "sources": ["src/file-system/operations.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "fromPath": {
-            "type": "string",
-            "required": true
-          },
-          "toPath": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-archive-committed",
-      "type": "text",
-      "x": 400,
-      "y": 1300,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.archive.committed\n\nGit commit created for archive operation.",
-      "pv": {
-        "event": "draft.archive.committed",
-        "sources": ["src/git/operations.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "integration"
-        },
-        "shape": "rectangle",
-        "fill": "#f59e0b",
-        "stroke": "#d97706",
-        "dataSchema": {
-          "commitMessage": {
-            "type": "string",
-            "required": true
-          },
-          "normalizedDraftId": {
-            "type": "string",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-archive-complete",
-      "type": "text",
-      "x": 400,
-      "y": 1450,
-      "width": 200,
-      "height": 100,
-      "text": "# draft.archive.complete\n\nDraft archived successfully.",
-      "pv": {
-        "event": "draft.archive.complete",
-        "sources": ["src/cli.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "success": {
-            "type": "boolean",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": true
-          },
-          "duration.ms": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "draft-error",
-      "type": "text",
-      "x": 1000,
-      "y": 500,
-      "width": 200,
-      "height": 150,
-      "text": "# draft.error\n\nDraft operation failed with an error.",
-      "pv": {
-        "event": "draft.error",
-        "sources": ["src/cli.ts", "src/core/backlog.ts"],
-        "otel": {
-          "kind": "event",
-          "category": "error"
-        },
-        "shape": "rectangle",
-        "fill": "#ef4444",
-        "stroke": "#dc2626",
-        "dataSchema": {
-          "error.type": {
-            "type": "string",
-            "required": true
-          },
-          "error.message": {
-            "type": "string",
-            "required": true
-          },
-          "operation": {
-            "type": "string",
-            "required": true
-          },
-          "draftId": {
-            "type": "string",
-            "required": false
-          },
-          "error.stage": {
-            "type": "string",
-            "required": false
-          },
-          "error.stack": {
-            "type": "string",
-            "required": false
-          }
-        }
-      }
-    }
-  ],
-  "edges": [
-    {
-      "id": "create-started-validated",
-      "fromNode": "draft-create-started",
-      "fromSide": "bottom",
-      "toNode": "draft-create-validated",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "create-validated-saved",
-      "fromNode": "draft-create-validated",
-      "fromSide": "bottom",
-      "toNode": "draft-create-saved",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "create-saved-committed",
-      "fromNode": "draft-create-saved",
-      "fromSide": "bottom",
-      "toNode": "draft-create-committed",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "create-committed-complete",
-      "fromNode": "draft-create-committed",
-      "fromSide": "bottom",
-      "toNode": "draft-create-complete",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "view-started-loaded",
-      "fromNode": "draft-view-started",
-      "fromSide": "bottom",
-      "toNode": "draft-view-loaded",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "view-loaded-complete",
-      "fromNode": "draft-view-loaded",
-      "fromSide": "bottom",
-      "toNode": "draft-view-complete",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "list-started-loaded",
-      "fromNode": "draft-list-started",
-      "fromSide": "bottom",
-      "toNode": "draft-list-loaded",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "list-loaded-filtered",
-      "fromNode": "draft-list-loaded",
-      "fromSide": "bottom",
-      "toNode": "draft-list-filtered",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "list-filtered-complete",
-      "fromNode": "draft-list-filtered",
-      "fromSide": "bottom",
-      "toNode": "draft-list-complete",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "promote-started-loaded",
-      "fromNode": "draft-promote-started",
-      "fromSide": "bottom",
-      "toNode": "draft-promote-loaded",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "promote-loaded-moved",
-      "fromNode": "draft-promote-loaded",
-      "fromSide": "bottom",
-      "toNode": "draft-promote-moved",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "promote-moved-committed",
-      "fromNode": "draft-promote-moved",
-      "fromSide": "bottom",
-      "toNode": "draft-promote-committed",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "promote-committed-complete",
-      "fromNode": "draft-promote-committed",
-      "fromSide": "bottom",
-      "toNode": "draft-promote-complete",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "archive-started-located",
-      "fromNode": "draft-archive-started",
-      "fromSide": "bottom",
-      "toNode": "draft-archive-located",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "archive-located-moved",
-      "fromNode": "draft-archive-located",
-      "fromSide": "bottom",
-      "toNode": "draft-archive-moved",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "archive-moved-committed",
-      "fromNode": "draft-archive-moved",
-      "fromSide": "bottom",
-      "toNode": "draft-archive-committed",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "archive-committed-complete",
-      "fromNode": "draft-archive-committed",
-      "fromSide": "bottom",
-      "toNode": "draft-archive-complete",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "create-started-error",
-      "fromNode": "draft-create-started",
-      "fromSide": "right",
-      "toNode": "draft-error",
-      "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
-    },
-    {
-      "id": "view-started-error",
-      "fromNode": "draft-view-started",
-      "fromSide": "right",
-      "toNode": "draft-error",
-      "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
-    },
-    {
-      "id": "list-started-error",
-      "fromNode": "draft-list-started",
-      "fromSide": "right",
-      "toNode": "draft-error",
-      "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
-    },
-    {
-      "id": "promote-started-error",
-      "fromNode": "draft-promote-started",
-      "fromSide": "right",
-      "toNode": "draft-error",
-      "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
-    },
-    {
-      "id": "archive-started-error",
-      "fromNode": "draft-archive-started",
-      "fromSide": "right",
-      "toNode": "draft-error",
-      "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
-    }
-  ],
-  "pv": {
-    "name": "Draft Management",
-    "version": "1.0.0",
-    "description": "Comprehensive draft management operations including create, view, list, promote, and archive",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    }
-  }
+	"nodes": [
+		{
+			"id": "draft-create-started",
+			"type": "text",
+			"x": 100,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.create.started\n\nDraft creation initiated with title.",
+			"pv": {
+				"event": {
+					"name": "draft.create.started",
+					"attributes": {
+						"title": {
+							"type": "string",
+							"required": true
+						},
+						"autoCommit": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts",
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-create-validated",
+			"type": "text",
+			"x": 100,
+			"y": 200,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.create.validated\n\nDraft data validated and ID generated.",
+			"pv": {
+				"event": {
+					"name": "draft.create.validated",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"normalizedId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-create-saved",
+			"type": "text",
+			"x": 100,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.create.saved\n\nDraft file written to drafts directory.",
+			"pv": {
+				"event": {
+					"name": "draft.create.saved",
+					"attributes": {
+						"filepath": {
+							"type": "string",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/file-system/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-create-committed",
+			"type": "text",
+			"x": 100,
+			"y": 500,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.create.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"pv": {
+				"event": {
+					"name": "draft.create.committed",
+					"attributes": {
+						"commitMessage": {
+							"type": "string",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/git/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration"
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706"
+			}
+		},
+		{
+			"id": "draft-create-complete",
+			"type": "text",
+			"x": 100,
+			"y": 650,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.create.complete\n\nDraft creation completed successfully.",
+			"pv": {
+				"event": {
+					"name": "draft.create.complete",
+					"attributes": {
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-view-started",
+			"type": "text",
+			"x": 400,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.view.started\n\nDraft view operation initiated.",
+			"pv": {
+				"event": {
+					"name": "draft.view.started",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"format": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-view-loaded",
+			"type": "text",
+			"x": 400,
+			"y": 200,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.view.loaded\n\nDraft data loaded from filesystem.",
+			"pv": {
+				"event": {
+					"name": "draft.view.loaded",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"source": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-view-complete",
+			"type": "text",
+			"x": 400,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.view.complete\n\nDraft view completed successfully.",
+			"pv": {
+				"event": {
+					"name": "draft.view.complete",
+					"attributes": {
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-list-started",
+			"type": "text",
+			"x": 700,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.list.started\n\nDraft list operation initiated with filters.",
+			"pv": {
+				"event": {
+					"name": "draft.list.started",
+					"attributes": {
+						"filters": {
+							"type": "object",
+							"required": false
+						},
+						"format": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-list-loaded",
+			"type": "text",
+			"x": 700,
+			"y": 200,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.list.loaded\n\nDrafts loaded from filesystem.",
+			"pv": {
+				"event": {
+					"name": "draft.list.loaded",
+					"attributes": {
+						"totalCount": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-list-filtered",
+			"type": "text",
+			"x": 700,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.list.filtered\n\nFilters applied to draft list.",
+			"pv": {
+				"event": {
+					"name": "draft.list.filtered",
+					"attributes": {
+						"resultCount": {
+							"type": "number",
+							"required": true
+						},
+						"appliedFilters": {
+							"type": "object",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-list-complete",
+			"type": "text",
+			"x": 700,
+			"y": 500,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.list.complete\n\nDraft list operation completed successfully.",
+			"pv": {
+				"event": {
+					"name": "draft.list.complete",
+					"attributes": {
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"resultCount": {
+							"type": "number",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-promote-started",
+			"type": "text",
+			"x": 100,
+			"y": 850,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.promote.started\n\nDraft promotion to task initiated.",
+			"pv": {
+				"event": {
+					"name": "draft.promote.started",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"autoCommit": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts",
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-promote-loaded",
+			"type": "text",
+			"x": 100,
+			"y": 1000,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.promote.loaded\n\nDraft file located for promotion.",
+			"pv": {
+				"event": {
+					"name": "draft.promote.loaded",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"fromPath": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-promote-moved",
+			"type": "text",
+			"x": 100,
+			"y": 1150,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.promote.moved\n\nDraft file moved to tasks directory.",
+			"pv": {
+				"event": {
+					"name": "draft.promote.moved",
+					"attributes": {
+						"fromPath": {
+							"type": "string",
+							"required": true
+						},
+						"toPath": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/file-system/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-promote-committed",
+			"type": "text",
+			"x": 100,
+			"y": 1300,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.promote.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"pv": {
+				"event": {
+					"name": "draft.promote.committed",
+					"attributes": {
+						"commitMessage": {
+							"type": "string",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/git/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration"
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706"
+			}
+		},
+		{
+			"id": "draft-promote-complete",
+			"type": "text",
+			"x": 100,
+			"y": 1450,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.promote.complete\n\nDraft promotion completed successfully.",
+			"pv": {
+				"event": {
+					"name": "draft.promote.complete",
+					"attributes": {
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-archive-started",
+			"type": "text",
+			"x": 400,
+			"y": 850,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.archive.started\n\nDraft archive command invoked.",
+			"pv": {
+				"event": {
+					"name": "draft.archive.started",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"autoCommit": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts",
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-archive-located",
+			"type": "text",
+			"x": 400,
+			"y": 1000,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.archive.located\n\nDraft file found and path resolved.",
+			"pv": {
+				"event": {
+					"name": "draft.archive.located",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"draftPath": {
+							"type": "string",
+							"required": true
+						},
+						"draftFilename": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-archive-moved",
+			"type": "text",
+			"x": 400,
+			"y": 1150,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.archive.moved\n\nDraft file moved to archive directory.",
+			"pv": {
+				"event": {
+					"name": "draft.archive.moved",
+					"attributes": {
+						"fromPath": {
+							"type": "string",
+							"required": true
+						},
+						"toPath": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/file-system/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "draft-archive-committed",
+			"type": "text",
+			"x": 400,
+			"y": 1300,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.archive.committed\n\nGit commit created for archive operation.",
+			"pv": {
+				"event": {
+					"name": "draft.archive.committed",
+					"attributes": {
+						"commitMessage": {
+							"type": "string",
+							"required": true
+						},
+						"normalizedDraftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/git/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration"
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706"
+			}
+		},
+		{
+			"id": "draft-archive-complete",
+			"type": "text",
+			"x": 400,
+			"y": 1450,
+			"width": 200,
+			"height": 100,
+			"text": "# draft.archive.complete\n\nDraft archived successfully.",
+			"pv": {
+				"event": {
+					"name": "draft.archive.complete",
+					"attributes": {
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "draft-error",
+			"type": "text",
+			"x": 1000,
+			"y": 500,
+			"width": 200,
+			"height": 150,
+			"text": "# draft.error\n\nDraft operation failed with an error.",
+			"pv": {
+				"event": {
+					"name": "draft.error",
+					"attributes": {
+						"error.type": {
+							"type": "string",
+							"required": true
+						},
+						"error.message": {
+							"type": "string",
+							"required": true
+						},
+						"operation": {
+							"type": "string",
+							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": false
+						},
+						"error.stage": {
+							"type": "string",
+							"required": false
+						},
+						"error.stack": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/cli.ts",
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "error"
+				},
+				"shape": "rectangle",
+				"fill": "#ef4444",
+				"stroke": "#dc2626"
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "create-started-validated",
+			"fromNode": "draft-create-started",
+			"fromSide": "bottom",
+			"toNode": "draft-create-validated",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-validated-saved",
+			"fromNode": "draft-create-validated",
+			"fromSide": "bottom",
+			"toNode": "draft-create-saved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-saved-committed",
+			"fromNode": "draft-create-saved",
+			"fromSide": "bottom",
+			"toNode": "draft-create-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-committed-complete",
+			"fromNode": "draft-create-committed",
+			"fromSide": "bottom",
+			"toNode": "draft-create-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "view-started-loaded",
+			"fromNode": "draft-view-started",
+			"fromSide": "bottom",
+			"toNode": "draft-view-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "view-loaded-complete",
+			"fromNode": "draft-view-loaded",
+			"fromSide": "bottom",
+			"toNode": "draft-view-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-started-loaded",
+			"fromNode": "draft-list-started",
+			"fromSide": "bottom",
+			"toNode": "draft-list-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-loaded-filtered",
+			"fromNode": "draft-list-loaded",
+			"fromSide": "bottom",
+			"toNode": "draft-list-filtered",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "list-filtered-complete",
+			"fromNode": "draft-list-filtered",
+			"fromSide": "bottom",
+			"toNode": "draft-list-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "promote-started-loaded",
+			"fromNode": "draft-promote-started",
+			"fromSide": "bottom",
+			"toNode": "draft-promote-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "promote-loaded-moved",
+			"fromNode": "draft-promote-loaded",
+			"fromSide": "bottom",
+			"toNode": "draft-promote-moved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "promote-moved-committed",
+			"fromNode": "draft-promote-moved",
+			"fromSide": "bottom",
+			"toNode": "draft-promote-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "promote-committed-complete",
+			"fromNode": "draft-promote-committed",
+			"fromSide": "bottom",
+			"toNode": "draft-promote-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "archive-started-located",
+			"fromNode": "draft-archive-started",
+			"fromSide": "bottom",
+			"toNode": "draft-archive-located",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "archive-located-moved",
+			"fromNode": "draft-archive-located",
+			"fromSide": "bottom",
+			"toNode": "draft-archive-moved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "archive-moved-committed",
+			"fromNode": "draft-archive-moved",
+			"fromSide": "bottom",
+			"toNode": "draft-archive-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "archive-committed-complete",
+			"fromNode": "draft-archive-committed",
+			"fromSide": "bottom",
+			"toNode": "draft-archive-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-started-error",
+			"fromNode": "draft-create-started",
+			"fromSide": "right",
+			"toNode": "draft-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "view-started-error",
+			"fromNode": "draft-view-started",
+			"fromSide": "right",
+			"toNode": "draft-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "list-started-error",
+			"fromNode": "draft-list-started",
+			"fromSide": "right",
+			"toNode": "draft-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "promote-started-error",
+			"fromNode": "draft-promote-started",
+			"fromSide": "right",
+			"toNode": "draft-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "archive-started-error",
+			"fromNode": "draft-archive-started",
+			"fromSide": "right",
+			"toNode": "draft-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		}
+	],
+	"pv": {
+		"name": "Draft Management",
+		"version": "1.0.0",
+		"description": "Comprehensive draft management operations including create, view, list, promote, and archive",
+		"edgeTypes": {
+			"flow": {
+				"label": "Flow",
+				"style": "solid",
+				"width": 2,
+				"color": "#64748b"
+			},
+			"error": {
+				"label": "Error Path",
+				"style": "dashed",
+				"width": 2,
+				"color": "#ef4444"
+			}
+		},
+		"markdown": ".principal-views/draft-management.md"
+	}
 }

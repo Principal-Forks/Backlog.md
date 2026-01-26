@@ -1,315 +1,328 @@
 {
-  "nodes": [
-    {
-      "id": "init-started",
-      "type": "text",
-      "x": 100,
-      "y": 50,
-      "width": 200,
-      "height": 100,
-      "text": "# init.started\n\nInitialization process begins. Emitted at the start of the init command with project configuration details.",
-      "pv": {
-        "event": "init.started",
-        "sources": [
-          "src/core/init.ts"
-        ],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "projectName": {
-            "type": "string",
-            "required": true
-          },
-          "integrationMode": {
-            "type": "string",
-            "required": true
-          },
-          "isReInitialization": {
-            "type": "boolean",
-            "required": true
-          },
-          "mcpClients": {
-            "type": "array",
-            "required": false
-          },
-          "hasAdvancedConfig": {
-            "type": "boolean",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "structure-created",
-      "type": "text",
-      "x": 100,
-      "y": 250,
-      "width": 200,
-      "height": 100,
-      "text": "# init.structure.created\n\nBacklog directory structure created successfully.",
-      "pv": {
-        "event": "init.structure.created",
-        "sources": [
-          "src/core/init.ts"
-        ],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "created.directories": {
-            "type": "number",
-            "required": true
-          },
-          "created.files": {
-            "type": "number",
-            "required": true
-          }
-        }
-      }
-    },
-    {
-      "id": "config-saved",
-      "type": "text",
-      "x": 100,
-      "y": 450,
-      "width": 200,
-      "height": 100,
-      "text": "# init.config.saved\n\nConfiguration saved to disk with project settings.",
-      "pv": {
-        "event": "init.config.saved",
-        "sources": [
-          "src/core/init.ts"
-        ],
-        "otel": {
-          "kind": "event",
-          "category": "operation"
-        },
-        "shape": "rectangle",
-        "fill": "#3b82f6",
-        "stroke": "#1d4ed8",
-        "dataSchema": {
-          "config.projectName": {
-            "type": "string",
-            "required": true
-          },
-          "config.autoCommit": {
-            "type": "boolean",
-            "required": true
-          },
-          "config.taskPrefix": {
-            "type": "string",
-            "required": true
-          },
-          "config.zeroPaddedIds": {
-            "type": "number",
-            "required": false
-          },
-          "config.defaultEditor": {
-            "type": "string",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "mcp-configured",
-      "type": "text",
-      "x": 100,
-      "y": 650,
-      "width": 200,
-      "height": 100,
-      "text": "# init.mcp.configured\n\nMCP integration configured (when applicable).",
-      "pv": {
-        "event": "init.mcp.configured",
-        "sources": [
-          "src/core/init.ts"
-        ],
-        "otel": {
-          "kind": "event",
-          "category": "integration"
-        },
-        "shape": "rectangle",
-        "fill": "#f59e0b",
-        "stroke": "#d97706",
-        "dataSchema": {
-          "mcp.clients": {
-            "type": "array",
-            "required": true
-          },
-          "mcp.successCount": {
-            "type": "number",
-            "required": true
-          },
-          "mcp.failureCount": {
-            "type": "number",
-            "required": true
-          },
-          "mcp.hasErrors": {
-            "type": "boolean",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "init-complete",
-      "type": "text",
-      "x": 100,
-      "y": 850,
-      "width": 200,
-      "height": 100,
-      "text": "# init.complete\n\nInitialization completed successfully.",
-      "pv": {
-        "event": "init.complete",
-        "sources": [
-          "src/core/init.ts"
-        ],
-        "otel": {
-          "kind": "event",
-          "category": "lifecycle"
-        },
-        "shape": "rectangle",
-        "fill": "#22c55e",
-        "stroke": "#16a34a",
-        "dataSchema": {
-          "success": {
-            "type": "boolean",
-            "required": true
-          },
-          "isReInitialization": {
-            "type": "boolean",
-            "required": true
-          },
-          "duration.ms": {
-            "type": "number",
-            "required": true
-          },
-          "hasMcpResults": {
-            "type": "boolean",
-            "required": false
-          }
-        }
-      }
-    },
-    {
-      "id": "init-error",
-      "type": "text",
-      "x": 450,
-      "y": 50,
-      "width": 200,
-      "height": 100,
-      "text": "# init.error\n\nInitialization failed with an error.",
-      "pv": {
-        "event": "init.error",
-        "sources": [
-          "src/core/init.ts"
-        ],
-        "otel": {
-          "kind": "event",
-          "category": "error"
-        },
-        "shape": "rectangle",
-        "fill": "#ef4444",
-        "stroke": "#dc2626",
-        "dataSchema": {
-          "error.type": {
-            "type": "string",
-            "required": true
-          },
-          "error.message": {
-            "type": "string",
-            "required": true
-          },
-          "error.stage": {
-            "type": "string",
-            "required": true
-          },
-          "error.stack": {
-            "type": "string",
-            "required": false
-          }
-        }
-      }
-    }
-  ],
-  "edges": [
-    {
-      "id": "config-to-mcp",
-      "fromNode": "config-saved",
-      "fromSide": "bottom",
-      "toNode": "mcp-configured",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "edge-mcp-configured-init-complete-1769299033035",
-      "fromNode": "mcp-configured",
-      "toNode": "init-complete",
-      "fromSide": "bottom",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "edge-structure-created-config-saved-1769299033035",
-      "fromNode": "structure-created",
-      "toNode": "config-saved",
-      "fromSide": "bottom",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "edge-init-started-structure-created-1769299033035",
-      "fromNode": "init-started",
-      "toNode": "structure-created",
-      "fromSide": "bottom",
-      "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
-    },
-    {
-      "id": "edge-init-started-init-error-1769299033035",
-      "fromNode": "init-started",
-      "toNode": "init-error",
-      "fromSide": "right",
-      "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
-    }
-  ],
-  "pv": {
-    "name": "Backlog Init",
-    "version": "1.0.0",
-    "description": "CLI command for initializing a new Backlog.md workspace",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    }
-  }
+	"nodes": [
+		{
+			"id": "init-started",
+			"type": "text",
+			"x": 100,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# init.started\n\nInitialization process begins. Emitted at the start of the init command with project configuration details.",
+			"pv": {
+				"event": {
+					"name": "init.started",
+					"attributes": {
+						"projectName": {
+							"type": "string",
+							"required": true
+						},
+						"integrationMode": {
+							"type": "string",
+							"required": true
+						},
+						"isReInitialization": {
+							"type": "boolean",
+							"required": true
+						},
+						"mcpClients": {
+							"type": "array",
+							"required": false
+						},
+						"hasAdvancedConfig": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/init.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "structure-created",
+			"type": "text",
+			"x": 100,
+			"y": 250,
+			"width": 200,
+			"height": 100,
+			"text": "# init.structure.created\n\nBacklog directory structure created successfully.",
+			"pv": {
+				"event": {
+					"name": "init.structure.created",
+					"attributes": {
+						"created.directories": {
+							"type": "number",
+							"required": true
+						},
+						"created.files": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/init.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "config-saved",
+			"type": "text",
+			"x": 100,
+			"y": 450,
+			"width": 200,
+			"height": 100,
+			"text": "# init.config.saved\n\nConfiguration saved to disk with project settings.",
+			"pv": {
+				"event": {
+					"name": "init.config.saved",
+					"attributes": {
+						"config.projectName": {
+							"type": "string",
+							"required": true
+						},
+						"config.autoCommit": {
+							"type": "boolean",
+							"required": true
+						},
+						"config.taskPrefix": {
+							"type": "string",
+							"required": true
+						},
+						"config.zeroPaddedIds": {
+							"type": "number",
+							"required": false
+						},
+						"config.defaultEditor": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/init.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "operation"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			}
+		},
+		{
+			"id": "mcp-configured",
+			"type": "text",
+			"x": 100,
+			"y": 650,
+			"width": 200,
+			"height": 100,
+			"text": "# init.mcp.configured\n\nMCP integration configured (when applicable).",
+			"pv": {
+				"event": {
+					"name": "init.mcp.configured",
+					"attributes": {
+						"mcp.clients": {
+							"type": "array",
+							"required": true
+						},
+						"mcp.successCount": {
+							"type": "number",
+							"required": true
+						},
+						"mcp.failureCount": {
+							"type": "number",
+							"required": true
+						},
+						"mcp.hasErrors": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/init.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration"
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706"
+			}
+		},
+		{
+			"id": "init-complete",
+			"type": "text",
+			"x": 100,
+			"y": 850,
+			"width": 200,
+			"height": 100,
+			"text": "# init.complete\n\nInitialization completed successfully.",
+			"pv": {
+				"event": {
+					"name": "init.complete",
+					"attributes": {
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"isReInitialization": {
+							"type": "boolean",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": true
+						},
+						"hasMcpResults": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/init.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			}
+		},
+		{
+			"id": "init-error",
+			"type": "text",
+			"x": 450,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# init.error\n\nInitialization failed with an error.",
+			"pv": {
+				"event": {
+					"name": "init.error",
+					"attributes": {
+						"error.type": {
+							"type": "string",
+							"required": true
+						},
+						"error.message": {
+							"type": "string",
+							"required": true
+						},
+						"error.stage": {
+							"type": "string",
+							"required": true
+						},
+						"error.stack": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
+				"sources": [
+					"src/core/init.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "error"
+				},
+				"shape": "rectangle",
+				"fill": "#ef4444",
+				"stroke": "#dc2626"
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "config-to-mcp",
+			"fromNode": "config-saved",
+			"fromSide": "bottom",
+			"toNode": "mcp-configured",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "edge-mcp-configured-init-complete-1769299033035",
+			"fromNode": "mcp-configured",
+			"toNode": "init-complete",
+			"fromSide": "bottom",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "edge-structure-created-config-saved-1769299033035",
+			"fromNode": "structure-created",
+			"toNode": "config-saved",
+			"fromSide": "bottom",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "edge-init-started-structure-created-1769299033035",
+			"fromNode": "init-started",
+			"toNode": "structure-created",
+			"fromSide": "bottom",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "edge-init-started-init-error-1769299033035",
+			"fromNode": "init-started",
+			"toNode": "init-error",
+			"fromSide": "right",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		}
+	],
+	"pv": {
+		"name": "Backlog Init",
+		"version": "1.0.0",
+		"description": "CLI command for initializing a new Backlog.md workspace",
+		"edgeTypes": {
+			"flow": {
+				"label": "Flow",
+				"style": "solid",
+				"width": 2,
+				"color": "#64748b"
+			},
+			"error": {
+				"label": "Error Path",
+				"style": "dashed",
+				"width": 2,
+				"color": "#ef4444"
+			}
+		},
+		"markdown": ".principal-views/init.md"
+	}
 }

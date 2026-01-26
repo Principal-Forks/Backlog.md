@@ -9,7 +9,15 @@
 			"height": 110,
 			"text": "# cleanup.preview.started\n\nCleanup preview initiated to identify old tasks.",
 			"pv": {
-				"event": "cleanup.preview.started",
+				"event": {
+					"name": "cleanup.preview.started",
+					"attributes": {
+						"olderThanDays": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts", "src/server/index.ts"],
 				"otel": {
 					"kind": "event",
@@ -17,13 +25,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"olderThanDays": {
-						"type": "number",
-						"required": true
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -35,7 +37,23 @@
 			"height": 110,
 			"text": "# cleanup.preview.filtered\n\nTasks filtered by status and age.",
 			"pv": {
-				"event": "cleanup.preview.filtered",
+				"event": {
+					"name": "cleanup.preview.filtered",
+					"attributes": {
+						"totalTasks": {
+							"type": "number",
+							"required": true
+						},
+						"matchedTasks": {
+							"type": "number",
+							"required": true
+						},
+						"cutoffDate": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts"],
 				"otel": {
 					"kind": "event",
@@ -43,21 +61,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"dataSchema": {
-					"totalTasks": {
-						"type": "number",
-						"required": true
-					},
-					"matchedTasks": {
-						"type": "number",
-						"required": true
-					},
-					"cutoffDate": {
-						"type": "string",
-						"required": true
-					}
-				}
+				"stroke": "#1d4ed8"
 			}
 		},
 		{
@@ -69,7 +73,19 @@
 			"height": 110,
 			"text": "# cleanup.preview.complete\n\nPreview generation completed.",
 			"pv": {
-				"event": "cleanup.preview.complete",
+				"event": {
+					"name": "cleanup.preview.complete",
+					"attributes": {
+						"taskCount": {
+							"type": "number",
+							"required": true
+						},
+						"success": {
+							"type": "boolean",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/server/index.ts"],
 				"otel": {
 					"kind": "event",
@@ -77,17 +93,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"taskCount": {
-						"type": "number",
-						"required": true
-					},
-					"success": {
-						"type": "boolean",
-						"required": true
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -99,7 +105,19 @@
 			"height": 110,
 			"text": "# cleanup.batch.started\n\nBatch cleanup execution initiated.",
 			"pv": {
-				"event": "cleanup.batch.started",
+				"event": {
+					"name": "cleanup.batch.started",
+					"attributes": {
+						"olderThanDays": {
+							"type": "number",
+							"required": true
+						},
+						"taskCount": {
+							"type": "number",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/server/index.ts"],
 				"otel": {
 					"kind": "event",
@@ -107,17 +125,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"olderThanDays": {
-						"type": "number",
-						"required": true
-					},
-					"taskCount": {
-						"type": "number",
-						"required": true
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -129,7 +137,23 @@
 			"height": 110,
 			"text": "# cleanup.batch.processing\n\nProcessing tasks in batch operation.",
 			"pv": {
-				"event": "cleanup.batch.processing",
+				"event": {
+					"name": "cleanup.batch.processing",
+					"attributes": {
+						"currentIndex": {
+							"type": "number",
+							"required": true
+						},
+						"totalCount": {
+							"type": "number",
+							"required": true
+						},
+						"taskId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/server/index.ts"],
 				"otel": {
 					"kind": "event",
@@ -137,21 +161,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"dataSchema": {
-					"currentIndex": {
-						"type": "number",
-						"required": true
-					},
-					"totalCount": {
-						"type": "number",
-						"required": true
-					},
-					"taskId": {
-						"type": "string",
-						"required": true
-					}
-				}
+				"stroke": "#1d4ed8"
 			}
 		},
 		{
@@ -163,7 +173,31 @@
 			"height": 110,
 			"text": "# cleanup.batch.complete\n\nBatch cleanup completed with results.",
 			"pv": {
-				"event": "cleanup.batch.complete",
+				"event": {
+					"name": "cleanup.batch.complete",
+					"attributes": {
+						"movedCount": {
+							"type": "number",
+							"required": true
+						},
+						"totalCount": {
+							"type": "number",
+							"required": true
+						},
+						"failedCount": {
+							"type": "number",
+							"required": false
+						},
+						"success": {
+							"type": "boolean",
+							"required": true
+						},
+						"duration.ms": {
+							"type": "number",
+							"required": false
+						}
+					}
+				},
 				"sources": ["src/server/index.ts"],
 				"otel": {
 					"kind": "event",
@@ -171,29 +205,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"movedCount": {
-						"type": "number",
-						"required": true
-					},
-					"totalCount": {
-						"type": "number",
-						"required": true
-					},
-					"failedCount": {
-						"type": "number",
-						"required": false
-					},
-					"success": {
-						"type": "boolean",
-						"required": true
-					},
-					"duration.ms": {
-						"type": "number",
-						"required": false
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -205,7 +217,19 @@
 			"height": 110,
 			"text": "# task.complete.started\n\nSingle task completion initiated.",
 			"pv": {
-				"event": "task.complete.started",
+				"event": {
+					"name": "task.complete.started",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"autoCommit": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts"],
 				"otel": {
 					"kind": "event",
@@ -213,17 +237,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"taskId": {
-						"type": "string",
-						"required": true
-					},
-					"autoCommit": {
-						"type": "boolean",
-						"required": false
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -235,7 +249,23 @@
 			"height": 110,
 			"text": "# task.complete.located\n\nTask file located in tasks directory.",
 			"pv": {
-				"event": "task.complete.located",
+				"event": {
+					"name": "task.complete.located",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"sourcePath": {
+							"type": "string",
+							"required": true
+						},
+						"filename": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts", "src/file-system/operations.ts"],
 				"otel": {
 					"kind": "event",
@@ -243,21 +273,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"dataSchema": {
-					"taskId": {
-						"type": "string",
-						"required": true
-					},
-					"sourcePath": {
-						"type": "string",
-						"required": true
-					},
-					"filename": {
-						"type": "string",
-						"required": true
-					}
-				}
+				"stroke": "#1d4ed8"
 			}
 		},
 		{
@@ -269,7 +285,23 @@
 			"height": 110,
 			"text": "# task.complete.moved\n\nTask file moved to completed directory.",
 			"pv": {
-				"event": "task.complete.moved",
+				"event": {
+					"name": "task.complete.moved",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"fromPath": {
+							"type": "string",
+							"required": true
+						},
+						"toPath": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/file-system/operations.ts"],
 				"otel": {
 					"kind": "event",
@@ -277,21 +309,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"dataSchema": {
-					"taskId": {
-						"type": "string",
-						"required": true
-					},
-					"fromPath": {
-						"type": "string",
-						"required": true
-					},
-					"toPath": {
-						"type": "string",
-						"required": true
-					}
-				}
+				"stroke": "#1d4ed8"
 			}
 		},
 		{
@@ -303,7 +321,19 @@
 			"height": 110,
 			"text": "# task.complete.committed\n\nTask completion committed to git.",
 			"pv": {
-				"event": "task.complete.committed",
+				"event": {
+					"name": "task.complete.committed",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"commitMessage": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts"],
 				"otel": {
 					"kind": "event",
@@ -311,17 +341,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#7c3aed",
-				"dataSchema": {
-					"taskId": {
-						"type": "string",
-						"required": true
-					},
-					"commitMessage": {
-						"type": "string",
-						"required": true
-					}
-				}
+				"stroke": "#7c3aed"
 			}
 		},
 		{
@@ -333,7 +353,19 @@
 			"height": 110,
 			"text": "# task.complete.complete\n\nTask completion operation finished.",
 			"pv": {
-				"event": "task.complete.complete",
+				"event": {
+					"name": "task.complete.complete",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"success": {
+							"type": "boolean",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts"],
 				"otel": {
 					"kind": "event",
@@ -341,17 +373,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"taskId": {
-						"type": "string",
-						"required": true
-					},
-					"success": {
-						"type": "boolean",
-						"required": true
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -363,7 +385,10 @@
 			"height": 110,
 			"text": "# completed.tasks.list.started\n\nList completed tasks operation started.",
 			"pv": {
-				"event": "completed.tasks.list.started",
+				"event": {
+					"name": "completed.tasks.list.started",
+					"attributes": {}
+				},
 				"sources": ["src/file-system/operations.ts"],
 				"otel": {
 					"kind": "event",
@@ -371,8 +396,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -384,7 +408,19 @@
 			"height": 110,
 			"text": "# completed.tasks.list.loaded\n\nCompleted tasks loaded from directory.",
 			"pv": {
-				"event": "completed.tasks.list.loaded",
+				"event": {
+					"name": "completed.tasks.list.loaded",
+					"attributes": {
+						"taskCount": {
+							"type": "number",
+							"required": true
+						},
+						"completedDir": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/file-system/operations.ts"],
 				"otel": {
 					"kind": "event",
@@ -392,17 +428,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"dataSchema": {
-					"taskCount": {
-						"type": "number",
-						"required": true
-					},
-					"completedDir": {
-						"type": "string",
-						"required": true
-					}
-				}
+				"stroke": "#1d4ed8"
 			}
 		},
 		{
@@ -414,7 +440,19 @@
 			"height": 110,
 			"text": "# completed.tasks.list.complete\n\nCompleted tasks list operation finished.",
 			"pv": {
-				"event": "completed.tasks.list.complete",
+				"event": {
+					"name": "completed.tasks.list.complete",
+					"attributes": {
+						"taskCount": {
+							"type": "number",
+							"required": true
+						},
+						"success": {
+							"type": "boolean",
+							"required": true
+						}
+					}
+				},
 				"sources": ["src/file-system/operations.ts"],
 				"otel": {
 					"kind": "event",
@@ -422,17 +460,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"dataSchema": {
-					"taskCount": {
-						"type": "number",
-						"required": true
-					},
-					"success": {
-						"type": "boolean",
-						"required": true
-					}
-				}
+				"stroke": "#16a34a"
 			}
 		},
 		{
@@ -444,7 +472,31 @@
 			"height": 130,
 			"text": "# cleanup.error\n\nCleanup operation error occurred.",
 			"pv": {
-				"event": "cleanup.error",
+				"event": {
+					"name": "cleanup.error",
+					"attributes": {
+						"operation": {
+							"type": "string",
+							"required": true
+						},
+						"error.type": {
+							"type": "string",
+							"required": false
+						},
+						"error.message": {
+							"type": "string",
+							"required": true
+						},
+						"error.stage": {
+							"type": "string",
+							"required": false
+						},
+						"taskId": {
+							"type": "string",
+							"required": false
+						}
+					}
+				},
 				"sources": ["src/core/backlog.ts", "src/server/index.ts"],
 				"otel": {
 					"kind": "event",
@@ -452,29 +504,7 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"dataSchema": {
-					"operation": {
-						"type": "string",
-						"required": true
-					},
-					"error.type": {
-						"type": "string",
-						"required": false
-					},
-					"error.message": {
-						"type": "string",
-						"required": true
-					},
-					"error.stage": {
-						"type": "string",
-						"required": false
-					},
-					"taskId": {
-						"type": "string",
-						"required": false
-					}
-				}
+				"stroke": "#dc2626"
 			}
 		}
 	],
@@ -644,6 +674,7 @@
 		"name": "Cleanup Operations",
 		"version": "1.0.0",
 		"description": "OpenTelemetry event schema for cleanup operations including preview, batch completion, and completed task management",
+		"markdown": ".principal-views/cleanup-operations.md",
 		"edgeTypes": {
 			"flow": {
 				"label": "Flow",
