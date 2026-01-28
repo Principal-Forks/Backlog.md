@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0",
-	"canvas": "init.otel.canvas",
+	"canvas": ".principal-views/init/init.otel.canvas",
 	"mode": "span-tree",
 	"name": "Backlog Init",
 	"description": "CLI command for initializing a new Backlog.md workspace",
