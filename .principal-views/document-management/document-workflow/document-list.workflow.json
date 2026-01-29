@@ -1,0 +1,80 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/document-management/document-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Document List",
+	"description": "Listing all documents with optional search filter",
+	"scenarios": [
+		{
+			"id": "list-success-with-filter",
+			"priority": 1,
+			"condition": {
+				"requires": ["document.list.complete", "document.list.filtered"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {matchedCount} documents (filtered from {documentCount})",
+				"events": {
+					"document.list.started": "Listing documents with search: {{search}}",
+					"document.list.loaded": "Loaded {{documentCount}} total documents",
+					"document.list.filtered": "Matched {{matchedCount}} documents",
+					"document.list.complete": "List complete with {{matchedCount}} results"
+				}
+			}
+		},
+		{
+			"id": "list-success-no-filter",
+			"priority": 2,
+			"condition": {
+				"requires": ["document.list.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {documentCount} documents",
+				"events": {
+					"document.list.started": "Listing all documents",
+					"document.list.loaded": "Loaded {{documentCount}} documents",
+					"document.list.complete": "List complete with {{documentCount}} results"
+				}
+			}
+		},
+		{
+			"id": "list-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["document.error"],
+				"assertions": {
+					"operation": "list"
+				}
+			},
+			"template": {
+				"summary": "❌ Document list failed: {error.message}",
+				"events": {
+					"document.list.started": "Listing documents",
+					"document.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Document list execution captured",
+				"events": {
+					"document.list.started": "List operation started",
+					"document.list.loaded": "Documents loaded",
+					"document.list.filtered": "Documents filtered",
+					"document.list.complete": "Operation complete",
+					"document.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

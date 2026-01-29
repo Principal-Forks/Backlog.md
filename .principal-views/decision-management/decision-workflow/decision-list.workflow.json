@@ -1,0 +1,60 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/decision-management/decision-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Decision List",
+	"description": "Listing all decisions/ADRs",
+	"scenarios": [
+		{
+			"id": "list-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["decision.list.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {decisionCount} decisions",
+				"events": {
+					"decision.list.started": "Listing all decisions (ADRs)",
+					"decision.list.loaded": "Loaded {{decisionCount}} decisions",
+					"decision.list.complete": "List complete with {{decisionCount}} results"
+				}
+			}
+		},
+		{
+			"id": "list-error",
+			"priority": 2,
+			"condition": {
+				"requires": ["decision.error"],
+				"assertions": {
+					"operation": "list"
+				}
+			},
+			"template": {
+				"summary": "❌ Decision list failed: {error.message}",
+				"events": {
+					"decision.list.started": "Listing decisions",
+					"decision.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Decision list execution captured",
+				"events": {
+					"decision.list.started": "List operation started",
+					"decision.list.loaded": "Decisions loaded",
+					"decision.list.complete": "Operation complete",
+					"decision.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

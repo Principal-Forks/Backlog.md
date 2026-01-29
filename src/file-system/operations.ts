@@ -1,6 +1,7 @@
 import { mkdir, rename, unlink } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
+import { trace } from "@opentelemetry/api";
 import { DEFAULT_DIRECTORIES, DEFAULT_FILES, DEFAULT_STATUSES } from "../constants/index.ts";
 import { parseDecision, parseDocument, parseMilestone, parseTask } from "../markdown/parser.ts";
 import { serializeDecision, serializeDocument, serializeTask } from "../markdown/serializer.ts";
@@ -440,10 +441,18 @@ export class FileSystem {
 	}
 
 	async promoteDraft(draftId: string): Promise<boolean> {
+		const span = trace.getActiveSpan();
+
 		try {
 			// Load the draft
 			const draft = await this.loadDraft(draftId);
 			if (!draft || !draft.filePath) return false;
+
+			// Emit draft.promote.loaded event
+			span?.addEvent("draft.promote.loaded", {
+				draftId: draft.id,
+				fromPath: draft.filePath,
+			});
 
 			// Get task prefix from config (default: "task")
 			const config = await this.loadConfig();
@@ -465,7 +474,14 @@ export class FileSystem {
 				filePath: undefined, // Will be set by saveTask
 			};
 
-			await this.saveTask(promotedTask);
+			const savedPath = await this.saveTask(promotedTask);
+			const fromPath = draft.filePath;
+
+			// Emit draft.promote.moved event
+			span?.addEvent("draft.promote.moved", {
+				fromPath,
+				toPath: savedPath,
+			});
 
 			// Delete old draft file
 			await unlink(draft.filePath);

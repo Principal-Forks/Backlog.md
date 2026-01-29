@@ -1,0 +1,83 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/milestone-management/milestone-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Milestone Create",
+	"description": "Creating a new milestone",
+	"scenarios": [
+		{
+			"id": "create-success-with-commit",
+			"priority": 1,
+			"condition": {
+				"requires": ["milestone.create.complete", "milestone.create.committed"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Created milestone {milestoneId} and committed to git (completed in {duration.ms}ms)",
+				"events": {
+					"milestone.create.started": "Creating milestone: {{title}}",
+					"milestone.create.validated": "Generated milestone ID: {{milestoneId}} (next ID: {{nextId}})",
+					"milestone.create.saved": "Saved to {{filepath}}",
+					"milestone.create.committed": "Committed: {{commitMessage}}",
+					"milestone.create.complete": "Milestone creation complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "create-success-no-commit",
+			"priority": 2,
+			"condition": {
+				"requires": ["milestone.create.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Created milestone {milestoneId} (completed in {duration.ms}ms)",
+				"events": {
+					"milestone.create.started": "Creating milestone: {{title}}",
+					"milestone.create.validated": "Generated milestone ID: {{milestoneId}}",
+					"milestone.create.saved": "Saved to {{filepath}}",
+					"milestone.create.complete": "Milestone creation complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "create-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["milestone.error"],
+				"assertions": {
+					"operation": "create"
+				}
+			},
+			"template": {
+				"summary": "❌ Milestone creation failed at {error.stage}: {error.message}",
+				"events": {
+					"milestone.create.started": "Started creating milestone",
+					"milestone.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Milestone create execution captured",
+				"events": {
+					"milestone.create.started": "Creation started",
+					"milestone.create.validated": "Validated",
+					"milestone.create.saved": "Saved",
+					"milestone.create.committed": "Committed",
+					"milestone.create.complete": "Complete",
+					"milestone.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

@@ -45,7 +45,9 @@
 			"condition": {
 				"requires": ["init.mcp.configured", "init.complete"],
 				"assertions": {
-					"mcp.failureCount": { "$gt": 0 }
+					"mcp.failureCount": {
+						"$gt": 0
+					}
 				}
 			},
 			"template": {

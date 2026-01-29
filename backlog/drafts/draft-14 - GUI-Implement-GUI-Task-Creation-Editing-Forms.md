@@ -14,16 +14,13 @@ dependencies:
 
 ## Description
 
-<!-- SECTION:DESCRIPTION:BEGIN -->
 Create forms/modals in the GUI for:
 
-- Creating new tasks (as active tasks or draft).
-- Editing existing tasks (all fields from frontmatter and description).
-- All operations should use the core logic library to update Markdown files and commit.
-<!-- SECTION:DESCRIPTION:END -->
+* Creating new tasks (as active tasks or draft).
+* Editing existing tasks (all fields from frontmatter and description).
+* All operations should use the core logic library to update Markdown files and commit.
 
 ## Acceptance Criteria
-<!-- AC:BEGIN -->
-- [ ] #1 Task creation form works and saves new tasks.
-- [ ] #2 Task editing form loads existing task data and saves changes.
-<!-- AC:END -->
+
+* [ ] \#1 Task creation form works and saves new tasks.
+* [ ] \#2 Task editing form loads existing task data and saves changes.

@@ -1,0 +1,62 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/search-operations/search-operations.otel.canvas",
+	"mode": "span-tree",
+	"name": "Search Initialize",
+	"description": "Initializing the search service and building the index",
+	"scenarios": [
+		{
+			"id": "init-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["search.initialize.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Search service initialized with {totalEntities} entities (completed in {duration.ms}ms)",
+				"events": {
+					"search.initialize.started": "Starting search service initialization",
+					"search.initialize.snapshot": "Loaded {{taskCount}} tasks, {{documentCount}} documents, {{decisionCount}} decisions",
+					"search.initialize.indexed": "Built Fuse.js index with {{totalEntities}} total entities",
+					"search.initialize.complete": "Search service ready in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "init-error",
+			"priority": 2,
+			"condition": {
+				"requires": ["search.error"],
+				"assertions": {
+					"operation": "initialize"
+				}
+			},
+			"template": {
+				"summary": "❌ Search initialization failed: {error.message}",
+				"events": {
+					"search.initialize.started": "Starting search service initialization",
+					"search.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Search initialize execution captured",
+				"events": {
+					"search.initialize.started": "Initialization started",
+					"search.initialize.snapshot": "Snapshot loaded",
+					"search.initialize.indexed": "Index built",
+					"search.initialize.complete": "Initialization complete",
+					"search.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

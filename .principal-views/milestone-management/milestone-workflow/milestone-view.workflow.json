@@ -1,0 +1,78 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/milestone-management/milestone-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Milestone View",
+	"description": "Viewing milestone details",
+	"scenarios": [
+		{
+			"id": "view-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["milestone.view.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Viewed milestone {milestoneId}: {title} (completed in {duration.ms}ms)",
+				"events": {
+					"milestone.view.started": "Viewing milestone {{milestoneId}}",
+					"milestone.view.loaded": "Loaded milestone: {{title}}",
+					"milestone.view.complete": "View complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "view-not-found",
+			"priority": 2,
+			"condition": {
+				"requires": ["milestone.error"],
+				"assertions": {
+					"operation": "view",
+					"error.type": "MilestoneNotFound"
+				}
+			},
+			"template": {
+				"summary": "❌ Milestone {identifier} not found",
+				"events": {
+					"milestone.view.started": "Viewing milestone {{identifier}}",
+					"milestone.error": "Milestone not found: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "view-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["milestone.error"],
+				"assertions": {
+					"operation": "view"
+				}
+			},
+			"template": {
+				"summary": "❌ Failed to view milestone {identifier}: {error.message}",
+				"events": {
+					"milestone.view.started": "Viewing milestone {{identifier}}",
+					"milestone.error": "Error: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Milestone view execution captured",
+				"events": {
+					"milestone.view.started": "View started",
+					"milestone.view.loaded": "Milestone loaded",
+					"milestone.view.complete": "View complete",
+					"milestone.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

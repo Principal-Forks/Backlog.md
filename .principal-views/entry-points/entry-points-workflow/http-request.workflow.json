@@ -1,0 +1,102 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/entry-points/entry-points.otel.canvas",
+	"mode": "span-tree",
+	"name": "HTTP Request",
+	"description": "HTTP API request lifecycle for browser interface",
+	"scenarios": [
+		{
+			"id": "http-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["http.response.sent", "operation.executed"],
+				"assertions": {
+					"success": true,
+					"statusCode": 200
+				}
+			},
+			"template": {
+				"summary": "✅ {method} {path} → {statusCode} (operation: {operation}, {duration.ms}ms)",
+				"events": {
+					"http.request.received": "{{method}} {{path}}{{#if userAgent}} from {{userAgent}}{{/if}}",
+					"http.request.routed": "Routed to {{route}} (handler: {{handler}})",
+					"http.operation.dispatched": "Dispatched operation: {{operation}}",
+					"operation.executed": "Executed {{operation}} on {{entityType}}{{#if entityId}} {{entityId}}{{/if}} ({{duration.ms}}ms)",
+					"http.response.sent": "{{statusCode}} response sent ({{responseSize}} bytes, {{duration.ms}}ms total)"
+				}
+			}
+		},
+		{
+			"id": "http-not-found",
+			"priority": 2,
+			"condition": {
+				"requires": ["http.response.sent"],
+				"assertions": {
+					"statusCode": 404
+				}
+			},
+			"template": {
+				"summary": "❌ {method} {path} → 404 Not Found",
+				"events": {
+					"http.request.received": "{{method}} {{path}}",
+					"http.response.sent": "404 Not Found ({{duration.ms}}ms)"
+				}
+			}
+		},
+		{
+			"id": "http-routing-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["entry.error"],
+				"assertions": {
+					"entryPoint": "http",
+					"error.stage": "routing"
+				}
+			},
+			"template": {
+				"summary": "❌ {method} {path} routing failed: {error.message}",
+				"events": {
+					"http.request.received": "{{method}} {{path}}",
+					"entry.error": "Routing error: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "http-operation-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["entry.error"],
+				"assertions": {
+					"entryPoint": "http"
+				}
+			},
+			"template": {
+				"summary": "❌ {method} {path} failed: {error.message}",
+				"events": {
+					"http.request.received": "{{method}} {{path}}",
+					"http.request.routed": "Routed to {{route}}",
+					"http.operation.dispatched": "Operation dispatched",
+					"entry.error": "Operation failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 HTTP request execution captured",
+				"events": {
+					"http.request.received": "Request received",
+					"http.request.routed": "Request routed",
+					"http.operation.dispatched": "Operation dispatched",
+					"operation.executed": "Operation executed",
+					"http.response.sent": "Response sent",
+					"entry.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

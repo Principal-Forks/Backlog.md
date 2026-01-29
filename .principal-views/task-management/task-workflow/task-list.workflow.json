@@ -1,0 +1,100 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/task-management/task-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Task List",
+	"description": "Listing and filtering tasks",
+	"scenarios": [
+		{
+			"id": "list-success-with-filters",
+			"priority": 1,
+			"condition": {
+				"requires": ["task.list.complete", "task.list.filtered"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {resultCount} tasks (filtered from {totalCount} total, completed in {duration.ms}ms)",
+				"events": {
+					"task.list.started": "Listing tasks with filters",
+					"task.list.loaded": "Loaded {{totalCount}} tasks{{#if includeCrossBranch}} (including cross-branch){{/if}}",
+					"task.list.filtered": "Applied filters, {{resultCount}} tasks match",
+					"task.list.complete": "List complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "list-success-no-filters",
+			"priority": 2,
+			"condition": {
+				"requires": ["task.list.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {resultCount} tasks (completed in {duration.ms}ms)",
+				"events": {
+					"task.list.started": "Listing all tasks",
+					"task.list.loaded": "Loaded {{totalCount}} tasks",
+					"task.list.filtered": "{{resultCount}} tasks in result",
+					"task.list.complete": "List complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "list-empty",
+			"priority": 3,
+			"condition": {
+				"requires": ["task.list.complete"],
+				"assertions": {
+					"resultCount": 0
+				}
+			},
+			"template": {
+				"summary": "ℹ️ No tasks found",
+				"events": {
+					"task.list.started": "Listing tasks",
+					"task.list.loaded": "Loaded {{totalCount}} tasks",
+					"task.list.filtered": "No tasks match filters",
+					"task.list.complete": "List complete (0 results)"
+				}
+			}
+		},
+		{
+			"id": "list-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["task.error"],
+				"assertions": {
+					"operation": "list"
+				}
+			},
+			"template": {
+				"summary": "❌ Failed to list tasks: {error.message}",
+				"events": {
+					"task.list.started": "Listing tasks",
+					"task.error": "Error: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Task list execution captured",
+				"events": {
+					"task.list.started": "List started",
+					"task.list.loaded": "Tasks loaded",
+					"task.list.filtered": "Filters applied",
+					"task.list.complete": "List complete",
+					"task.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

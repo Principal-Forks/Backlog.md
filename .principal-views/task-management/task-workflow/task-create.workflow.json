@@ -1,0 +1,83 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/task-management/task-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Task Create",
+	"description": "Creating a new task in the backlog",
+	"scenarios": [
+		{
+			"id": "create-success-with-commit",
+			"priority": 1,
+			"condition": {
+				"requires": ["task.create.complete", "task.create.committed"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Created task {taskId} and committed to git (completed in {duration.ms}ms)",
+				"events": {
+					"task.create.started": "Creating task: {{title}}",
+					"task.create.validated": "Generated task ID: {{normalizedId}}",
+					"task.create.saved": "Saved to {{filepath}}",
+					"task.create.committed": "Committed: {{commitMessage}}",
+					"task.create.complete": "Task creation complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "create-success-no-commit",
+			"priority": 2,
+			"condition": {
+				"requires": ["task.create.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Created task {taskId} (completed in {duration.ms}ms)",
+				"events": {
+					"task.create.started": "Creating task: {{title}}",
+					"task.create.validated": "Generated task ID: {{normalizedId}}",
+					"task.create.saved": "Saved to {{filepath}}",
+					"task.create.complete": "Task creation complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "create-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["task.error"],
+				"assertions": {
+					"operation": "create"
+				}
+			},
+			"template": {
+				"summary": "❌ Task creation failed at {error.stage}: {error.message}",
+				"events": {
+					"task.create.started": "Started creating task",
+					"task.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Task create execution captured",
+				"events": {
+					"task.create.started": "Creation started",
+					"task.create.validated": "Validated",
+					"task.create.saved": "Saved",
+					"task.create.committed": "Committed",
+					"task.create.complete": "Complete",
+					"task.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

@@ -1,5 +1,6 @@
 import { unlink } from "node:fs/promises";
 import { join } from "node:path";
+import { context, SpanStatusCode, trace } from "@opentelemetry/api";
 import { DEFAULT_DIRECTORIES, DEFAULT_STATUSES, FALLBACK_STATUS } from "../constants/index.ts";
 import { FileSystem } from "../file-system/operations.ts";
 import { GitOperations } from "../git/operations.ts";
@@ -1768,15 +1769,82 @@ export class Core {
 	}
 
 	async promoteDraft(draftId: string, autoCommit?: boolean): Promise<boolean> {
-		const success = await this.fs.promoteDraft(draftId);
+		const tracer = trace.getTracer("backlog-draft-management");
+		const span = tracer.startSpan("draft.promotion");
+		const startTime = Date.now();
 
-		if (success && (await this.shouldAutoCommit(autoCommit))) {
-			const backlogDir = await this.getBacklogDirectoryName();
-			const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-			await this.git.commitChanges(`backlog: Promote draft ${normalizeId(draftId, "draft")}`, repoRoot);
+		try {
+			// Emit draft.promote.started event
+			span.addEvent("draft.promote.started", {
+				draftId,
+				autoCommit: autoCommit ?? false,
+			});
+
+			// Execute promotion in span context so filesystem can access it
+			const success = await context.with(trace.setSpan(context.active(), span), async () => {
+				return await this.fs.promoteDraft(draftId);
+			});
+
+			if (!success) {
+				// Emit error event for draft not found
+				span.addEvent("draft.error", {
+					"error.type": "DraftNotFound",
+					"error.message": `Draft ${draftId} not found or could not be promoted`,
+					operation: "promote",
+					draftId,
+					"error.stage": "load",
+				});
+
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Draft not found" });
+				span.end();
+				return false;
+			}
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Promote draft ${normalizeId(draftId, "draft")}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				// Emit draft.promote.committed event
+				span.addEvent("draft.promote.committed", {
+					commitMessage,
+					draftId,
+				});
+			}
+
+			// Emit draft.promote.complete event
+			const duration = Date.now() - startTime;
+			span.addEvent("draft.promote.complete", {
+				success: true,
+				draftId,
+				"duration.ms": duration,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			return success;
+		} catch (error) {
+			// Emit draft.error event
+			span.addEvent("draft.error", {
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				operation: "promote",
+				draftId,
+				"error.stage": "execution",
+				"error.stack": error instanceof Error ? error.stack : undefined,
+			});
+
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : "Unknown error",
+			});
+			span.recordException(error instanceof Error ? error : new Error(String(error)));
+			span.end();
+
+			throw error;
 		}
-
-		return success;
 	}
 
 	async demoteTask(taskId: string, autoCommit?: boolean): Promise<boolean> {

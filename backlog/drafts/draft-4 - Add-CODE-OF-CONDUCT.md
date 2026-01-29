@@ -12,13 +12,10 @@ dependencies: []
 
 ## Description
 
-<!-- SECTION:DESCRIPTION:BEGIN -->
-Create a standard CODE_OF_CONDUCT.md for the project.
-<!-- SECTION:DESCRIPTION:END -->
+Create a standard CODE\_OF\_CONDUCT.md for the project.
 
 ## Acceptance Criteria
-<!-- AC:BEGIN -->
-- [ ] #1 CODE_OF_CONDUCT.md added with Contributor Covenant text
-- [ ] #2 Mention in README where to find the Code of Conduct
-- [ ] #3 Task committed to repository
-<!-- AC:END -->
+
+* [ ] \#1 CODE\_OF\_CONDUCT.md added with Contributor Covenant text
+* [x] \#2 Mention in README where to find the Code of Conduct
+* [ ] \#3 Task committed to repository

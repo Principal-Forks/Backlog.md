@@ -1,0 +1,96 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/cleanup-operations/cleanup-operations.otel.canvas",
+	"mode": "span-tree",
+	"name": "Cleanup Batch",
+	"description": "Batch cleanup operation moving multiple Done tasks to completed folder",
+	"scenarios": [
+		{
+			"id": "batch-success-all",
+			"priority": 1,
+			"condition": {
+				"requires": ["cleanup.batch.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Moved {movedCount} of {totalCount} tasks to completed folder (completed in {duration.ms}ms)",
+				"events": {
+					"cleanup.batch.started": "Starting batch cleanup for {{taskCount}} tasks (older than {{olderThanDays}} days)",
+					"cleanup.batch.processing": "Processing task {{currentIndex}}/{{totalCount}}: {{taskId}}",
+					"cleanup.batch.complete": "Batch cleanup complete: {{movedCount}}/{{totalCount}} tasks moved{{#if failedCount}} ({{failedCount}} failed){{/if}} in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "batch-partial-success",
+			"priority": 2,
+			"condition": {
+				"requires": ["cleanup.batch.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "⚠️ Moved {movedCount} of {totalCount} tasks ({failedCount} failed)",
+				"events": {
+					"cleanup.batch.started": "Starting batch cleanup for {{taskCount}} tasks",
+					"cleanup.batch.processing": "Processing tasks",
+					"cleanup.batch.complete": "Batch cleanup completed with {{failedCount}} failures: {{movedCount}}/{{totalCount}} tasks moved"
+				}
+			}
+		},
+		{
+			"id": "batch-no-tasks",
+			"priority": 3,
+			"condition": {
+				"requires": ["cleanup.batch.complete"],
+				"assertions": {
+					"success": true,
+					"taskCount": 0
+				}
+			},
+			"template": {
+				"summary": "⚠️ No tasks to clean up",
+				"events": {
+					"cleanup.batch.started": "Starting batch cleanup",
+					"cleanup.batch.complete": "No tasks to clean up"
+				}
+			}
+		},
+		{
+			"id": "batch-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["cleanup.error"],
+				"assertions": {
+					"operation": "batch"
+				}
+			},
+			"template": {
+				"summary": "❌ Batch cleanup failed: {error.message}",
+				"events": {
+					"cleanup.batch.started": "Starting batch cleanup",
+					"cleanup.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Cleanup batch execution captured",
+				"events": {
+					"cleanup.batch.started": "Batch started",
+					"cleanup.batch.processing": "Processing tasks",
+					"cleanup.batch.complete": "Batch complete",
+					"cleanup.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,84 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/entry-points/entry-points.otel.canvas",
+	"mode": "span-tree",
+	"name": "CLI Request",
+	"description": "Command-line interface request lifecycle",
+	"scenarios": [
+		{
+			"id": "cli-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["cli.request.complete", "operation.executed"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ CLI {command} {subcommand} completed successfully (operation: {operation}, {duration.ms}ms)",
+				"events": {
+					"cli.request.received": "Received CLI command: {{command}} {{subcommand}}",
+					"cli.request.parsed": "Parsed to operation: {{operation}} (entity: {{entityType}})",
+					"cli.operation.dispatched": "Dispatched to handler: {{handler}}",
+					"operation.executed": "Executed {{operation}} on {{entityType}}{{#if entityId}} {{entityId}}{{/if}} ({{duration.ms}}ms)",
+					"cli.request.complete": "CLI request complete with exit code {{exitCode}}"
+				}
+			}
+		},
+		{
+			"id": "cli-parsing-error",
+			"priority": 2,
+			"condition": {
+				"requires": ["entry.error"],
+				"assertions": {
+					"entryPoint": "cli",
+					"error.stage": "parsing"
+				}
+			},
+			"template": {
+				"summary": "❌ CLI command parsing failed: {error.message}",
+				"events": {
+					"cli.request.received": "Received CLI command: {{command}}",
+					"entry.error": "Parsing error: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "cli-operation-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["entry.error"],
+				"assertions": {
+					"entryPoint": "cli"
+				}
+			},
+			"template": {
+				"summary": "❌ CLI {operation} failed: {error.message}",
+				"events": {
+					"cli.request.received": "Received CLI command",
+					"cli.request.parsed": "Parsed to operation: {{operation}}",
+					"cli.operation.dispatched": "Dispatched to handler",
+					"entry.error": "Operation failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 CLI request execution captured",
+				"events": {
+					"cli.request.received": "Request received",
+					"cli.request.parsed": "Request parsed",
+					"cli.operation.dispatched": "Operation dispatched",
+					"operation.executed": "Operation executed",
+					"cli.request.complete": "Request complete",
+					"entry.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

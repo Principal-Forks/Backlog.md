@@ -1,0 +1,106 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/task-management/task-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Task Edit",
+	"description": "Editing an existing task",
+	"scenarios": [
+		{
+			"id": "edit-success-with-commit",
+			"priority": 1,
+			"condition": {
+				"requires": ["task.edit.complete", "task.edit.committed"],
+				"assertions": {
+					"success": true,
+					"hasChanges": true
+				}
+			},
+			"template": {
+				"summary": "✅ Updated task {taskId} and committed changes (completed in {duration.ms}ms)",
+				"events": {
+					"task.edit.started": "Editing task {{taskId}}",
+					"task.edit.loaded": "Loaded task (current status: {{currentStatus}})",
+					"task.edit.validated": "Validated changes",
+					"task.edit.updated": "Updated fields: {{updatedFields}}",
+					"task.edit.committed": "Committed: {{commitMessage}}",
+					"task.edit.complete": "Edit complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "edit-success-no-commit",
+			"priority": 2,
+			"condition": {
+				"requires": ["task.edit.complete"],
+				"assertions": {
+					"success": true,
+					"hasChanges": true
+				}
+			},
+			"template": {
+				"summary": "✅ Updated task {taskId} (completed in {duration.ms}ms)",
+				"events": {
+					"task.edit.started": "Editing task {{taskId}}",
+					"task.edit.loaded": "Loaded task (current status: {{currentStatus}})",
+					"task.edit.validated": "Validated changes",
+					"task.edit.updated": "Updated fields: {{updatedFields}}",
+					"task.edit.complete": "Edit complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "edit-no-changes",
+			"priority": 3,
+			"condition": {
+				"requires": ["task.edit.validated"],
+				"assertions": {
+					"hasChanges": false
+				}
+			},
+			"template": {
+				"summary": "ℹ️ No changes made to task {taskId}",
+				"events": {
+					"task.edit.started": "Editing task {{taskId}}",
+					"task.edit.loaded": "Loaded task",
+					"task.edit.validated": "No changes detected"
+				}
+			}
+		},
+		{
+			"id": "edit-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["task.error"],
+				"assertions": {
+					"operation": "edit"
+				}
+			},
+			"template": {
+				"summary": "❌ Task edit failed for {taskId}: {error.message}",
+				"events": {
+					"task.edit.started": "Started editing task {{taskId}}",
+					"task.error": "Failed: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Task edit execution captured",
+				"events": {
+					"task.edit.started": "Edit started",
+					"task.edit.loaded": "Task loaded",
+					"task.edit.validated": "Validated",
+					"task.edit.updated": "Updated",
+					"task.edit.committed": "Committed",
+					"task.edit.complete": "Complete",
+					"task.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

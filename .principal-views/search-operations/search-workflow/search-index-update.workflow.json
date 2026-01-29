@@ -1,0 +1,62 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/search-operations/search-operations.otel.canvas",
+	"mode": "span-tree",
+	"name": "Search Index Update",
+	"description": "Updating the search index when content changes",
+	"scenarios": [
+		{
+			"id": "update-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["search.index.update.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Search index updated to version {version} with {totalEntities} entities",
+				"events": {
+					"search.index.update.started": "Index update triggered by {{trigger}} (version {{version}})",
+					"search.index.snapshot.applied": "Applied snapshot: {{taskCount}} tasks, {{documentCount}} documents, {{decisionCount}} decisions",
+					"search.index.rebuilt": "Rebuilt Fuse.js index with {{totalEntities}} entities",
+					"search.index.update.complete": "Index updated to version {{version}}"
+				}
+			}
+		},
+		{
+			"id": "update-error",
+			"priority": 2,
+			"condition": {
+				"requires": ["search.error"],
+				"assertions": {
+					"operation": "index-update"
+				}
+			},
+			"template": {
+				"summary": "❌ Search index update failed: {error.message}",
+				"events": {
+					"search.index.update.started": "Index update triggered by {{trigger}}",
+					"search.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Search index update execution captured",
+				"events": {
+					"search.index.update.started": "Update started",
+					"search.index.snapshot.applied": "Snapshot applied",
+					"search.index.rebuilt": "Index rebuilt",
+					"search.index.update.complete": "Update complete",
+					"search.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

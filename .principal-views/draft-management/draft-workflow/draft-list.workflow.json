@@ -1,0 +1,100 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/draft-management/draft-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Draft List",
+	"description": "Listing and filtering drafts",
+	"scenarios": [
+		{
+			"id": "list-success-with-filters",
+			"priority": 1,
+			"condition": {
+				"requires": ["draft.list.complete", "draft.list.filtered"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {resultCount} drafts (filtered from {totalCount} total, completed in {duration.ms}ms)",
+				"events": {
+					"draft.list.started": "Listing drafts with filters",
+					"draft.list.loaded": "Loaded {{totalCount}} drafts",
+					"draft.list.filtered": "Applied filters, {{resultCount}} drafts match",
+					"draft.list.complete": "List complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "list-success-no-filters",
+			"priority": 2,
+			"condition": {
+				"requires": ["draft.list.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {resultCount} drafts (completed in {duration.ms}ms)",
+				"events": {
+					"draft.list.started": "Listing all drafts",
+					"draft.list.loaded": "Loaded {{totalCount}} drafts",
+					"draft.list.filtered": "{{resultCount}} drafts in result",
+					"draft.list.complete": "List complete in {{duration.ms}}ms"
+				}
+			}
+		},
+		{
+			"id": "list-empty",
+			"priority": 3,
+			"condition": {
+				"requires": ["draft.list.complete"],
+				"assertions": {
+					"resultCount": 0
+				}
+			},
+			"template": {
+				"summary": "ℹ️ No drafts found",
+				"events": {
+					"draft.list.started": "Listing drafts",
+					"draft.list.loaded": "Loaded {{totalCount}} drafts",
+					"draft.list.filtered": "No drafts match filters",
+					"draft.list.complete": "List complete (0 results)"
+				}
+			}
+		},
+		{
+			"id": "list-error",
+			"priority": 4,
+			"condition": {
+				"requires": ["draft.error"],
+				"assertions": {
+					"operation": "list"
+				}
+			},
+			"template": {
+				"summary": "❌ Failed to list drafts: {error.message}",
+				"events": {
+					"draft.list.started": "Listing drafts",
+					"draft.error": "Error: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Draft list execution captured",
+				"events": {
+					"draft.list.started": "List started",
+					"draft.list.loaded": "Drafts loaded",
+					"draft.list.filtered": "Filters applied",
+					"draft.list.complete": "List complete",
+					"draft.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

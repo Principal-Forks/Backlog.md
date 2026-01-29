@@ -1,0 +1,78 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/document-management/document-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Document View",
+	"description": "Viewing a single document by ID",
+	"scenarios": [
+		{
+			"id": "view-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["document.view.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Viewed document {documentId}",
+				"events": {
+					"document.view.started": "Loading document: {{documentId}}",
+					"document.view.loaded": "Found at {{documentPath}}",
+					"document.view.complete": "Document loaded successfully"
+				}
+			}
+		},
+		{
+			"id": "view-not-found",
+			"priority": 2,
+			"condition": {
+				"requires": ["document.error"],
+				"assertions": {
+					"operation": "view",
+					"error.type": "DocumentNotFound"
+				}
+			},
+			"template": {
+				"summary": "❌ Document {documentId} not found",
+				"events": {
+					"document.view.started": "Loading document: {{documentId}}",
+					"document.error": "Document not found: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "view-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["document.error"],
+				"assertions": {
+					"operation": "view"
+				}
+			},
+			"template": {
+				"summary": "❌ Document view failed: {error.message}",
+				"events": {
+					"document.view.started": "Loading document: {{documentId}}",
+					"document.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Document view execution captured",
+				"events": {
+					"document.view.started": "View operation started",
+					"document.view.loaded": "Document loaded",
+					"document.view.complete": "Operation complete",
+					"document.error": "Error occurred"
+				}
+			}
+		}
+	]
+}

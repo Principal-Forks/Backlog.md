@@ -13,6 +13,7 @@ export function formatDateForDisplay(dateStr: string): string {
 	const hasTime = dateStr.includes(" ") || dateStr.includes("T");
 	return hasTime ? dateStr : dateStr;
 }
+console.log("Copy Path");
 
 function buildChecklistItems(items: Task["acceptanceCriteriaItems"]): ChecklistItem[] {
 	const criteria = items ?? [];

@@ -1,0 +1,79 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/entry-points/cleanup-operations.otel.canvas",
+	"mode": "span-tree",
+	"name": "Completed Tasks List",
+	"description": "Listing all completed tasks from the completed folder",
+	"scenarios": [
+		{
+			"id": "list-success",
+			"priority": 1,
+			"condition": {
+				"requires": ["completed.tasks.list.complete"],
+				"assertions": {
+					"success": true
+				}
+			},
+			"template": {
+				"summary": "✅ Listed {taskCount} completed tasks",
+				"events": {
+					"completed.tasks.list.started": "Listing completed tasks",
+					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
+					"completed.tasks.list.complete": "List complete with {{taskCount}} completed tasks"
+				}
+			}
+		},
+		{
+			"id": "list-empty",
+			"priority": 2,
+			"condition": {
+				"requires": ["completed.tasks.list.complete"],
+				"assertions": {
+					"success": true,
+					"taskCount": 0
+				}
+			},
+			"template": {
+				"summary": "⚠️ No completed tasks found",
+				"events": {
+					"completed.tasks.list.started": "Listing completed tasks",
+					"completed.tasks.list.loaded": "No tasks in completed directory",
+					"completed.tasks.list.complete": "List complete with no tasks"
+				}
+			}
+		},
+		{
+			"id": "list-error",
+			"priority": 3,
+			"condition": {
+				"requires": ["cleanup.error"],
+				"assertions": {
+					"operation": "list-completed"
+				}
+			},
+			"template": {
+				"summary": "❌ Failed to list completed tasks: {error.message}",
+				"events": {
+					"completed.tasks.list.started": "Listing completed tasks",
+					"cleanup.error": "Failed at {{error.stage}}: {{error.message}}"
+				}
+			}
+		},
+		{
+			"id": "fallback",
+			"priority": 999,
+			"condition": {
+				"default": true
+			},
+			"template": {
+				"summary": "📋 Completed tasks list execution captured",
+				"events": {
+					"completed.tasks.list.started": "List started",
+					"completed.tasks.list.loaded": "Tasks loaded",
+					"completed.tasks.list.complete": "List complete",
+					"cleanup.error": "Error occurred"
+				}
+			}
+		}
+	]
+}
