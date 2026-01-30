@@ -28,7 +28,7 @@ interface CollectedSpan {
 }
 
 class SimpleSpanCollector {
-	private spans: CollectedSpan[] = [];
+	spans: CollectedSpan[] = [];
 
 	collectSpan(span: CollectedSpan) {
 		this.spans.push(span);
@@ -201,27 +201,10 @@ export function completeSpanWithError(span: Span, error: Error, attributes?: Rec
 }
 
 /**
- * Export all captured spans to __executions__/*.otel.json
+ * Convert collected spans to OTEL JSON format
  */
-async function exportSpans() {
-	const spans = collector.getSpans();
-
-	if (spans.length === 0) {
-		console.log("No OTEL spans to export");
-		return;
-	}
-
-	// Create __executions__ directory co-located with canvases
-	const executionsDir = join(process.cwd(), ".principal-views", "__executions__");
-	await mkdir(executionsDir, { recursive: true });
-
-	// Generate filename matching canvas basename
-	// Use canvas name 'draft-management' to ensure UI can find it
-	const filename = "draft-management.otel.json";
-	const filepath = join(executionsDir, filename);
-
-	// Convert to OTEL JSON format
-	const otelData = {
+function spansToOtelJson(spans: CollectedSpan[], scopeName: string) {
+	return {
 		resourceSpans: [
 			{
 				resource: {
@@ -233,7 +216,7 @@ async function exportSpans() {
 				scopeSpans: [
 					{
 						scope: {
-							name: "backlog-draft-management",
+							name: scopeName,
 							version: "1.0.0",
 						},
 						spans: spans.map((span) => ({
@@ -277,17 +260,32 @@ async function exportSpans() {
 			},
 		],
 	};
-
-	await writeFile(filepath, JSON.stringify(otelData, null, 2));
-	console.log(`\n✅ Exported ${spans.length} spans to ${filename}`);
 }
 
-// Export spans after all tests
-afterAll(async () => {
-	await exportSpans();
-});
+/**
+ * Export current spans to a specific scenario file and clear the collector
+ * @param workflowDir - Path to workflow directory (e.g., ".principal-views/draft-management/draft-workflow")
+ * @param scenarioName - Name of the scenario (e.g., "promote-success-with-commit")
+ * @param scopeName - OTEL scope name (e.g., "backlog-draft-management")
+ */
+export async function exportTestSpans(workflowDir: string, scenarioName: string, scopeName: string) {
+	const spans = collector.getSpans();
 
-// Also export on process exit
-process.on("beforeExit", async () => {
-	await exportSpans();
-});
+	if (spans.length === 0) {
+		return;
+	}
+
+	// Ensure workflow directory exists
+	const fullDir = join(process.cwd(), workflowDir);
+	await mkdir(fullDir, { recursive: true });
+
+	// Export to scenario-specific file
+	const filename = `${scenarioName}.otel.json`;
+	const filepath = join(fullDir, filename);
+
+	const otelData = spansToOtelJson(spans, scopeName);
+	await writeFile(filepath, JSON.stringify(otelData, null, "\t"));
+
+	// Clear collected spans for next test
+	collector.spans.length = 0;
+}

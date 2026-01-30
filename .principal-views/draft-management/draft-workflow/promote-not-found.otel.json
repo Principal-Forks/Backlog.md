@@ -1,0 +1,100 @@
+{
+	"resourceSpans": [
+		{
+			"resource": {
+				"attributes": [
+					{
+						"key": "service.name",
+						"value": {
+							"stringValue": "backlog.md"
+						}
+					},
+					{
+						"key": "test.framework",
+						"value": {
+							"stringValue": "bun"
+						}
+					}
+				]
+			},
+			"scopeSpans": [
+				{
+					"scope": {
+						"name": "backlog-draft-management",
+						"version": "1.0.0"
+					},
+					"spans": [
+						{
+							"traceId": "58f4b76b2b704",
+							"spanId": "6214a169513ce8",
+							"name": "draft.promotion",
+							"startTimeUnixNano": "1769754449040000000",
+							"endTimeUnixNano": "1769754449040000000",
+							"attributes": [],
+							"events": [
+								{
+									"timeUnixNano": "1769754449040000000",
+									"name": "draft.promote.started",
+									"attributes": [
+										{
+											"key": "draftId",
+											"value": {
+												"stringValue": "DRAFT-999"
+											}
+										},
+										{
+											"key": "autoCommit",
+											"value": {
+												"boolValue": true
+											}
+										}
+									]
+								},
+								{
+									"timeUnixNano": "1769754449040000000",
+									"name": "draft.error",
+									"attributes": [
+										{
+											"key": "error.type",
+											"value": {
+												"stringValue": "DraftNotFound"
+											}
+										},
+										{
+											"key": "error.message",
+											"value": {
+												"stringValue": "Draft DRAFT-999 not found or could not be promoted"
+											}
+										},
+										{
+											"key": "operation",
+											"value": {
+												"stringValue": "promote"
+											}
+										},
+										{
+											"key": "draftId",
+											"value": {
+												"stringValue": "DRAFT-999"
+											}
+										},
+										{
+											"key": "error.stage",
+											"value": {
+												"stringValue": "load"
+											}
+										}
+									]
+								}
+							],
+							"status": {
+								"code": 2,
+								"message": "Draft not found"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

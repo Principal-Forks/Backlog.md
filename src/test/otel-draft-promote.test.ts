@@ -2,8 +2,11 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { $ } from "bun";
 import { Core } from "../core/backlog.ts";
+import { exportTestSpans } from "./otel-setup.ts";
 import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
-import "./otel-setup.ts"; // Import OTEL setup to capture and export telemetry
+
+const WORKFLOW_DIR = ".principal-views/draft-management/draft-workflow";
+const SCOPE_NAME = "backlog-draft-management";
 
 let TEST_DIR: string;
 let backlog: Core;
@@ -65,13 +68,8 @@ describe("OTEL Draft Promotion Telemetry", () => {
 		expect(tasks[0].assignee).toEqual(["@testuser"]);
 		expect(tasks[0].labels).toContain("feature");
 
-		// OTEL events are automatically captured and will be exported to __executions__/
-		// Events emitted:
-		// 1. draft.promote.started (draftId, autoCommit)
-		// 2. draft.promote.loaded (draftId, fromPath)
-		// 3. draft.promote.moved (fromPath, toPath)
-		// 4. draft.promote.committed (commitMessage, draftId)
-		// 5. draft.promote.complete (success, draftId, duration.ms)
+		// Export trace for this scenario
+		await exportTestSpans(WORKFLOW_DIR, "promote-success-with-commit", SCOPE_NAME);
 	});
 
 	test("promotes draft to task with OTEL telemetry - success without commit", async () => {
@@ -99,11 +97,8 @@ describe("OTEL Draft Promotion Telemetry", () => {
 		expect(tasks).toHaveLength(1);
 		expect(tasks[0].title).toBe("Draft Without Auto-Commit");
 
-		// OTEL events emitted (no draft.promote.committed):
-		// 1. draft.promote.started (draftId, autoCommit: false)
-		// 2. draft.promote.loaded (draftId, fromPath)
-		// 3. draft.promote.moved (fromPath, toPath)
-		// 4. draft.promote.complete (success, draftId, duration.ms)
+		// Export trace for this scenario
+		await exportTestSpans(WORKFLOW_DIR, "promote-success-no-commit", SCOPE_NAME);
 	});
 
 	test("fails to promote non-existent draft with OTEL error telemetry", async () => {
@@ -117,9 +112,8 @@ describe("OTEL Draft Promotion Telemetry", () => {
 		const tasks = await backlog.filesystem.listTasks();
 		expect(tasks).toHaveLength(0);
 
-		// OTEL events emitted:
-		// 1. draft.promote.started (draftId: "DRAFT-999")
-		// 2. draft.error (error.type: "DraftNotFound", operation: "promote", error.stage: "load")
+		// Export trace for this scenario
+		await exportTestSpans(WORKFLOW_DIR, "promote-not-found", SCOPE_NAME);
 	});
 
 	test("captures error telemetry when promotion fails mid-process", async () => {
@@ -145,12 +139,6 @@ describe("OTEL Draft Promotion Telemetry", () => {
 		// 1. Mock filesystem operations
 		// 2. Throw errors during saveTask or unlink
 		// 3. Verify draft.error event is emitted with proper attributes
+		// Not exporting: this test doesn't produce the error scenario it describes
 	});
 });
-
-/**
- * After all tests complete, the otel-setup.ts afterAll hook will:
- * 1. Collect all captured spans
- * 2. Export them to __executions__/draft-management-test-{timestamp}.otel.json
- * 3. These execution files can then be visualized against the draft-management.otel.canvas
- */
