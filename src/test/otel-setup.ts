@@ -2,6 +2,9 @@ import { afterAll } from "bun:test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
+	type Context,
+	context,
+	ROOT_CONTEXT,
 	type Span,
 	type SpanContext,
 	type SpanOptions,
@@ -145,9 +148,40 @@ class CollectingTracer {
 const collectingTracer = new CollectingTracer();
 trace.getTracer = () => collectingTracer as unknown as Tracer;
 
-// Also provide a way to get active span
+// Track active spans via context
 let activeSpanStack: Span[] = [];
 trace.getActiveSpan = () => activeSpanStack[activeSpanStack.length - 1];
+
+// Symbol to store span in context
+const SPAN_KEY = Symbol("otel-span");
+
+// Override trace.setSpan to create a context with the span
+const originalSetSpan = trace.setSpan;
+trace.setSpan = (ctx: Context, span: Span): Context => {
+	// Create a mock context that carries the span
+	return { ...ctx, [SPAN_KEY]: span } as unknown as Context;
+};
+
+// Override context.with to properly track active span during callback
+const originalWith = context.with;
+context.with = <A extends unknown[], F extends (...args: A) => ReturnType<F>>(
+	ctx: Context,
+	fn: F,
+	thisArg?: ThisParameterType<F>,
+	...args: A
+): ReturnType<F> => {
+	const span = (ctx as any)[SPAN_KEY] as Span | undefined;
+	if (span) {
+		activeSpanStack.push(span);
+	}
+	try {
+		return fn.apply(thisArg, args);
+	} finally {
+		if (span) {
+			activeSpanStack.pop();
+		}
+	}
+};
 
 /**
  * Start a test span for capturing OTEL events

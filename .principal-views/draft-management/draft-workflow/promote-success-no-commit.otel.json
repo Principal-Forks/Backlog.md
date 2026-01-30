@@ -25,15 +25,15 @@
 					},
 					"spans": [
 						{
-							"traceId": "339cafb0d3c57",
-							"spanId": "9668d5c2c8f628",
+							"traceId": "02ebcf92ff9398",
+							"spanId": "8711ea94ba7bf",
 							"name": "draft.promotion",
-							"startTimeUnixNano": "1769754449000000000",
-							"endTimeUnixNano": "1769754449002000000",
+							"startTimeUnixNano": "1769755464425000000",
+							"endTimeUnixNano": "1769755464427000000",
 							"attributes": [],
 							"events": [
 								{
-									"timeUnixNano": "1769754449000000000",
+									"timeUnixNano": "1769755464425000000",
 									"name": "draft.promote.started",
 									"attributes": [
 										{
@@ -51,7 +51,43 @@
 									]
 								},
 								{
-									"timeUnixNano": "1769754449002000000",
+									"timeUnixNano": "1769755464426000000",
+									"name": "draft.promote.loaded",
+									"attributes": [
+										{
+											"key": "draftId",
+											"value": {
+												"stringValue": "DRAFT-2"
+											}
+										},
+										{
+											"key": "fromPath",
+											"value": {
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml0ipjuu-qha-429ae96e/backlog/drafts/draft-2 - Draft-Without-Auto-Commit.md"
+											}
+										}
+									]
+								},
+								{
+									"timeUnixNano": "1769755464427000000",
+									"name": "draft.promote.moved",
+									"attributes": [
+										{
+											"key": "fromPath",
+											"value": {
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml0ipjuu-qha-429ae96e/backlog/drafts/draft-2 - Draft-Without-Auto-Commit.md"
+											}
+										},
+										{
+											"key": "toPath",
+											"value": {
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml0ipjuu-qha-429ae96e/backlog/tasks/task-1 - Draft-Without-Auto-Commit.md"
+											}
+										}
+									]
+								},
+								{
+									"timeUnixNano": "1769755464427000000",
 									"name": "draft.promote.complete",
 									"attributes": [
 										{
