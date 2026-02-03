@@ -27,6 +27,7 @@ import {
 	isGitRepository,
 	updateReadmeWithBoard,
 } from "./index.ts";
+import { initializeTelemetry, shutdownTelemetry } from "./telemetry/init.ts";
 import {
 	type BacklogConfig,
 	type Decision,
@@ -62,6 +63,9 @@ import { buildTaskUpdateInput } from "./utils/task-edit-builder.ts";
 import { normalizeTaskId, taskIdsEqual } from "./utils/task-path.ts";
 import { sortTasks } from "./utils/task-sorting.ts";
 import { getVersion } from "./utils/version.ts";
+
+// Initialize OpenTelemetry if configured
+initializeTelemetry();
 
 type IntegrationMode = "mcp" | "cli" | "none";
 
@@ -3403,9 +3407,11 @@ registerCompletionCommand(program);
 // MCP command group
 registerMcpCommand(program);
 
-program.parseAsync(process.argv).finally(() => {
+program.parseAsync(process.argv).finally(async () => {
 	// Restore BUN_OPTIONS after CLI parsing completes so it's available for subsequent commands
 	if (originalBunOptions) {
 		process.env.BUN_OPTIONS = originalBunOptions;
 	}
+	// Flush and shutdown telemetry to ensure all traces are exported
+	await shutdownTelemetry();
 });

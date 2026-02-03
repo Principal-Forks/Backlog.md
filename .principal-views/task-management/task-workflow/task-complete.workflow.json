@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0",
-	"canvas": ".principal-views/task-management/cleanup-operations.otel.canvas",
+	"canvas": ".principal-views/cleanup-operations/cleanup-operations.otel.canvas",
 	"mode": "span-tree",
 	"name": "Task Complete",
 	"description": "Moving a single task to the completed folder",
