@@ -1,0 +1,364 @@
+{
+	"id": "backlog-md-introduction",
+	"version": "1.0.0",
+	"title": "Backlog.md - Markdown-Native Task Management",
+	"description": "Learn how Backlog.md turns your repository into a self-contained project board powered by plain Markdown files.",
+	"audience": "New Users & AI Assistants",
+	"prerequisites": [
+		"Basic understanding of Markdown",
+		"Familiarity with Git repositories",
+		"Backlog.md installed (npm i -g backlog.md)"
+	],
+	"steps": [
+		{
+			"id": "step-01",
+			"title": "Welcome to Backlog.md",
+			"description": "Backlog.md is a markdown-native task manager that lives entirely in your Git repository. No databases, no external services - just plain Markdown files organized in a folder structure. Everything is version-controlled, searchable, and human-readable.",
+			"colorMode": "fileTypes",
+			"highlightFiles": ["README.md", "backlog/readme.md"],
+			"resources": [
+				{
+					"title": "Backlog.md Documentation",
+					"url": "https://github.com/MrLesk/Backlog.md"
+				}
+			]
+		},
+		{
+			"id": "step-02",
+			"title": "The Backlog Folder Structure",
+			"description": "The heart of Backlog.md is the 'backlog' folder. It contains all your tasks, documentation, and decisions in a well-organized structure. Each subfolder serves a specific purpose in your project workflow.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog",
+			"highlightLayers": [
+				{
+					"id": "backlog-structure",
+					"name": "Backlog Structure",
+					"color": "#3b82f6",
+					"renderStrategy": "border",
+					"opacity": 1,
+					"borderWidth": 3,
+					"items": [
+						{
+							"path": "backlog/tasks",
+							"type": "directory"
+						},
+						{
+							"path": "backlog/completed",
+							"type": "directory"
+						},
+						{
+							"path": "backlog/archive",
+							"type": "directory"
+						},
+						{
+							"path": "backlog/docs",
+							"type": "directory"
+						},
+						{
+							"path": "backlog/decisions",
+							"type": "directory"
+						},
+						{
+							"path": "backlog/config.yml",
+							"type": "file"
+						}
+					]
+				}
+			],
+			"interactiveActions": [
+				{
+					"type": "explore",
+					"description": "Explore the backlog folder to see all subfolders",
+					"target": "backlog"
+				}
+			]
+		},
+		{
+			"id": "step-03",
+			"title": "Active Tasks",
+			"description": "The 'backlog/tasks' folder contains all active tasks. Each task is a Markdown file with a structured name: 'back-<ID> - <Title>.md'. Tasks include YAML frontmatter for metadata (status, priority, assignee, labels, dependencies) and Markdown content for description and acceptance criteria.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog/tasks",
+			"highlightFiles": ["backlog/tasks/back-200 - Add-Claude-Code-integration-with-workflow-commands-during-init.md"],
+			"interactiveActions": [
+				{
+					"type": "open-file",
+					"description": "Open an example task to see its structure",
+					"target": "backlog/tasks/back-200 - Add-Claude-Code-integration-with-workflow-commands-during-init.md",
+					"required": true
+				}
+			],
+			"resources": [
+				{
+					"title": "Task Format Documentation",
+					"url": "https://github.com/MrLesk/Backlog.md#task-format"
+				}
+			]
+		},
+		{
+			"id": "step-04",
+			"title": "Task Anatomy",
+			"description": "Every task file has two parts: YAML frontmatter (between ---) defining metadata like ID, title, status, assignee, priority, labels, and dependencies; and Markdown content including a Description section and Acceptance Criteria checklist. This format makes tasks both machine-readable and human-friendly.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog/tasks",
+			"highlightFiles": ["backlog/tasks/back-200 - Add-Claude-Code-integration-with-workflow-commands-during-init.md"],
+			"interactiveActions": [
+				{
+					"type": "highlight",
+					"description": "Notice the YAML frontmatter at the top and Markdown content below"
+				}
+			]
+		},
+		{
+			"id": "step-05",
+			"title": "Configuration",
+			"description": "The 'backlog/config.yml' file controls project-wide settings: project name, task statuses, default labels, definition of done checklist, date formats, task ID prefix, and editor preferences. This configuration applies to all tasks and is shared across your team via Git.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog",
+			"highlightFiles": ["backlog/config.yml"],
+			"interactiveActions": [
+				{
+					"type": "open-file",
+					"description": "Open config.yml to see project settings",
+					"target": "backlog/config.yml"
+				}
+			]
+		},
+		{
+			"id": "step-06",
+			"title": "Completed Tasks",
+			"description": "When tasks are marked as 'Done', they move to 'backlog/completed'. This keeps your active task list clean while preserving the full history. Completed tasks remain searchable and accessible, providing a record of what's been accomplished.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog/completed",
+			"highlightLayers": [
+				{
+					"id": "completed-folder",
+					"name": "Completed Tasks",
+					"color": "#22c55e",
+					"renderStrategy": "fill",
+					"opacity": 0.3,
+					"items": [
+						{
+							"path": "backlog/completed",
+							"type": "directory"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "step-07",
+			"title": "Documentation",
+			"description": "The 'backlog/docs' folder stores project documentation as Markdown files. Docs follow the naming pattern 'doc-<ID> - <Title>.md' and can cover testing guides, setup instructions, architecture decisions, or any project knowledge worth preserving.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog/docs",
+			"highlightLayers": [
+				{
+					"id": "docs-folder",
+					"name": "Documentation",
+					"color": "#8b5cf6",
+					"renderStrategy": "fill",
+					"opacity": 0.3,
+					"items": [
+						{
+							"path": "backlog/docs",
+							"type": "directory"
+						}
+					]
+				}
+			],
+			"interactiveActions": [
+				{
+					"type": "explore",
+					"description": "Browse existing documentation files"
+				}
+			]
+		},
+		{
+			"id": "step-08",
+			"title": "Decision Records",
+			"description": "The 'backlog/decisions' folder captures important architectural and technical decisions. These decision records document the context, options considered, and rationale behind key choices, creating a valuable historical record for the team.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "backlog/decisions",
+			"highlightLayers": [
+				{
+					"id": "decisions-folder",
+					"name": "Decisions",
+					"color": "#f59e0b",
+					"renderStrategy": "fill",
+					"opacity": 0.3,
+					"items": [
+						{
+							"path": "backlog/decisions",
+							"type": "directory"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "step-09",
+			"title": "CLI Commands",
+			"description": "The CLI (src/cli.ts and src/commands) provides powerful terminal commands: 'backlog task create' to create tasks, 'backlog board' for terminal Kanban, 'backlog search' to find anything, and 'backlog task update' to modify tasks. All commands work directly with Markdown files.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "src/commands",
+			"highlightLayers": [
+				{
+					"id": "cli-files",
+					"name": "CLI Commands",
+					"color": "#06b6d4",
+					"renderStrategy": "border",
+					"borderWidth": 3,
+					"items": [
+						{
+							"path": "src/cli.ts",
+							"type": "file"
+						},
+						{
+							"path": "src/commands",
+							"type": "directory"
+						}
+					]
+				}
+			],
+			"resources": [
+				{
+					"title": "CLI Commands Documentation",
+					"url": "https://github.com/MrLesk/Backlog.md#cli-commands"
+				}
+			]
+		},
+		{
+			"id": "step-10",
+			"title": "MCP Server",
+			"description": "The MCP server (src/mcp) enables seamless integration with AI assistants like Claude Code, Gemini CLI, and Codex. It implements the Model Context Protocol, allowing AI to create tasks, update statuses, search the backlog, and manage your workflow programmatically.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "src/mcp",
+			"highlightLayers": [
+				{
+					"id": "mcp-files",
+					"name": "MCP Server",
+					"color": "#8b5cf6",
+					"renderStrategy": "border",
+					"borderWidth": 3,
+					"items": [
+						{
+							"path": "src/mcp",
+							"type": "directory"
+						}
+					]
+				}
+			],
+			"resources": [
+				{
+					"title": "MCP Integration Guide",
+					"url": "https://github.com/MrLesk/Backlog.md#mcp-integration"
+				}
+			]
+		},
+		{
+			"id": "step-11",
+			"title": "Web Interface",
+			"description": "The web UI (src/web) provides a modern, responsive browser interface for visual task management. Run 'backlog browser' to launch it. Features include drag-and-drop Kanban board, task creation and editing, interactive checklists, and real-time updates that sync with your Markdown files.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "src/web",
+			"highlightLayers": [
+				{
+					"id": "web-files",
+					"name": "Web UI",
+					"color": "#f59e0b",
+					"renderStrategy": "border",
+					"borderWidth": 3,
+					"items": [
+						{
+							"path": "src/web",
+							"type": "directory"
+						}
+					]
+				}
+			],
+			"resources": [
+				{
+					"title": "Web Interface Guide",
+					"url": "https://github.com/MrLesk/Backlog.md#web-interface"
+				}
+			]
+		},
+		{
+			"id": "step-12",
+			"title": "AI Assistant Integration",
+			"description": "Backlog.md works seamlessly with AI assistants through MCP. The CLAUDE.md and AGENTS.md files contain instructions that tell AI how to use Backlog.md effectively. The 'backlog init' command sets up MCP automatically for Claude Code, Gemini CLI, and Codex.",
+			"colorMode": "fileTypes",
+			"focusDirectory": "",
+			"highlightFiles": ["CLAUDE.md", "AGENTS.md"],
+			"highlightLayers": [
+				{
+					"id": "mcp-integration",
+					"name": "MCP Server Code",
+					"color": "#8b5cf6",
+					"renderStrategy": "border",
+					"borderWidth": 3,
+					"items": [
+						{
+							"path": "src/mcp",
+							"type": "directory"
+						}
+					]
+				}
+			],
+			"interactiveActions": [
+				{
+					"type": "highlight",
+					"description": "These files contain instructions for AI assistants"
+				}
+			],
+			"resources": [
+				{
+					"title": "MCP Integration Guide",
+					"url": "https://github.com/MrLesk/Backlog.md#mcp-integration"
+				}
+			]
+		},
+		{
+			"id": "step-13",
+			"title": "Getting Started",
+			"description": "Ready to start? Run 'backlog init' to bootstrap a new project, 'backlog task create' to add tasks, 'backlog board' to visualize your kanban, or 'backlog browser' for the web interface. Everything is stored as Markdown in your repo, version-controlled and fully transparent. Happy tracking!",
+			"colorMode": "fileTypes",
+			"focusDirectory": "",
+			"highlightLayers": [
+				{
+					"id": "full-project",
+					"name": "Full Backlog.md Project",
+					"color": "#3b82f6",
+					"renderStrategy": "border",
+					"borderWidth": 3,
+					"opacity": 1,
+					"items": [
+						{
+							"path": "backlog",
+							"type": "directory"
+						},
+						{
+							"path": "src",
+							"type": "directory"
+						},
+						{
+							"path": "README.md",
+							"type": "file"
+						}
+					]
+				}
+			],
+			"resources": [
+				{
+					"title": "Full Documentation",
+					"url": "https://github.com/MrLesk/Backlog.md"
+				},
+				{
+					"title": "Contributing Guide",
+					"url": "https://github.com/MrLesk/Backlog.md/blob/main/CONTRIBUTING.md"
+				}
+			]
+		}
+	]
+}
