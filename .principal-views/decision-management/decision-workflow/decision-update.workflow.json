@@ -6,87 +6,8 @@
 	"description": "Updating an existing decision/ADR from markdown content",
 	"scenarios": [
 		{
-			"id": "update-success-with-commit",
-			"priority": 1,
-			"condition": {
-				"requires": ["decision.update.complete", "decision.update.committed"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Updated decision {decisionId} and committed to git (completed in {duration.ms}ms)",
-				"events": {
-					"decision.update.started": "Updating decision: {{decisionId}}",
-					"decision.update.loaded": "Loaded existing decision from {{decisionPath}}",
-					"decision.update.parsed": "Parsed markdown content for updates",
-					"decision.update.saved": "Saved to {{decisionPath}}",
-					"decision.update.committed": "Committed: {{commitMessage}}",
-					"decision.update.complete": "Decision updated successfully in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "update-success-no-commit",
-			"priority": 2,
-			"condition": {
-				"requires": ["decision.update.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Updated decision {decisionId} (completed in {duration.ms}ms)",
-				"events": {
-					"decision.update.started": "Updating decision: {{decisionId}}",
-					"decision.update.loaded": "Loaded existing decision from {{decisionPath}}",
-					"decision.update.parsed": "Parsed markdown content for updates",
-					"decision.update.saved": "Saved to {{decisionPath}}",
-					"decision.update.complete": "Decision updated successfully in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "update-not-found",
-			"priority": 3,
-			"condition": {
-				"requires": ["decision.error"],
-				"assertions": {
-					"operation": "update",
-					"error.type": "DecisionNotFound"
-				}
-			},
-			"template": {
-				"summary": "❌ Decision {decisionId} not found - cannot update",
-				"events": {
-					"decision.update.started": "Updating decision: {{decisionId}}",
-					"decision.error": "Decision not found: {{error.message}}"
-				}
-			}
-		},
-		{
-			"id": "update-error",
-			"priority": 4,
-			"condition": {
-				"requires": ["decision.error"],
-				"assertions": {
-					"operation": "update"
-				}
-			},
-			"template": {
-				"summary": "❌ Decision update failed at {error.stage}: {error.message}",
-				"events": {
-					"decision.update.started": "Updating decision: {{decisionId}}",
-					"decision.error": "Failed at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Decision update execution captured",
 				"events": {
@@ -98,7 +19,9 @@
 					"decision.update.complete": "Operation complete",
 					"decision.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "decision.update"
 }

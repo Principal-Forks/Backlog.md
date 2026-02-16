@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# cli.request.received\n\nCLI command received with arguments.",
+			"text": "# Request Received\n\nCLI command received with arguments.",
 			"pv": {
 				"event": {
 					"name": "cli.request.received",
@@ -39,7 +39,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -49,7 +50,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# cli.request.parsed\n\nCommand arguments parsed and validated.",
+			"text": "# Request Parsed\n\nCommand arguments parsed and validated.",
 			"pv": {
 				"event": {
 					"name": "cli.request.parsed",
@@ -77,7 +78,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -87,7 +89,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# cli.operation.dispatched\n\nRequest routed to core operation handler.",
+			"text": "# Operation Dispatched\n\nRequest routed to core operation handler.",
 			"pv": {
 				"event": {
 					"name": "cli.operation.dispatched",
@@ -111,7 +113,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -121,7 +124,7 @@
 			"y": 782,
 			"width": 200,
 			"height": 100,
-			"text": "# cli.request.complete\n\nCLI command completed successfully.",
+			"text": "# Request Complete\n\nCLI command completed successfully.",
 			"pv": {
 				"event": {
 					"name": "cli.request.complete",
@@ -149,7 +152,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -159,7 +163,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# mcp.tool.invoked\n\nMCP tool called with parameters.",
+			"text": "# Tool Invoked\n\nMCP tool called with parameters.",
 			"pv": {
 				"event": {
 					"name": "mcp.tool.invoked",
@@ -187,7 +191,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -197,7 +202,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# mcp.tool.validated\n\nTool parameters validated against schema.",
+			"text": "# Tool Validated\n\nTool parameters validated against schema.",
 			"pv": {
 				"event": {
 					"name": "mcp.tool.validated",
@@ -225,7 +230,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -235,7 +241,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# mcp.operation.dispatched\n\nTool request routed to core operation.",
+			"text": "# Operation Dispatched\n\nTool request routed to core operation.",
 			"pv": {
 				"event": {
 					"name": "mcp.operation.dispatched",
@@ -259,7 +265,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -269,7 +276,7 @@
 			"y": 805,
 			"width": 200,
 			"height": 100,
-			"text": "# mcp.tool.response\n\nMCP tool response sent to client.",
+			"text": "# Tool Response\n\nMCP tool response sent to client.",
 			"pv": {
 				"event": {
 					"name": "mcp.tool.response",
@@ -297,7 +304,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -307,7 +315,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# http.request.received\n\nHTTP request received from browser client.",
+			"text": "# Request Received\n\nHTTP request received from browser client.",
 			"pv": {
 				"event": {
 					"name": "http.request.received",
@@ -339,7 +347,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -349,7 +358,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# http.request.routed\n\nRequest routed to API endpoint handler.",
+			"text": "# Request Routed\n\nRequest routed to API endpoint handler.",
 			"pv": {
 				"event": {
 					"name": "http.request.routed",
@@ -377,7 +386,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -387,7 +397,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# http.operation.dispatched\n\nAPI request dispatched to core operation.",
+			"text": "# Operation Dispatched\n\nAPI request dispatched to core operation.",
 			"pv": {
 				"event": {
 					"name": "http.operation.dispatched",
@@ -415,7 +425,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -425,7 +436,7 @@
 			"y": 785,
 			"width": 200,
 			"height": 100,
-			"text": "# http.response.sent\n\nHTTP response sent to client.",
+			"text": "# Response Sent\n\nHTTP response sent to client.",
 			"pv": {
 				"event": {
 					"name": "http.response.sent",
@@ -457,7 +468,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -467,7 +479,7 @@
 			"y": 561,
 			"width": 200,
 			"height": 120,
-			"text": "# operation.executed\n\nCore operation completed (child span).\n\nLinks to domain canvases:\n- task.*\n- draft.*\n- milestone.*",
+			"text": "# Operation Executed\n\nCore operation completed (child span).\n\nLinks to domain canvases:\n- task.*\n- draft.*\n- milestone.*",
 			"pv": {
 				"event": {
 					"name": "operation.executed",
@@ -503,7 +515,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#6d28d9"
+				"stroke": "#6d28d9",
+				"status": "draft"
 			}
 		},
 		{
@@ -513,7 +526,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 150,
-			"text": "# entry.error\n\nEntry point request failed with error.",
+			"text": "# Entry Error\n\nEntry point request failed with error.",
 			"pv": {
 				"event": {
 					"name": "entry.error",
@@ -555,7 +568,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],

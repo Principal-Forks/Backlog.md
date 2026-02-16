@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# search.initialize.started\n\nSearch service initialization initiated.",
+			"text": "# Initialize Started\n\nSearch service initialization initiated.",
 			"pv": {
 				"event": {
 					"name": "search.initialize.started",
@@ -22,7 +22,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -32,7 +33,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# search.initialize.snapshot\n\nContent snapshot loaded from store.",
+			"text": "# Initialize Snapshot\n\nContent snapshot loaded from store.",
 			"pv": {
 				"event": {
 					"name": "search.initialize.snapshot",
@@ -60,7 +61,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -70,7 +72,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# search.initialize.indexed\n\nSearch index built with Fuse.js.",
+			"text": "# Initialize Indexed\n\nSearch index built with Fuse.js.",
 			"pv": {
 				"event": {
 					"name": "search.initialize.indexed",
@@ -94,7 +96,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -104,7 +107,7 @@
 			"y": 500,
 			"width": 240,
 			"height": 110,
-			"text": "# search.initialize.complete\n\nSearch service ready for queries.",
+			"text": "# Initialize Complete\n\nSearch service ready for queries.",
 			"pv": {
 				"event": {
 					"name": "search.initialize.complete",
@@ -128,7 +131,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -138,7 +142,7 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# search.query.started\n\nSearch query initiated.",
+			"text": "# Query Started\n\nSearch query initiated.",
 			"pv": {
 				"event": {
 					"name": "search.query.started",
@@ -166,7 +170,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -176,7 +181,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# search.query.normalized\n\nQuery and filters normalized.",
+			"text": "# Query Normalized\n\nQuery and filters normalized.",
 			"pv": {
 				"event": {
 					"name": "search.query.normalized",
@@ -204,7 +209,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -214,7 +220,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# search.query.executed\n\nFuse.js search executed on index.",
+			"text": "# Query Executed\n\nFuse.js search executed on index.",
 			"pv": {
 				"event": {
 					"name": "search.query.executed",
@@ -238,7 +244,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -248,7 +255,7 @@
 			"y": 500,
 			"width": 240,
 			"height": 110,
-			"text": "# search.query.filtered\n\nResults filtered by type and criteria.",
+			"text": "# Query Filtered\n\nResults filtered by type and criteria.",
 			"pv": {
 				"event": {
 					"name": "search.query.filtered",
@@ -280,7 +287,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -290,7 +298,7 @@
 			"y": 650,
 			"width": 240,
 			"height": 110,
-			"text": "# search.query.complete\n\nSearch query completed with results.",
+			"text": "# Query Complete\n\nSearch query completed with results.",
 			"pv": {
 				"event": {
 					"name": "search.query.complete",
@@ -318,7 +326,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -328,7 +337,7 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# search.index.update.started\n\nIndex update triggered by content change.",
+			"text": "# Update Started\n\nIndex update triggered by content change.",
 			"pv": {
 				"event": {
 					"name": "search.index.update.started",
@@ -352,7 +361,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -362,7 +372,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# search.index.snapshot.applied\n\nNew snapshot applied to search entities.",
+			"text": "# Snapshot Applied\n\nNew snapshot applied to search entities.",
 			"pv": {
 				"event": {
 					"name": "search.index.snapshot.applied",
@@ -390,7 +400,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -400,7 +411,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# search.index.rebuilt\n\nFuse.js index rebuilt with new data.",
+			"text": "# Index Rebuilt\n\nFuse.js index rebuilt with new data.",
 			"pv": {
 				"event": {
 					"name": "search.index.rebuilt",
@@ -424,7 +435,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -434,7 +446,7 @@
 			"y": 500,
 			"width": 240,
 			"height": 110,
-			"text": "# search.index.update.complete\n\nIndex update completed successfully.",
+			"text": "# Update Complete\n\nIndex update completed successfully.",
 			"pv": {
 				"event": {
 					"name": "search.index.update.complete",
@@ -458,7 +470,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -468,7 +481,7 @@
 			"y": 300,
 			"width": 240,
 			"height": 130,
-			"text": "# search.error\n\nSearch operation error occurred.",
+			"text": "# Search Error\n\nSearch operation error occurred.",
 			"pv": {
 				"event": {
 					"name": "search.error",
@@ -500,7 +513,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],

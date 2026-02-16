@@ -6,67 +6,8 @@
 	"description": "Creating a new draft in the backlog",
 	"scenarios": [
 		{
-			"id": "create-success-with-commit",
-			"priority": 1,
-			"condition": {
-				"requires": ["draft.create.complete", "draft.create.committed"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Created draft {draftId} and committed to git (completed in {duration.ms}ms)",
-				"events": {
-					"draft.create.started": "Creating draft: {{title}}",
-					"draft.create.validated": "Generated draft ID: {{normalizedId}}",
-					"draft.create.saved": "Saved to {{filepath}}",
-					"draft.create.committed": "Committed: {{commitMessage}}",
-					"draft.create.complete": "Draft creation complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "create-success-no-commit",
-			"priority": 2,
-			"condition": {
-				"requires": ["draft.create.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Created draft {draftId} (completed in {duration.ms}ms)",
-				"events": {
-					"draft.create.started": "Creating draft: {{title}}",
-					"draft.create.validated": "Generated draft ID: {{normalizedId}}",
-					"draft.create.saved": "Saved to {{filepath}}",
-					"draft.create.complete": "Draft creation complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "create-error",
-			"priority": 3,
-			"condition": {
-				"requires": ["draft.error"],
-				"assertions": {
-					"operation": "create"
-				}
-			},
-			"template": {
-				"summary": "❌ Draft creation failed at {error.stage}: {error.message}",
-				"events": {
-					"draft.create.started": "Started creating draft",
-					"draft.error": "Failed at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Draft create execution captured",
 				"events": {
@@ -77,7 +18,9 @@
 					"draft.create.complete": "Complete",
 					"draft.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "draft.create"
 }

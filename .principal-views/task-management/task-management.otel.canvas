@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# task.create.started\n\nTask creation initiated with title and metadata.",
+			"text": "# Create Started\n\nTask creation initiated with title and metadata.",
 			"pv": {
 				"event": {
 					"name": "task.create.started",
@@ -36,7 +36,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -46,7 +47,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# task.create.validated\n\nTask data validated and ID generated.",
+			"text": "# Create Validated\n\nTask data validated and ID generated.",
 			"pv": {
 				"event": {
 					"name": "task.create.validated",
@@ -70,7 +71,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -80,7 +82,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# task.create.saved\n\nTask file written to filesystem.",
+			"text": "# Create Saved\n\nTask file written to filesystem.",
 			"pv": {
 				"event": {
 					"name": "task.create.saved",
@@ -104,7 +106,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -114,7 +117,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# task.create.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
 			"pv": {
 				"event": {
 					"name": "task.create.committed",
@@ -138,7 +141,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -148,7 +152,7 @@
 			"y": 650,
 			"width": 200,
 			"height": 100,
-			"text": "# task.create.complete\n\nTask creation completed successfully.",
+			"text": "# Create Complete\n\nTask creation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "task.create.complete",
@@ -176,7 +180,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -186,7 +191,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# task.edit.started\n\nTask edit operation initiated.",
+			"text": "# Edit Started\n\nTask edit operation initiated.",
 			"pv": {
 				"event": {
 					"name": "task.edit.started",
@@ -215,7 +220,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -225,7 +231,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# task.edit.loaded\n\nExisting task loaded from filesystem.",
+			"text": "# Edit Loaded\n\nExisting task loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "task.edit.loaded",
@@ -249,7 +255,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -259,7 +266,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# task.edit.validated\n\nUpdate inputs validated.",
+			"text": "# Edit Validated\n\nUpdate inputs validated.",
 			"pv": {
 				"event": {
 					"name": "task.edit.validated",
@@ -283,7 +290,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -293,7 +301,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# task.edit.updated\n\nTask file updated with changes.",
+			"text": "# Edit Updated\n\nTask file updated with changes.",
 			"pv": {
 				"event": {
 					"name": "task.edit.updated",
@@ -317,7 +325,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -327,7 +336,7 @@
 			"y": 650,
 			"width": 200,
 			"height": 100,
-			"text": "# task.edit.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
 			"pv": {
 				"event": {
 					"name": "task.edit.committed",
@@ -351,7 +360,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -361,7 +371,7 @@
 			"y": 800,
 			"width": 200,
 			"height": 100,
-			"text": "# task.edit.complete\n\nTask edit completed successfully.",
+			"text": "# Edit Complete\n\nTask edit completed successfully.",
 			"pv": {
 				"event": {
 					"name": "task.edit.complete",
@@ -389,7 +399,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -399,7 +410,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# task.view.started\n\nTask view operation initiated.",
+			"text": "# View Started\n\nTask view operation initiated.",
 			"pv": {
 				"event": {
 					"name": "task.view.started",
@@ -423,7 +434,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -433,7 +445,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# task.view.loaded\n\nTask data loaded from filesystem or content store.",
+			"text": "# View Loaded\n\nTask data loaded from filesystem or content store.",
 			"pv": {
 				"event": {
 					"name": "task.view.loaded",
@@ -461,7 +473,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -471,7 +484,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# task.view.complete\n\nTask view completed successfully.",
+			"text": "# View Complete\n\nTask view completed successfully.",
 			"pv": {
 				"event": {
 					"name": "task.view.complete",
@@ -499,7 +512,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -509,7 +523,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# task.list.started\n\nTask list operation initiated with filters.",
+			"text": "# List Started\n\nTask list operation initiated with filters.",
 			"pv": {
 				"event": {
 					"name": "task.list.started",
@@ -533,7 +547,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -543,7 +558,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# task.list.loaded\n\nTasks loaded from filesystem and content store.",
+			"text": "# List Loaded\n\nTasks loaded from filesystem and content store.",
 			"pv": {
 				"event": {
 					"name": "task.list.loaded",
@@ -567,7 +582,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -577,7 +593,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# task.list.filtered\n\nFilters applied to task list.",
+			"text": "# List Filtered\n\nFilters applied to task list.",
 			"pv": {
 				"event": {
 					"name": "task.list.filtered",
@@ -601,7 +617,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -611,7 +628,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# task.list.complete\n\nTask list operation completed successfully.",
+			"text": "# List Complete\n\nTask list operation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "task.list.complete",
@@ -639,7 +656,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -649,7 +667,7 @@
 			"y": 550,
 			"width": 200,
 			"height": 100,
-			"text": "# task.demote.started\n\nTask demotion to draft initiated.",
+			"text": "# Demote Started\n\nTask demotion to draft initiated.",
 			"pv": {
 				"event": {
 					"name": "task.demote.started",
@@ -674,7 +692,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -684,7 +703,7 @@
 			"y": 700,
 			"width": 200,
 			"height": 100,
-			"text": "# task.demote.loaded\n\nTask file located for demotion.",
+			"text": "# Demote Loaded\n\nTask file located for demotion.",
 			"pv": {
 				"event": {
 					"name": "task.demote.loaded",
@@ -708,7 +727,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -718,7 +738,7 @@
 			"y": 850,
 			"width": 200,
 			"height": 100,
-			"text": "# task.demote.moved\n\nTask file moved to drafts directory.",
+			"text": "# Demote Moved\n\nTask file moved to drafts directory.",
 			"pv": {
 				"event": {
 					"name": "task.demote.moved",
@@ -742,7 +762,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -752,7 +773,7 @@
 			"y": 1000,
 			"width": 200,
 			"height": 100,
-			"text": "# task.demote.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
 			"pv": {
 				"event": {
 					"name": "task.demote.committed",
@@ -776,7 +797,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -786,7 +808,7 @@
 			"y": 1150,
 			"width": 200,
 			"height": 100,
-			"text": "# task.demote.complete\n\nTask demotion completed successfully.",
+			"text": "# Demote Complete\n\nTask demotion completed successfully.",
 			"pv": {
 				"event": {
 					"name": "task.demote.complete",
@@ -814,7 +836,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -824,7 +847,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 150,
-			"text": "# task.error\n\nTask operation failed with an error.",
+			"text": "# Task Error\n\nTask operation failed with an error.",
 			"pv": {
 				"event": {
 					"name": "task.error",
@@ -865,7 +888,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		},
 		{
@@ -875,7 +899,7 @@
 			"y": 1350,
 			"width": 200,
 			"height": 100,
-			"text": "# task.archive.started\n\nTask archive command invoked with task ID.",
+			"text": "# Archive Started\n\nTask archive command invoked with task ID.",
 			"pv": {
 				"event": {
 					"name": "task.archive.started",
@@ -900,7 +924,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -910,7 +935,7 @@
 			"y": 1500,
 			"width": 200,
 			"height": 100,
-			"text": "# task.archive.located\n\nTask file found and path resolved.",
+			"text": "# Archive Located\n\nTask file found and path resolved.",
 			"pv": {
 				"event": {
 					"name": "task.archive.located",
@@ -938,7 +963,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -948,7 +974,7 @@
 			"y": 1650,
 			"width": 200,
 			"height": 100,
-			"text": "# task.archive.moved\n\nTask file moved to archive directory.",
+			"text": "# Archive Moved\n\nTask file moved to archive directory.",
 			"pv": {
 				"event": {
 					"name": "task.archive.moved",
@@ -973,7 +999,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -983,7 +1010,7 @@
 			"y": 1800,
 			"width": 200,
 			"height": 100,
-			"text": "# task.archive.committed\n\nGit commit created for archive operation.",
+			"text": "# Changes Committed\n\nGit commit created for archive operation.",
 			"pv": {
 				"event": {
 					"name": "task.archive.committed",
@@ -1007,7 +1034,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -1017,7 +1045,7 @@
 			"y": 1950,
 			"width": 200,
 			"height": 100,
-			"text": "# task.archive.complete\n\nTask archived successfully.",
+			"text": "# Archive Complete\n\nTask archived successfully.",
 			"pv": {
 				"event": {
 					"name": "task.archive.complete",
@@ -1045,7 +1073,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		}
 	],

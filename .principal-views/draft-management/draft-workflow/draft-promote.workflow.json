@@ -6,85 +6,8 @@
 	"description": "Promoting a draft to a task",
 	"scenarios": [
 		{
-			"id": "promote-success-with-commit",
-			"priority": 1,
-			"condition": {
-				"requires": ["draft.promote.complete", "draft.promote.committed"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Promoted draft {draftId} to task and committed (completed in {duration.ms}ms)",
-				"events": {
-					"draft.promote.started": "Promoting draft {{draftId}} to task",
-					"draft.promote.loaded": "Located draft at {{fromPath}}",
-					"draft.promote.moved": "Moved from {{fromPath}} to {{toPath}}",
-					"draft.promote.committed": "Committed: {{commitMessage}}",
-					"draft.promote.complete": "Promotion complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "promote-success-no-commit",
-			"priority": 2,
-			"condition": {
-				"requires": ["draft.promote.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Promoted draft {draftId} to task (completed in {duration.ms}ms)",
-				"events": {
-					"draft.promote.started": "Promoting draft {{draftId}} to task",
-					"draft.promote.loaded": "Located draft at {{fromPath}}",
-					"draft.promote.moved": "Moved from {{fromPath}} to {{toPath}}",
-					"draft.promote.complete": "Promotion complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "promote-not-found",
-			"priority": 3,
-			"condition": {
-				"requires": ["draft.error"],
-				"assertions": {
-					"operation": "promote",
-					"error.type": "DraftNotFound"
-				}
-			},
-			"template": {
-				"summary": "❌ Draft {draftId} not found - cannot promote",
-				"events": {
-					"draft.promote.started": "Promoting draft {{draftId}}",
-					"draft.error": "Draft not found: {{error.message}}"
-				}
-			}
-		},
-		{
-			"id": "promote-error",
-			"priority": 4,
-			"condition": {
-				"requires": ["draft.error"],
-				"assertions": {
-					"operation": "promote"
-				}
-			},
-			"template": {
-				"summary": "❌ Failed to promote draft {draftId}: {error.message}",
-				"events": {
-					"draft.promote.started": "Promoting draft {{draftId}}",
-					"draft.error": "Error at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Draft promote execution captured",
 				"events": {
@@ -95,7 +18,9 @@
 					"draft.promote.complete": "Promotion complete",
 					"draft.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "draft.promote"
 }

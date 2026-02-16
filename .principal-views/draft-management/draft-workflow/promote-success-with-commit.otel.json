@@ -25,15 +25,15 @@
 					},
 					"spans": [
 						{
-							"traceId": "c6a4dfd2fecb58",
-							"spanId": "2c9c10dcd17fc",
+							"traceId": "f0aacef21ca0c",
+							"spanId": "047a71650bd67",
 							"name": "draft.promotion",
-							"startTimeUnixNano": "1770080256119000000",
-							"endTimeUnixNano": "1770080256160000000",
+							"startTimeUnixNano": "1770675730977000000",
+							"endTimeUnixNano": "1770675731018000000",
 							"attributes": [],
 							"events": [
 								{
-									"timeUnixNano": "1770080256119000000",
+									"timeUnixNano": "1770675730977000000",
 									"name": "draft.promote.started",
 									"attributes": [
 										{
@@ -51,7 +51,7 @@
 									]
 								},
 								{
-									"timeUnixNano": "1770080256120000000",
+									"timeUnixNano": "1770675730977000000",
 									"name": "draft.promote.loaded",
 									"attributes": [
 										{
@@ -63,31 +63,31 @@
 										{
 											"key": "fromPath",
 											"value": {
-												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml5w2yq8-f4n-68708573/backlog/drafts/draft-1 - Test-Draft-for-Promotion.md"
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-mlfqm22n-13cf-f1aabdf3/backlog/drafts/draft-1 - Test-Draft-for-Promotion.md"
 											}
 										}
 									]
 								},
 								{
-									"timeUnixNano": "1770080256121000000",
+									"timeUnixNano": "1770675730977000000",
 									"name": "draft.promote.moved",
 									"attributes": [
 										{
 											"key": "fromPath",
 											"value": {
-												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml5w2yq8-f4n-68708573/backlog/drafts/draft-1 - Test-Draft-for-Promotion.md"
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-mlfqm22n-13cf-f1aabdf3/backlog/drafts/draft-1 - Test-Draft-for-Promotion.md"
 											}
 										},
 										{
 											"key": "toPath",
 											"value": {
-												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml5w2yq8-f4n-68708573/backlog/tasks/task-1 - Test-Draft-for-Promotion.md"
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-mlfqm22n-13cf-f1aabdf3/backlog/tasks/task-1 - Test-Draft-for-Promotion.md"
 											}
 										}
 									]
 								},
 								{
-									"timeUnixNano": "1770080256160000000",
+									"timeUnixNano": "1770675731018000000",
 									"name": "draft.promote.committed",
 									"attributes": [
 										{
@@ -105,7 +105,7 @@
 									]
 								},
 								{
-									"timeUnixNano": "1770080256160000000",
+									"timeUnixNano": "1770675731018000000",
 									"name": "draft.promote.complete",
 									"attributes": [
 										{

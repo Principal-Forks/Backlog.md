@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# document.create.started\n\nDocument creation initiated with title and content.",
+			"text": "# Create Started\n\nDocument creation initiated with title and content.",
 			"pv": {
 				"event": {
 					"name": "document.create.started",
@@ -32,7 +32,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -42,7 +43,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# document.create.validated\n\nDocument ID generated and validated.",
+			"text": "# Create Validated\n\nDocument ID generated and validated.",
 			"pv": {
 				"event": {
 					"name": "document.create.validated",
@@ -66,7 +67,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -76,7 +78,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# document.create.saved\n\nDocument file saved to disk.",
+			"text": "# Create Saved\n\nDocument file saved to disk.",
 			"pv": {
 				"event": {
 					"name": "document.create.saved",
@@ -100,7 +102,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -110,7 +113,7 @@
 			"y": 500,
 			"width": 220,
 			"height": 110,
-			"text": "# document.create.committed\n\nDocument creation committed to git.",
+			"text": "# Changes Committed\n\nDocument creation committed to git.",
 			"pv": {
 				"event": {
 					"name": "document.create.committed",
@@ -134,7 +137,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#7c3aed"
+				"stroke": "#7c3aed",
+				"status": "draft"
 			}
 		},
 		{
@@ -144,7 +148,7 @@
 			"y": 650,
 			"width": 220,
 			"height": 110,
-			"text": "# document.create.complete\n\nDocument creation completed successfully.",
+			"text": "# Create Complete\n\nDocument creation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "document.create.complete",
@@ -172,7 +176,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -182,7 +187,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# document.view.started\n\nDocument view initiated.",
+			"text": "# View Started\n\nDocument view initiated.",
 			"pv": {
 				"event": {
 					"name": "document.view.started",
@@ -202,7 +207,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -212,7 +218,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# document.view.loaded\n\nDocument loaded from filesystem.",
+			"text": "# View Loaded\n\nDocument loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "document.view.loaded",
@@ -236,7 +242,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -246,7 +253,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# document.view.complete\n\nDocument view completed.",
+			"text": "# View Complete\n\nDocument view completed.",
 			"pv": {
 				"event": {
 					"name": "document.view.complete",
@@ -270,7 +277,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -280,7 +288,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# document.list.started\n\nDocument list operation initiated.",
+			"text": "# List Started\n\nDocument list operation initiated.",
 			"pv": {
 				"event": {
 					"name": "document.list.started",
@@ -301,7 +309,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -311,7 +320,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# document.list.loaded\n\nDocuments loaded from filesystem.",
+			"text": "# List Loaded\n\nDocuments loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "document.list.loaded",
@@ -331,7 +340,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -341,7 +351,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# document.list.filtered\n\nDocuments filtered by search criteria.",
+			"text": "# List Filtered\n\nDocuments filtered by search criteria.",
 			"pv": {
 				"event": {
 					"name": "document.list.filtered",
@@ -365,7 +375,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -375,7 +386,7 @@
 			"y": 500,
 			"width": 220,
 			"height": 110,
-			"text": "# document.list.complete\n\nDocument list operation completed.",
+			"text": "# List Complete\n\nDocument list operation completed.",
 			"pv": {
 				"event": {
 					"name": "document.list.complete",
@@ -399,7 +410,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -409,7 +421,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# document.update.started\n\nDocument update initiated.",
+			"text": "# Update Started\n\nDocument update initiated.",
 			"pv": {
 				"event": {
 					"name": "document.update.started",
@@ -438,7 +450,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -448,7 +461,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# document.update.loaded\n\nExisting document loaded for update.",
+			"text": "# Update Loaded\n\nExisting document loaded for update.",
 			"pv": {
 				"event": {
 					"name": "document.update.loaded",
@@ -472,7 +485,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -482,7 +496,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# document.update.validated\n\nDocument update validated.",
+			"text": "# Update Validated\n\nDocument update validated.",
 			"pv": {
 				"event": {
 					"name": "document.update.validated",
@@ -506,7 +520,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -516,7 +531,7 @@
 			"y": 500,
 			"width": 220,
 			"height": 110,
-			"text": "# document.update.saved\n\nUpdated document saved to disk.",
+			"text": "# Update Saved\n\nUpdated document saved to disk.",
 			"pv": {
 				"event": {
 					"name": "document.update.saved",
@@ -536,7 +551,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -546,7 +562,7 @@
 			"y": 650,
 			"width": 220,
 			"height": 110,
-			"text": "# document.update.committed\n\nDocument update committed to git.",
+			"text": "# Changes Committed\n\nDocument update committed to git.",
 			"pv": {
 				"event": {
 					"name": "document.update.committed",
@@ -566,7 +582,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#7c3aed"
+				"stroke": "#7c3aed",
+				"status": "draft"
 			}
 		},
 		{
@@ -576,7 +593,7 @@
 			"y": 800,
 			"width": 220,
 			"height": 110,
-			"text": "# document.update.complete\n\nDocument update completed successfully.",
+			"text": "# Update Complete\n\nDocument update completed successfully.",
 			"pv": {
 				"event": {
 					"name": "document.update.complete",
@@ -604,7 +621,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -614,7 +632,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# document.search.started\n\nDocument search initiated.",
+			"text": "# Search Started\n\nDocument search initiated.",
 			"pv": {
 				"event": {
 					"name": "document.search.started",
@@ -638,7 +656,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -648,7 +667,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# document.search.executed\n\nSearch query executed.",
+			"text": "# Search Executed\n\nSearch query executed.",
 			"pv": {
 				"event": {
 					"name": "document.search.executed",
@@ -672,7 +691,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -682,7 +702,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# document.search.complete\n\nDocument search completed.",
+			"text": "# Search Complete\n\nDocument search completed.",
 			"pv": {
 				"event": {
 					"name": "document.search.complete",
@@ -710,7 +730,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -720,7 +741,7 @@
 			"y": 400,
 			"width": 220,
 			"height": 130,
-			"text": "# document.error\n\nDocument operation error occurred.",
+			"text": "# Document Error\n\nDocument operation error occurred.",
 			"pv": {
 				"event": {
 					"name": "document.error",
@@ -753,7 +774,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],

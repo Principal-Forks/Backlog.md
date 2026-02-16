@@ -6,85 +6,8 @@
 	"description": "Creating a new document in the documentation directory",
 	"scenarios": [
 		{
-			"id": "create-success-with-commit",
-			"priority": 1,
-			"condition": {
-				"requires": ["document.create.complete", "document.create.committed"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Created document {documentId} and committed to git (completed in {duration.ms}ms)",
-				"events": {
-					"document.create.started": "Creating document: {{title}}",
-					"document.create.validated": "Generated document ID: {{normalizedId}}",
-					"document.create.saved": "Saved to {{documentPath}}",
-					"document.create.committed": "Committed: {{commitMessage}}",
-					"document.create.complete": "Document created successfully in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "create-success-no-commit",
-			"priority": 2,
-			"condition": {
-				"requires": ["document.create.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Created document {documentId} (completed in {duration.ms}ms)",
-				"events": {
-					"document.create.started": "Creating document: {{title}}",
-					"document.create.validated": "Generated document ID: {{normalizedId}}",
-					"document.create.saved": "Saved to {{documentPath}}",
-					"document.create.complete": "Document created successfully in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "create-validation-error",
-			"priority": 3,
-			"condition": {
-				"requires": ["document.error"],
-				"assertions": {
-					"operation": "create",
-					"error.stage": "validation"
-				}
-			},
-			"template": {
-				"summary": "❌ Document creation validation failed: {error.message}",
-				"events": {
-					"document.create.started": "Creating document: {{title}}",
-					"document.error": "Validation error: {{error.message}}"
-				}
-			}
-		},
-		{
-			"id": "create-error",
-			"priority": 4,
-			"condition": {
-				"requires": ["document.error"],
-				"assertions": {
-					"operation": "create"
-				}
-			},
-			"template": {
-				"summary": "❌ Document creation failed at {error.stage}: {error.message}",
-				"events": {
-					"document.create.started": "Creating document: {{title}}",
-					"document.error": "Failed at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Document create execution captured",
 				"events": {
@@ -95,7 +18,9 @@
 					"document.create.complete": "Operation complete",
 					"document.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "document.create"
 }

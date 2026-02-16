@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.create.started\n\nDraft creation initiated with title.",
+			"text": "# Create Started\n\nDraft creation initiated with title.",
 			"pv": {
 				"event": {
 					"name": "draft.create.started",
@@ -32,7 +32,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -42,7 +43,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.create.validated\n\nDraft data validated and ID generated.",
+			"text": "# Create Validated\n\nDraft data validated and ID generated.",
 			"pv": {
 				"event": {
 					"name": "draft.create.validated",
@@ -66,7 +67,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -76,7 +78,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.create.saved\n\nDraft file written to drafts directory.",
+			"text": "# Create Saved\n\nDraft file written to drafts directory.",
 			"pv": {
 				"event": {
 					"name": "draft.create.saved",
@@ -100,7 +102,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -110,7 +113,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.create.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
 			"pv": {
 				"event": {
 					"name": "draft.create.committed",
@@ -134,7 +137,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -144,7 +148,7 @@
 			"y": 650,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.create.complete\n\nDraft creation completed successfully.",
+			"text": "# Create Complete\n\nDraft creation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "draft.create.complete",
@@ -172,7 +176,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -182,7 +187,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.view.started\n\nDraft view operation initiated.",
+			"text": "# View Started\n\nDraft view operation initiated.",
 			"pv": {
 				"event": {
 					"name": "draft.view.started",
@@ -206,7 +211,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -216,7 +222,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.view.loaded\n\nDraft data loaded from filesystem.",
+			"text": "# View Loaded\n\nDraft data loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "draft.view.loaded",
@@ -240,7 +246,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -250,7 +257,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.view.complete\n\nDraft view completed successfully.",
+			"text": "# View Complete\n\nDraft view completed successfully.",
 			"pv": {
 				"event": {
 					"name": "draft.view.complete",
@@ -278,7 +285,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -288,7 +296,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.list.started\n\nDraft list operation initiated with filters.",
+			"text": "# List Started\n\nDraft list operation initiated with filters.",
 			"pv": {
 				"event": {
 					"name": "draft.list.started",
@@ -312,7 +320,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -322,7 +331,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.list.loaded\n\nDrafts loaded from filesystem.",
+			"text": "# List Loaded\n\nDrafts loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "draft.list.loaded",
@@ -342,7 +351,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -352,7 +362,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.list.filtered\n\nFilters applied to draft list.",
+			"text": "# List Filtered\n\nFilters applied to draft list.",
 			"pv": {
 				"event": {
 					"name": "draft.list.filtered",
@@ -376,7 +386,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -386,7 +397,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.list.complete\n\nDraft list operation completed successfully.",
+			"text": "# List Complete\n\nDraft list operation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "draft.list.complete",
@@ -414,7 +425,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -424,7 +436,7 @@
 			"y": 850,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.promote.started\n\nDraft promotion to task initiated.",
+			"text": "# Promote Started\n\nDraft promotion to task initiated.",
 			"pv": {
 				"event": {
 					"name": "draft.promote.started",
@@ -440,16 +452,19 @@
 					}
 				},
 				"sources": [
-					"src/cli.ts",
 					"src/core/backlog.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "implemented"
 			}
 		},
 		{
@@ -459,7 +474,7 @@
 			"y": 1000,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.promote.loaded\n\nDraft file located for promotion.",
+			"text": "# Promote Loaded\n\nDraft file located for promotion.",
 			"pv": {
 				"event": {
 					"name": "draft.promote.loaded",
@@ -475,15 +490,19 @@
 					}
 				},
 				"sources": [
-					"src/core/backlog.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "implemented"
 			}
 		},
 		{
@@ -493,7 +512,7 @@
 			"y": 1150,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.promote.moved\n\nDraft file moved to tasks directory.",
+			"text": "# Promote Moved\n\nDraft file moved to tasks directory.",
 			"pv": {
 				"event": {
 					"name": "draft.promote.moved",
@@ -513,11 +532,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "implemented"
 			}
 		},
 		{
@@ -527,7 +550,7 @@
 			"y": 1300,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.promote.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
 			"pv": {
 				"event": {
 					"name": "draft.promote.committed",
@@ -543,15 +566,19 @@
 					}
 				},
 				"sources": [
-					"src/git/operations.ts"
+					"src/core/backlog.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "integration"
+					"category": "integration",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "implemented"
 			}
 		},
 		{
@@ -561,7 +588,7 @@
 			"y": 1450,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.promote.complete\n\nDraft promotion completed successfully.",
+			"text": "# Promote Complete\n\nDraft promotion completed successfully.",
 			"pv": {
 				"event": {
 					"name": "draft.promote.complete",
@@ -581,15 +608,19 @@
 					}
 				},
 				"sources": [
-					"src/cli.ts"
+					"src/core/backlog.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "implemented"
 			}
 		},
 		{
@@ -599,7 +630,7 @@
 			"y": 850,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.archive.started\n\nDraft archive command invoked.",
+			"text": "# Archive Started\n\nDraft archive command invoked.",
 			"pv": {
 				"event": {
 					"name": "draft.archive.started",
@@ -624,7 +655,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -634,7 +666,7 @@
 			"y": 1000,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.archive.located\n\nDraft file found and path resolved.",
+			"text": "# Archive Located\n\nDraft file found and path resolved.",
 			"pv": {
 				"event": {
 					"name": "draft.archive.located",
@@ -662,7 +694,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -672,7 +705,7 @@
 			"y": 1150,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.archive.moved\n\nDraft file moved to archive directory.",
+			"text": "# Archive Moved\n\nDraft file moved to archive directory.",
 			"pv": {
 				"event": {
 					"name": "draft.archive.moved",
@@ -696,7 +729,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -706,7 +740,7 @@
 			"y": 1300,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.archive.committed\n\nGit commit created for archive operation.",
+			"text": "# Changes Committed\n\nGit commit created for archive operation.",
 			"pv": {
 				"event": {
 					"name": "draft.archive.committed",
@@ -730,7 +764,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -740,7 +775,7 @@
 			"y": 1450,
 			"width": 200,
 			"height": 100,
-			"text": "# draft.archive.complete\n\nDraft archived successfully.",
+			"text": "# Archive Complete\n\nDraft archived successfully.",
 			"pv": {
 				"event": {
 					"name": "draft.archive.complete",
@@ -768,7 +803,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -778,7 +814,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 150,
-			"text": "# draft.error\n\nDraft operation failed with an error.",
+			"text": "# Draft Error\n\nDraft operation failed with an error.",
 			"pv": {
 				"event": {
 					"name": "draft.error",
@@ -810,16 +846,19 @@
 					}
 				},
 				"sources": [
-					"src/cli.ts",
 					"src/core/backlog.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "error"
+					"category": "error",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "implemented"
 			}
 		}
 	],

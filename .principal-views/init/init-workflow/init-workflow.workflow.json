@@ -6,67 +6,8 @@
 	"description": "CLI command for initializing a new Backlog.md workspace",
 	"scenarios": [
 		{
-			"id": "init-success",
-			"priority": 1,
-			"condition": {
-				"requires": ["init.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Successfully initialized project (completed in {duration.ms}ms)",
-				"events": {
-					"init.started": "Initializing {{projectName}} in {{integrationMode}} mode",
-					"init.structure.created": "Created {{created.directories}} directories and {{created.files}} files",
-					"init.config.saved": "Saved configuration with prefix {{config.taskPrefix}}",
-					"init.mcp.configured": "Configured {{mcp.successCount}} MCP clients",
-					"init.complete": "Initialization complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "init-error",
-			"priority": 2,
-			"condition": {
-				"requires": ["init.error"]
-			},
-			"template": {
-				"summary": "❌ Initialization failed at {error.stage} stage: {error.message}",
-				"events": {
-					"init.started": "Started initialization",
-					"init.error": "Failed at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
-			"id": "init-mcp-warnings",
-			"priority": 3,
-			"condition": {
-				"requires": ["init.mcp.configured", "init.complete"],
-				"assertions": {
-					"mcp.failureCount": {
-						"$gt": 0
-					}
-				}
-			},
-			"template": {
-				"summary": "⚠️  Initialized with MCP configuration warnings ({mcp.successCount} successful, {mcp.failureCount} failed)",
-				"events": {
-					"init.started": "Initializing {{projectName}}",
-					"init.structure.created": "Created directory structure",
-					"init.config.saved": "Saved configuration",
-					"init.mcp.configured": "MCP: {{mcp.successCount}} successful, {{mcp.failureCount}} failed",
-					"init.complete": "Initialization complete with warnings"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Backlog init execution captured",
 				"events": {
@@ -77,7 +18,9 @@
 					"init.complete": "Initialization complete",
 					"init.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "init"
 }

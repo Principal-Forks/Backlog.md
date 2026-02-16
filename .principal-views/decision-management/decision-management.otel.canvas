@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.create.started\n\nDecision creation initiated with title.",
+			"text": "# Create Started\n\nDecision creation initiated with title.",
 			"pv": {
 				"event": {
 					"name": "decision.create.started",
@@ -27,7 +27,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -37,7 +38,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.create.validated\n\nDecision ID generated and validated.",
+			"text": "# Create Validated\n\nDecision ID generated and validated.",
 			"pv": {
 				"event": {
 					"name": "decision.create.validated",
@@ -61,7 +62,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -71,7 +73,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.create.saved\n\nDecision file saved to disk.",
+			"text": "# Create Saved\n\nDecision file saved to disk.",
 			"pv": {
 				"event": {
 					"name": "decision.create.saved",
@@ -95,7 +97,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -105,7 +108,7 @@
 			"y": 500,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.create.committed\n\nDecision creation committed to git.",
+			"text": "# Changes Committed\n\nDecision creation committed to git.",
 			"pv": {
 				"event": {
 					"name": "decision.create.committed",
@@ -129,7 +132,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#7c3aed"
+				"stroke": "#7c3aed",
+				"status": "draft"
 			}
 		},
 		{
@@ -139,7 +143,7 @@
 			"y": 650,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.create.complete\n\nDecision creation completed successfully.",
+			"text": "# Create Complete\n\nDecision creation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "decision.create.complete",
@@ -167,7 +171,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -177,7 +182,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.view.started\n\nDecision view initiated.",
+			"text": "# View Started\n\nDecision view initiated.",
 			"pv": {
 				"event": {
 					"name": "decision.view.started",
@@ -197,7 +202,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -207,7 +213,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.view.loaded\n\nDecision loaded from filesystem.",
+			"text": "# View Loaded\n\nDecision loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "decision.view.loaded",
@@ -231,7 +237,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -241,7 +248,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.view.complete\n\nDecision view completed.",
+			"text": "# View Complete\n\nDecision view completed.",
 			"pv": {
 				"event": {
 					"name": "decision.view.complete",
@@ -265,7 +272,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -275,7 +283,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.list.started\n\nDecision list operation initiated.",
+			"text": "# List Started\n\nDecision list operation initiated.",
 			"pv": {
 				"event": {
 					"name": "decision.list.started",
@@ -290,7 +298,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -300,7 +309,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.list.loaded\n\nDecisions loaded from filesystem.",
+			"text": "# List Loaded\n\nDecisions loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "decision.list.loaded",
@@ -320,7 +329,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -330,7 +340,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.list.complete\n\nDecision list operation completed.",
+			"text": "# List Complete\n\nDecision list operation completed.",
 			"pv": {
 				"event": {
 					"name": "decision.list.complete",
@@ -354,7 +364,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -364,7 +375,7 @@
 			"y": 50,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.update.started\n\nDecision update initiated.",
+			"text": "# Update Started\n\nDecision update initiated.",
 			"pv": {
 				"event": {
 					"name": "decision.update.started",
@@ -388,7 +399,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -398,7 +410,7 @@
 			"y": 200,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.update.loaded\n\nExisting decision loaded for update.",
+			"text": "# Update Loaded\n\nExisting decision loaded for update.",
 			"pv": {
 				"event": {
 					"name": "decision.update.loaded",
@@ -422,7 +434,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -432,7 +445,7 @@
 			"y": 350,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.update.parsed\n\nMarkdown content parsed for updates.",
+			"text": "# Update Parsed\n\nMarkdown content parsed for updates.",
 			"pv": {
 				"event": {
 					"name": "decision.update.parsed",
@@ -456,7 +469,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -466,7 +480,7 @@
 			"y": 500,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.update.saved\n\nUpdated decision saved to disk.",
+			"text": "# Update Saved\n\nUpdated decision saved to disk.",
 			"pv": {
 				"event": {
 					"name": "decision.update.saved",
@@ -486,7 +500,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -496,7 +511,7 @@
 			"y": 650,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.update.committed\n\nDecision update committed to git.",
+			"text": "# Changes Committed\n\nDecision update committed to git.",
 			"pv": {
 				"event": {
 					"name": "decision.update.committed",
@@ -516,7 +531,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#7c3aed"
+				"stroke": "#7c3aed",
+				"status": "draft"
 			}
 		},
 		{
@@ -526,7 +542,7 @@
 			"y": 800,
 			"width": 220,
 			"height": 110,
-			"text": "# decision.update.complete\n\nDecision update completed successfully.",
+			"text": "# Update Complete\n\nDecision update completed successfully.",
 			"pv": {
 				"event": {
 					"name": "decision.update.complete",
@@ -554,7 +570,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -564,7 +581,7 @@
 			"y": 400,
 			"width": 220,
 			"height": 130,
-			"text": "# decision.error\n\nDecision operation error occurred.",
+			"text": "# Decision Error\n\nDecision operation error occurred.",
 			"pv": {
 				"event": {
 					"name": "decision.error",
@@ -597,7 +614,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],

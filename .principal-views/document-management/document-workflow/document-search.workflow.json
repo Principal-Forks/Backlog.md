@@ -6,65 +6,8 @@
 	"description": "Full-text search across document content",
 	"scenarios": [
 		{
-			"id": "search-success-with-results",
-			"priority": 1,
-			"condition": {
-				"requires": ["document.search.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Found {resultCount} documents for query \"{query}\" (completed in {duration.ms}ms)",
-				"events": {
-					"document.search.started": "Searching documents for: {{query}}{{#if limit}} (limit: {{limit}}){{/if}}",
-					"document.search.executed": "Search returned {{resultCount}} results",
-					"document.search.complete": "Search completed in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "search-no-results",
-			"priority": 2,
-			"condition": {
-				"requires": ["document.search.complete"],
-				"assertions": {
-					"success": true,
-					"resultCount": 0
-				}
-			},
-			"template": {
-				"summary": "⚠️ No documents found for query \"{query}\"",
-				"events": {
-					"document.search.started": "Searching documents for: {{query}}",
-					"document.search.executed": "No results found",
-					"document.search.complete": "Search completed with no results"
-				}
-			}
-		},
-		{
-			"id": "search-error",
-			"priority": 3,
-			"condition": {
-				"requires": ["document.error"],
-				"assertions": {
-					"operation": "search"
-				}
-			},
-			"template": {
-				"summary": "❌ Document search failed: {error.message}",
-				"events": {
-					"document.search.started": "Searching documents for: {{query}}",
-					"document.error": "Failed at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Document search execution captured",
 				"events": {
@@ -73,7 +16,9 @@
 					"document.search.complete": "Operation complete",
 					"document.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "document.search"
 }

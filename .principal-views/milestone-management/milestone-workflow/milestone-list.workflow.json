@@ -6,83 +6,8 @@
 	"description": "Listing milestones",
 	"scenarios": [
 		{
-			"id": "list-success-with-archived",
-			"priority": 1,
-			"condition": {
-				"requires": ["milestone.list.complete"],
-				"assertions": {
-					"success": true,
-					"includeArchived": true
-				}
-			},
-			"template": {
-				"summary": "✅ Listed {resultCount} milestones (including {archivedCount} archived, completed in {duration.ms}ms)",
-				"events": {
-					"milestone.list.started": "Listing all milestones (including archived)",
-					"milestone.list.loaded": "Loaded {{totalCount}} milestones ({{archivedCount}} archived)",
-					"milestone.list.complete": "List complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "list-success",
-			"priority": 2,
-			"condition": {
-				"requires": ["milestone.list.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Listed {resultCount} milestones (completed in {duration.ms}ms)",
-				"events": {
-					"milestone.list.started": "Listing milestones",
-					"milestone.list.loaded": "Loaded {{totalCount}} milestones",
-					"milestone.list.complete": "List complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "list-empty",
-			"priority": 3,
-			"condition": {
-				"requires": ["milestone.list.complete"],
-				"assertions": {
-					"resultCount": 0
-				}
-			},
-			"template": {
-				"summary": "ℹ️ No milestones found",
-				"events": {
-					"milestone.list.started": "Listing milestones",
-					"milestone.list.loaded": "No milestones found",
-					"milestone.list.complete": "List complete (0 results)"
-				}
-			}
-		},
-		{
-			"id": "list-error",
-			"priority": 4,
-			"condition": {
-				"requires": ["milestone.error"],
-				"assertions": {
-					"operation": "list"
-				}
-			},
-			"template": {
-				"summary": "❌ Failed to list milestones: {error.message}",
-				"events": {
-					"milestone.list.started": "Listing milestones",
-					"milestone.error": "Error: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Milestone list execution captured",
 				"events": {
@@ -91,7 +16,9 @@
 					"milestone.list.complete": "List complete",
 					"milestone.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "milestone.list"
 }

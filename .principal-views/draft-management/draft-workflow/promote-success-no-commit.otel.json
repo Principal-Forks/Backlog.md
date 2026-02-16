@@ -25,15 +25,15 @@
 					},
 					"spans": [
 						{
-							"traceId": "ff88d57c567d98",
-							"spanId": "42aa2b6d8b507",
+							"traceId": "4102e77d924ff8",
+							"spanId": "3806464d07421",
 							"name": "draft.promotion",
-							"startTimeUnixNano": "1770080256200000000",
-							"endTimeUnixNano": "1770080256201000000",
+							"startTimeUnixNano": "1770675731056000000",
+							"endTimeUnixNano": "1770675731057000000",
 							"attributes": [],
 							"events": [
 								{
-									"timeUnixNano": "1770080256200000000",
+									"timeUnixNano": "1770675731056000000",
 									"name": "draft.promote.started",
 									"attributes": [
 										{
@@ -51,7 +51,7 @@
 									]
 								},
 								{
-									"timeUnixNano": "1770080256200000000",
+									"timeUnixNano": "1770675731056000000",
 									"name": "draft.promote.loaded",
 									"attributes": [
 										{
@@ -63,31 +63,31 @@
 										{
 											"key": "fromPath",
 											"value": {
-												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml5w2ysk-f4n-a504866d/backlog/drafts/draft-2 - Draft-Without-Auto-Commit.md"
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-mlfqm24u-13cf-e7470729/backlog/drafts/draft-2 - Draft-Without-Auto-Commit.md"
 											}
 										}
 									]
 								},
 								{
-									"timeUnixNano": "1770080256201000000",
+									"timeUnixNano": "1770675731057000000",
 									"name": "draft.promote.moved",
 									"attributes": [
 										{
 											"key": "fromPath",
 											"value": {
-												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml5w2ysk-f4n-a504866d/backlog/drafts/draft-2 - Draft-Without-Auto-Commit.md"
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-mlfqm24u-13cf-e7470729/backlog/drafts/draft-2 - Draft-Without-Auto-Commit.md"
 											}
 										},
 										{
 											"key": "toPath",
 											"value": {
-												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-ml5w2ysk-f4n-a504866d/backlog/tasks/task-1 - Draft-Without-Auto-Commit.md"
+												"stringValue": "/Users/griever/Developer/backlog-adaptation/Backlog.md/tmp/otel-draft-promote-mlfqm24u-13cf-e7470729/backlog/tasks/task-1 - Draft-Without-Auto-Commit.md"
 											}
 										}
 									]
 								},
 								{
-									"timeUnixNano": "1770080256201000000",
+									"timeUnixNano": "1770675731057000000",
 									"name": "draft.promote.complete",
 									"attributes": [
 										{

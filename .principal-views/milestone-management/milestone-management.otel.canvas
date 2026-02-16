@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.create.started\n\nMilestone creation initiated with title.",
+			"text": "# Create Started\n\nMilestone creation initiated with title.",
 			"pv": {
 				"event": {
 					"name": "milestone.create.started",
@@ -36,7 +36,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -46,7 +47,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.create.validated\n\nMilestone data validated and ID generated.",
+			"text": "# Create Validated\n\nMilestone data validated and ID generated.",
 			"pv": {
 				"event": {
 					"name": "milestone.create.validated",
@@ -70,7 +71,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -80,7 +82,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.create.saved\n\nMilestone file written to milestones directory.",
+			"text": "# Create Saved\n\nMilestone file written to milestones directory.",
 			"pv": {
 				"event": {
 					"name": "milestone.create.saved",
@@ -108,7 +110,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -118,7 +121,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.create.committed\n\nChanges committed to git (if autoCommit enabled).",
+			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
 			"pv": {
 				"event": {
 					"name": "milestone.create.committed",
@@ -142,7 +145,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -152,7 +156,7 @@
 			"y": 650,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.create.complete\n\nMilestone creation completed successfully.",
+			"text": "# Create Complete\n\nMilestone creation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "milestone.create.complete",
@@ -180,7 +184,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -190,7 +195,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.view.started\n\nMilestone view operation initiated.",
+			"text": "# View Started\n\nMilestone view operation initiated.",
 			"pv": {
 				"event": {
 					"name": "milestone.view.started",
@@ -214,7 +219,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -224,7 +230,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.view.loaded\n\nMilestone data loaded from filesystem.",
+			"text": "# View Loaded\n\nMilestone data loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "milestone.view.loaded",
@@ -248,7 +254,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -258,7 +265,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.view.complete\n\nMilestone view completed successfully.",
+			"text": "# View Complete\n\nMilestone view completed successfully.",
 			"pv": {
 				"event": {
 					"name": "milestone.view.complete",
@@ -286,7 +293,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -296,7 +304,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.list.started\n\nMilestone list operation initiated.",
+			"text": "# List Started\n\nMilestone list operation initiated.",
 			"pv": {
 				"event": {
 					"name": "milestone.list.started",
@@ -320,7 +328,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -330,7 +339,7 @@
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.list.loaded\n\nMilestones loaded from filesystem.",
+			"text": "# List Loaded\n\nMilestones loaded from filesystem.",
 			"pv": {
 				"event": {
 					"name": "milestone.list.loaded",
@@ -354,7 +363,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -364,7 +374,7 @@
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.list.complete\n\nMilestone list operation completed successfully.",
+			"text": "# List Complete\n\nMilestone list operation completed successfully.",
 			"pv": {
 				"event": {
 					"name": "milestone.list.complete",
@@ -392,7 +402,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -402,7 +413,7 @@
 			"y": 850,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.archive.started\n\nMilestone archive command invoked.",
+			"text": "# Archive Started\n\nMilestone archive command invoked.",
 			"pv": {
 				"event": {
 					"name": "milestone.archive.started",
@@ -427,7 +438,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -437,7 +449,7 @@
 			"y": 1000,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.archive.located\n\nMilestone file found and path resolved.",
+			"text": "# Archive Located\n\nMilestone file found and path resolved.",
 			"pv": {
 				"event": {
 					"name": "milestone.archive.located",
@@ -465,7 +477,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -475,7 +488,7 @@
 			"y": 1150,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.archive.moved\n\nMilestone file moved to archive directory.",
+			"text": "# Archive Moved\n\nMilestone file moved to archive directory.",
 			"pv": {
 				"event": {
 					"name": "milestone.archive.moved",
@@ -499,7 +512,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -509,7 +523,7 @@
 			"y": 1300,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.archive.committed\n\nGit commit created for archive operation.",
+			"text": "# Changes Committed\n\nGit commit created for archive operation.",
 			"pv": {
 				"event": {
 					"name": "milestone.archive.committed",
@@ -533,7 +547,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -543,7 +558,7 @@
 			"y": 1450,
 			"width": 200,
 			"height": 100,
-			"text": "# milestone.archive.complete\n\nMilestone archived successfully.",
+			"text": "# Archive Complete\n\nMilestone archived successfully.",
 			"pv": {
 				"event": {
 					"name": "milestone.archive.complete",
@@ -571,7 +586,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -581,7 +597,7 @@
 			"y": 500,
 			"width": 200,
 			"height": 150,
-			"text": "# milestone.error\n\nMilestone operation failed with an error.",
+			"text": "# Milestone Error\n\nMilestone operation failed with an error.",
 			"pv": {
 				"event": {
 					"name": "milestone.error",
@@ -622,7 +638,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],

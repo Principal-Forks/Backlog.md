@@ -6,68 +6,8 @@
 	"description": "Executing a search query across all entity types",
 	"scenarios": [
 		{
-			"id": "query-success-with-results",
-			"priority": 1,
-			"condition": {
-				"requires": ["search.query.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Search found {resultCount} results for \"{query}\" (completed in {duration.ms}ms)",
-				"events": {
-					"search.query.started": "Searching for: {{query}}{{#if limit}} (limit: {{limit}}){{/if}}",
-					"search.query.normalized": "Normalized query: \"{{trimmedQuery}}\" across {{types.length}} types",
-					"search.query.executed": "Fuse.js search returned {{rawResultCount}} raw results",
-					"search.query.filtered": "Filtered to {{filteredCount}} results ({{taskCount}} tasks, {{documentCount}} documents, {{decisionCount}} decisions)",
-					"search.query.complete": "Search completed with {{resultCount}} results in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "query-no-results",
-			"priority": 2,
-			"condition": {
-				"requires": ["search.query.complete"],
-				"assertions": {
-					"success": true,
-					"resultCount": 0
-				}
-			},
-			"template": {
-				"summary": "⚠️ No results found for \"{query}\"",
-				"events": {
-					"search.query.started": "Searching for: {{query}}",
-					"search.query.normalized": "Normalized query: \"{{trimmedQuery}}\"",
-					"search.query.executed": "Fuse.js search returned no matches",
-					"search.query.complete": "Search completed with no results"
-				}
-			}
-		},
-		{
-			"id": "query-error",
-			"priority": 3,
-			"condition": {
-				"requires": ["search.error"],
-				"assertions": {
-					"operation": "query"
-				}
-			},
-			"template": {
-				"summary": "❌ Search query failed: {error.message}",
-				"events": {
-					"search.query.started": "Searching for: {{query}}",
-					"search.error": "Failed at {{error.stage}}: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Search query execution captured",
 				"events": {
@@ -78,7 +18,9 @@
 					"search.query.complete": "Query complete",
 					"search.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "search.query"
 }

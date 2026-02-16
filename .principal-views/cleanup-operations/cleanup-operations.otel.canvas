@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# cleanup.preview.started\n\nCleanup preview initiated to identify old tasks.",
+			"text": "# Preview Started\n\nCleanup preview initiated to identify old tasks.",
 			"pv": {
 				"event": {
 					"name": "cleanup.preview.started",
@@ -18,14 +18,18 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts", "src/server/index.ts"],
+				"sources": [
+					"src/core/backlog.ts",
+					"src/server/index.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -35,7 +39,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# cleanup.preview.filtered\n\nTasks filtered by status and age.",
+			"text": "# Tasks Filtered\n\nTasks filtered by status and age.",
 			"pv": {
 				"event": {
 					"name": "cleanup.preview.filtered",
@@ -54,14 +58,17 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts"],
+				"sources": [
+					"src/core/backlog.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "operation"
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -71,7 +78,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# cleanup.preview.complete\n\nPreview generation completed.",
+			"text": "# Preview Complete\n\nPreview generation completed.",
 			"pv": {
 				"event": {
 					"name": "cleanup.preview.complete",
@@ -86,14 +93,17 @@
 						}
 					}
 				},
-				"sources": ["src/server/index.ts"],
+				"sources": [
+					"src/server/index.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -103,7 +113,7 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# cleanup.batch.started\n\nBatch cleanup execution initiated.",
+			"text": "# Batch Cleanup Started\n\nBatch cleanup execution initiated.",
 			"pv": {
 				"event": {
 					"name": "cleanup.batch.started",
@@ -118,14 +128,17 @@
 						}
 					}
 				},
-				"sources": ["src/server/index.ts"],
+				"sources": [
+					"src/server/index.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -135,7 +148,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# cleanup.batch.processing\n\nProcessing tasks in batch operation.",
+			"text": "# Processing Tasks\n\nProcessing tasks in batch operation.",
 			"pv": {
 				"event": {
 					"name": "cleanup.batch.processing",
@@ -154,14 +167,17 @@
 						}
 					}
 				},
-				"sources": ["src/server/index.ts"],
+				"sources": [
+					"src/server/index.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "operation"
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -171,7 +187,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# cleanup.batch.complete\n\nBatch cleanup completed with results.",
+			"text": "# Batch Complete\n\nBatch cleanup completed with results.",
 			"pv": {
 				"event": {
 					"name": "cleanup.batch.complete",
@@ -198,14 +214,17 @@
 						}
 					}
 				},
-				"sources": ["src/server/index.ts"],
+				"sources": [
+					"src/server/index.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -215,7 +234,7 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# task.complete.started\n\nSingle task completion initiated.",
+			"text": "# Task Completion Started\n\nSingle task completion initiated.",
 			"pv": {
 				"event": {
 					"name": "task.complete.started",
@@ -230,14 +249,17 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts"],
+				"sources": [
+					"src/core/backlog.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -247,7 +269,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# task.complete.located\n\nTask file located in tasks directory.",
+			"text": "# Task Located\n\nTask file located in tasks directory.",
 			"pv": {
 				"event": {
 					"name": "task.complete.located",
@@ -266,14 +288,18 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts", "src/file-system/operations.ts"],
+				"sources": [
+					"src/core/backlog.ts",
+					"src/file-system/operations.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "io"
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -283,7 +309,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# task.complete.moved\n\nTask file moved to completed directory.",
+			"text": "# Task Moved\n\nTask file moved to completed directory.",
 			"pv": {
 				"event": {
 					"name": "task.complete.moved",
@@ -302,14 +328,17 @@
 						}
 					}
 				},
-				"sources": ["src/file-system/operations.ts"],
+				"sources": [
+					"src/file-system/operations.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "io"
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -319,7 +348,7 @@
 			"y": 500,
 			"width": 240,
 			"height": 110,
-			"text": "# task.complete.committed\n\nTask completion committed to git.",
+			"text": "# Changes Committed\n\nTask completion committed to git.",
 			"pv": {
 				"event": {
 					"name": "task.complete.committed",
@@ -334,14 +363,17 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts"],
+				"sources": [
+					"src/core/backlog.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "git"
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
-				"stroke": "#7c3aed"
+				"stroke": "#7c3aed",
+				"status": "draft"
 			}
 		},
 		{
@@ -351,7 +383,7 @@
 			"y": 650,
 			"width": 240,
 			"height": 110,
-			"text": "# task.complete.complete\n\nTask completion operation finished.",
+			"text": "# Completion Complete\n\nTask completion operation finished.",
 			"pv": {
 				"event": {
 					"name": "task.complete.complete",
@@ -366,14 +398,17 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts"],
+				"sources": [
+					"src/core/backlog.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -383,20 +418,23 @@
 			"y": 50,
 			"width": 240,
 			"height": 110,
-			"text": "# completed.tasks.list.started\n\nList completed tasks operation started.",
+			"text": "# List Started\n\nList completed tasks operation started.",
 			"pv": {
 				"event": {
 					"name": "completed.tasks.list.started",
 					"attributes": {}
 				},
-				"sources": ["src/file-system/operations.ts"],
+				"sources": [
+					"src/file-system/operations.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -406,7 +444,7 @@
 			"y": 200,
 			"width": 240,
 			"height": 110,
-			"text": "# completed.tasks.list.loaded\n\nCompleted tasks loaded from directory.",
+			"text": "# Tasks Loaded\n\nCompleted tasks loaded from directory.",
 			"pv": {
 				"event": {
 					"name": "completed.tasks.list.loaded",
@@ -421,14 +459,17 @@
 						}
 					}
 				},
-				"sources": ["src/file-system/operations.ts"],
+				"sources": [
+					"src/file-system/operations.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "io"
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -438,7 +479,7 @@
 			"y": 350,
 			"width": 240,
 			"height": 110,
-			"text": "# completed.tasks.list.complete\n\nCompleted tasks list operation finished.",
+			"text": "# List Complete\n\nCompleted tasks list operation finished.",
 			"pv": {
 				"event": {
 					"name": "completed.tasks.list.complete",
@@ -453,14 +494,17 @@
 						}
 					}
 				},
-				"sources": ["src/file-system/operations.ts"],
+				"sources": [
+					"src/file-system/operations.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "lifecycle"
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -470,7 +514,7 @@
 			"y": 300,
 			"width": 240,
 			"height": 130,
-			"text": "# cleanup.error\n\nCleanup operation error occurred.",
+			"text": "# Cleanup Error\n\nCleanup operation error occurred.",
 			"pv": {
 				"event": {
 					"name": "cleanup.error",
@@ -497,14 +541,18 @@
 						}
 					}
 				},
-				"sources": ["src/core/backlog.ts", "src/server/index.ts"],
+				"sources": [
+					"src/core/backlog.ts",
+					"src/server/index.ts"
+				],
 				"otel": {
 					"kind": "event",
 					"category": "error"
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],

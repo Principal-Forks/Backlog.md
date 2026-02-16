@@ -6,64 +6,8 @@
 	"description": "Viewing draft details",
 	"scenarios": [
 		{
-			"id": "view-success",
-			"priority": 1,
-			"condition": {
-				"requires": ["draft.view.complete"],
-				"assertions": {
-					"success": true
-				}
-			},
-			"template": {
-				"summary": "✅ Viewed draft {draftId} (completed in {duration.ms}ms)",
-				"events": {
-					"draft.view.started": "Viewing draft {{draftId}}",
-					"draft.view.loaded": "Loaded draft from {{source}}",
-					"draft.view.complete": "View complete in {{duration.ms}}ms"
-				}
-			}
-		},
-		{
-			"id": "view-not-found",
-			"priority": 2,
-			"condition": {
-				"requires": ["draft.error"],
-				"assertions": {
-					"operation": "view",
-					"error.type": "DraftNotFound"
-				}
-			},
-			"template": {
-				"summary": "❌ Draft {draftId} not found",
-				"events": {
-					"draft.view.started": "Viewing draft {{draftId}}",
-					"draft.error": "Draft not found: {{error.message}}"
-				}
-			}
-		},
-		{
-			"id": "view-error",
-			"priority": 3,
-			"condition": {
-				"requires": ["draft.error"],
-				"assertions": {
-					"operation": "view"
-				}
-			},
-			"template": {
-				"summary": "❌ Failed to view draft {draftId}: {error.message}",
-				"events": {
-					"draft.view.started": "Viewing draft {{draftId}}",
-					"draft.error": "Error: {{error.message}}"
-				}
-			}
-		},
-		{
 			"id": "fallback",
 			"priority": 999,
-			"condition": {
-				"default": true
-			},
 			"template": {
 				"summary": "📋 Draft view execution captured",
 				"events": {
@@ -72,7 +16,9 @@
 					"draft.view.complete": "View complete",
 					"draft.error": "Error occurred"
 				}
-			}
+			},
+			"description": "Default fallback scenario for unmatched cases"
 		}
-	]
+	],
+	"spanPattern": "draft.view"
 }

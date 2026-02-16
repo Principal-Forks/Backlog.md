@@ -7,7 +7,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# init.started\n\nInitialization process begins. Emitted at the start of the init command with project configuration details.",
+			"text": "# Init Started\n\nInitialization process begins. Emitted at the start of the init command with project configuration details.",
 			"pv": {
 				"event": {
 					"name": "init.started",
@@ -43,7 +43,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -53,7 +54,7 @@
 			"y": 250,
 			"width": 200,
 			"height": 100,
-			"text": "# init.structure.created\n\nBacklog directory structure created successfully.",
+			"text": "# Structure Created\n\nBacklog directory structure created successfully.",
 			"pv": {
 				"event": {
 					"name": "init.structure.created",
@@ -77,7 +78,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -87,7 +89,7 @@
 			"y": 450,
 			"width": 200,
 			"height": 100,
-			"text": "# init.config.saved\n\nConfiguration saved to disk with project settings.",
+			"text": "# Config Saved\n\nConfiguration saved to disk with project settings.",
 			"pv": {
 				"event": {
 					"name": "init.config.saved",
@@ -123,7 +125,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
-				"stroke": "#1d4ed8"
+				"stroke": "#1d4ed8",
+				"status": "draft"
 			}
 		},
 		{
@@ -133,7 +136,7 @@
 			"y": 650,
 			"width": 200,
 			"height": 100,
-			"text": "# init.mcp.configured\n\nMCP integration configured (when applicable).",
+			"text": "# Mcp Configured\n\nMCP integration configured (when applicable).",
 			"pv": {
 				"event": {
 					"name": "init.mcp.configured",
@@ -165,7 +168,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
-				"stroke": "#d97706"
+				"stroke": "#d97706",
+				"status": "draft"
 			}
 		},
 		{
@@ -175,7 +179,7 @@
 			"y": 850,
 			"width": 200,
 			"height": 100,
-			"text": "# init.complete\n\nInitialization completed successfully.",
+			"text": "# Init Complete\n\nInitialization completed successfully.",
 			"pv": {
 				"event": {
 					"name": "init.complete",
@@ -207,7 +211,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
-				"stroke": "#16a34a"
+				"stroke": "#16a34a",
+				"status": "draft"
 			}
 		},
 		{
@@ -217,7 +222,7 @@
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# init.error\n\nInitialization failed with an error.",
+			"text": "# Init Error\n\nInitialization failed with an error.",
 			"pv": {
 				"event": {
 					"name": "init.error",
@@ -249,7 +254,8 @@
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
-				"stroke": "#dc2626"
+				"stroke": "#dc2626",
+				"status": "draft"
 			}
 		}
 	],
