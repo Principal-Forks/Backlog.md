@@ -10,7 +10,7 @@ import {
 	formatDateForDisplay,
 	formatTaskPlainText,
 } from "../formatters/task-plain-text.ts";
-import type { Task, TaskSearchResult } from "../types/index.ts";
+import type { Milestone, Task, TaskSearchResult } from "../types/index.ts";
 import { collectAvailableLabels } from "../utils/label-filter.ts";
 import { hasAnyPrefix } from "../utils/prefix-config.ts";
 import { createTaskSearchIndex } from "../utils/task-search.ts";
@@ -35,6 +35,29 @@ function getPriorityDisplay(priority?: "high" | "medium" | "low"): string {
 		default:
 			return "";
 	}
+}
+
+function createMilestoneLabelResolver(milestones: Milestone[]): (milestone: string) => string {
+	const milestoneLabelsByKey = new Map<string, string>();
+	for (const milestone of milestones) {
+		const normalizedId = milestone.id.trim();
+		const normalizedTitle = milestone.title.trim();
+		if (!normalizedId || !normalizedTitle) continue;
+		milestoneLabelsByKey.set(normalizedId.toLowerCase(), normalizedTitle);
+		const idMatch = normalizedId.match(/^m-(\d+)$/i);
+		if (idMatch?.[1]) {
+			const numericAlias = String(Number.parseInt(idMatch[1], 10));
+			milestoneLabelsByKey.set(`m-${numericAlias}`, normalizedTitle);
+			milestoneLabelsByKey.set(numericAlias, normalizedTitle);
+		}
+		milestoneLabelsByKey.set(normalizedTitle.toLowerCase(), normalizedTitle);
+	}
+
+	return (milestone: string) => {
+		const normalized = milestone.trim();
+		if (!normalized) return milestone;
+		return milestoneLabelsByKey.get(normalized.toLowerCase()) ?? milestone;
+	};
 }
 
 /**
@@ -82,6 +105,11 @@ export async function viewTaskEnhanced(
 	let taskSearchIndex: ReturnType<typeof createTaskSearchIndex> | null = null;
 	let searchService: Awaited<ReturnType<typeof core.getSearchService>> | null = null;
 	let contentStore: Awaited<ReturnType<typeof core.getContentStore>> | null = null;
+	const [milestoneEntities, archivedMilestoneEntities] = await Promise.all([
+		core.filesystem.listMilestones(),
+		core.filesystem.listArchivedMilestones(),
+	]);
+	const resolveMilestoneLabel = createMilestoneLabelResolver([...milestoneEntities, ...archivedMilestoneEntities]);
 
 	if (options.tasks) {
 		// Tasks already provided - use in-memory search (no ContentStore loading)
@@ -386,6 +414,22 @@ export async function viewTaskEnhanced(
 		tags: true,
 		content: "",
 	});
+	let transientHelpContent: string | null = null;
+	let helpRestoreTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function showTransientHelp(message: string, durationMs = 3000) {
+		transientHelpContent = message;
+		if (helpRestoreTimer) {
+			clearTimeout(helpRestoreTimer);
+			helpRestoreTimer = null;
+		}
+		updateHelpBar();
+		helpRestoreTimer = setTimeout(() => {
+			transientHelpContent = null;
+			helpRestoreTimer = null;
+			updateHelpBar();
+		}, durationMs);
+	}
 
 	function setActivePane(active: "list" | "detail" | "none") {
 		const listBorder = taskListPane.style as { border?: { fg?: string } };
@@ -758,7 +802,7 @@ export async function viewTaskEnhanced(
 
 		screen.title = `Task ${currentSelectedTask.id} - ${currentSelectedTask.title}`;
 
-		const detailContent = generateDetailContent(currentSelectedTask);
+		const detailContent = generateDetailContent(currentSelectedTask, resolveMilestoneLabel);
 
 		// Calculate header height based on content and available width
 		const detailPaneWidth = typeof detailPane.width === "number" ? detailPane.width : 60;
@@ -813,6 +857,12 @@ export async function viewTaskEnhanced(
 
 	// Dynamic help bar content
 	function updateHelpBar() {
+		if (transientHelpContent) {
+			helpBar.setContent(transientHelpContent);
+			screen.render();
+			return;
+		}
+
 		let content = "";
 
 		const filterFocus = filterHeader.getCurrentFocus();
@@ -827,16 +877,63 @@ export async function viewTaskEnhanced(
 					" {cyan-fg}[Tab]{/} Next Filter | {cyan-fg}[Shift+Tab]{/} Prev | {cyan-fg}[↑↓]{/} Select | {cyan-fg}[Esc]{/} Back | {gray-fg}(Live filter){/}";
 			}
 		} else if (currentFocus === "detail") {
-			content = " {cyan-fg}[←]{/} Task List | {cyan-fg}[↑↓]{/} Scroll | {cyan-fg}[q/Esc]{/} Quit";
+			content =
+				" {cyan-fg}[←]{/} Task List | {cyan-fg}[↑↓]{/} Scroll | {cyan-fg}[E]{/} Edit | {cyan-fg}[q/Esc]{/} Quit";
 		} else {
 			// Task list help
 			content =
-				" {cyan-fg}[Tab]{/} Switch View | {cyan-fg}[/]{/} Search | {cyan-fg}[s]{/} Status | {cyan-fg}[p]{/} Priority | {cyan-fg}[l]{/} Labels | {cyan-fg}[↑↓]{/} Navigate | {cyan-fg}[q/Esc]{/} Quit";
+				" {cyan-fg}[Tab]{/} Switch View | {cyan-fg}[/]{/} Search | {cyan-fg}[s]{/} Status | {cyan-fg}[p]{/} Priority | {cyan-fg}[l]{/} Labels | {cyan-fg}[↑↓]{/} Navigate | {cyan-fg}[E]{/} Edit | {cyan-fg}[q/Esc]{/} Quit";
 		}
 
 		helpBar.setContent(content);
 		screen.render();
 	}
+
+	const openCurrentTaskInEditor = async () => {
+		if (labelPickerOpen || currentFocus === "filters" || noResultsMessage) {
+			return;
+		}
+		const selectedTask = currentSelectedTask;
+
+		try {
+			const result = await core.editTaskInTui(selectedTask.id, screen, selectedTask);
+			if (result.reason === "read_only") {
+				const branchInfo = result.task?.branch ? ` in branch ${result.task.branch}` : "";
+				showTransientHelp(` {red-fg}Task is read-only${branchInfo}.{/}`);
+				return;
+			}
+			if (result.reason === "editor_failed") {
+				showTransientHelp(" {red-fg}Editor exited with an error; task was not modified.{/}");
+				return;
+			}
+			if (result.reason === "not_found") {
+				showTransientHelp(` {red-fg}Task ${selectedTask.id} was not found on this branch.{/}`);
+				return;
+			}
+
+			if (result.task) {
+				const index = allTasks.findIndex((taskItem) => taskItem.id === selectedTask.id);
+				if (index >= 0) {
+					allTasks[index] = result.task;
+				}
+				const enhancedTask = enrichTask(result.task) ?? result.task;
+				currentSelectedTask = enhancedTask;
+				options.onTaskChange?.(enhancedTask);
+				if (taskSearchIndex) {
+					taskSearchIndex = createTaskSearchIndex(allTasks);
+				}
+			}
+
+			applyFilters();
+			if (result.changed) {
+				showTransientHelp(` {green-fg}Task ${result.task?.id ?? selectedTask.id} marked modified.{/}`);
+				return;
+			}
+			showTransientHelp(` {gray-fg}No changes detected for ${result.task?.id ?? selectedTask.id}.{/}`);
+		} catch (_error) {
+			showTransientHelp(" {red-fg}Failed to open editor.{/}");
+		}
+	};
 
 	// Handle resize
 	screen.on("resize", () => {
@@ -871,6 +968,10 @@ export async function viewTaskEnhanced(
 
 	screen.key(["l", "L"], () => {
 		openLabelPicker();
+	});
+
+	screen.key(["e", "E", "S-e"], () => {
+		void openCurrentTaskInEditor();
 	});
 
 	screen.key(["escape"], () => {
@@ -947,6 +1048,10 @@ export async function viewTaskEnhanced(
 	// Wait for screen to close
 	return new Promise<void>((resolve) => {
 		screen.on("destroy", () => {
+			if (helpRestoreTimer) {
+				clearTimeout(helpRestoreTimer);
+				helpRestoreTimer = null;
+			}
 			searchService?.dispose();
 			contentStore?.dispose();
 			resolve();
@@ -954,7 +1059,10 @@ export async function viewTaskEnhanced(
 	});
 }
 
-function generateDetailContent(task: Task): { headerContent: string[]; bodyContent: string[] } {
+function generateDetailContent(
+	task: Task,
+	resolveMilestoneLabel?: (milestone: string) => string,
+): { headerContent: string[]; bodyContent: string[] } {
 	const headerContent = [
 		` {${getStatusColor(task.status)}-fg}${formatStatusWithIcon(task.status)}{/} {bold}{blue-fg}${task.id}{/blue-fg}{/bold} - ${task.title}`,
 	];
@@ -993,7 +1101,8 @@ function generateDetailContent(task: Task): { headerContent: string[]; bodyConte
 		metadata.push(`{bold}Reporter:{/bold} {cyan-fg}${reporterText}{/}`);
 	}
 	if (task.milestone) {
-		metadata.push(`{bold}Milestone:{/bold} {magenta-fg}${task.milestone}{/}`);
+		const milestoneLabel = resolveMilestoneLabel ? resolveMilestoneLabel(task.milestone) : task.milestone;
+		metadata.push(`{bold}Milestone:{/bold} {magenta-fg}${milestoneLabel}{/}`);
 	}
 	if (task.parentTaskId) {
 		const parentLabel = task.parentTaskTitle ? `${task.parentTaskId} - ${task.parentTaskTitle}` : task.parentTaskId;
@@ -1113,6 +1222,7 @@ function generateDetailContent(task: Task): { headerContent: string[]; bodyConte
 export async function createTaskPopup(
 	screen: ScreenInterface,
 	task: Task,
+	resolveMilestoneLabel?: (milestone: string) => string,
 ): Promise<{
 	background: BoxInterface;
 	popup: BoxInterface;
@@ -1149,7 +1259,7 @@ export async function createTaskPopup(
 
 	popup.setFront?.();
 
-	const { headerContent, bodyContent } = generateDetailContent(task);
+	const { headerContent, bodyContent } = generateDetailContent(task, resolveMilestoneLabel);
 
 	// Calculate header height based on content and available width
 	const popupWidth = typeof popup.width === "number" ? popup.width : 80;

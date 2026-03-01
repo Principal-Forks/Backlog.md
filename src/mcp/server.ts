@@ -14,6 +14,7 @@ import { getPackageName } from "../utils/app-info.ts";
 import { getVersion } from "../utils/version.ts";
 import { registerInitRequiredResource } from "./resources/init-required/index.ts";
 import { registerWorkflowResources } from "./resources/workflow/index.ts";
+import { registerDefinitionOfDoneTools } from "./tools/definition-of-done/index.ts";
 import { registerDocumentTools } from "./tools/documents/index.ts";
 import { registerMilestoneTools } from "./tools/milestones/index.ts";
 import { registerTaskTools } from "./tools/tasks/index.ts";
@@ -52,6 +53,7 @@ type ServerInitOptions = {
 export class McpServer extends Core {
 	private readonly server: Server;
 	private transport?: StdioServerTransport;
+	private stopping = false;
 
 	private readonly tools = new Map<string, McpToolHandler>();
 	private readonly resources = new Map<string, McpResourceHandler>();
@@ -136,8 +138,17 @@ export class McpServer extends Core {
 	 * Stop the server and release transport resources.
 	 */
 	public async stop(): Promise<void> {
-		await this.server.close();
-		this.transport = undefined;
+		if (this.stopping) {
+			return;
+		}
+		this.stopping = true;
+		try {
+			await this.server.close();
+		} finally {
+			this.transport = undefined;
+			this.disposeSearchService();
+			this.disposeContentStore();
+		}
 	}
 
 	public getServer(): Server {
@@ -281,6 +292,7 @@ export async function createMcpServer(projectRoot: string, options: ServerInitOp
 	registerWorkflowTools(server);
 	registerTaskTools(server, config);
 	registerMilestoneTools(server);
+	registerDefinitionOfDoneTools(server);
 	registerDocumentTools(server, config);
 
 	if (options.debug) {

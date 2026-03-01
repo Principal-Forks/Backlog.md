@@ -258,7 +258,8 @@ export interface BacklogConfig {
 	defaultReporter?: string;
 	statuses: string[];
 	labels: string[];
-	milestones: string[];
+	/** @deprecated Milestones are sourced from milestone files, not config. */
+	milestones?: string[];
 	definitionOfDone?: string[];
 	defaultStatus?: string;
 	dateFormat: string;
@@ -270,7 +271,6 @@ export interface BacklogConfig {
 	remoteOperations?: boolean;
 	autoCommit?: boolean;
 	zeroPaddedIds?: number;
-	timezonePreference?: string; // e.g., 'UTC', 'America/New_York', or 'local'
 	includeDateTimeInDates?: boolean; // Whether to include time in new dates
 	bypassGitHooks?: boolean;
 	checkActiveBranches?: boolean; // Check task states across active branches (default: true)

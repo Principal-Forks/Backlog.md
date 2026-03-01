@@ -210,7 +210,10 @@ export class ApiClient {
 		});
 	}
 
-	async updateTask(id: string, updates: Partial<Task>): Promise<Task> {
+	async updateTask(
+		id: string,
+		updates: Omit<Partial<Task>, "milestone"> & { milestone?: string | null },
+	): Promise<Task> {
 		return this.fetchJson<Task>(`${API_BASE}/tasks/${id}`, {
 			method: "PUT",
 			body: JSON.stringify(updates),
@@ -467,7 +470,7 @@ export class ApiClient {
 	async initializeProject(options: {
 		projectName: string;
 		integrationMode: "mcp" | "cli" | "none";
-		mcpClients?: ("claude" | "codex" | "gemini" | "guide")[];
+		mcpClients?: ("claude" | "codex" | "gemini" | "kiro" | "guide")[];
 		agentInstructions?: ("CLAUDE.md" | "AGENTS.md" | "GEMINI.md" | ".github/copilot-instructions.md")[];
 		installClaudeAgent?: boolean;
 		advancedConfig?: {

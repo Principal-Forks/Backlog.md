@@ -13,17 +13,16 @@ This project uses Backlog.md MCP for all task and project management activities.
 * **When to read it**: BEFORE creating tasks, or when you're unsure whether to track work
 
 These guides cover:
-
-* Decision framework for when to create tasks
-* Search-first workflow to avoid duplicates
-* Links to detailed guides for task creation, execution, and completion
-* MCP tools reference
+- Decision framework for when to create tasks
+- Search-first workflow to avoid duplicates
+- Links to detailed guides for task creation, execution, and finalization
+- MCP tools reference
 
 You MUST read the overview resource to understand the complete workflow. The information is NOT summarized here.
 
 \</CRITICAL\_INSTRUCTION>
 
-When you're working on a task, you should assign it yourself: -a @codex
+When you're working on a task, you should assign it yourself: -a @{your-name}
 
 In addition to the rules above, please consider the following:
 At the end of every task implementation, try to take a moment to see if you can simplify it.
