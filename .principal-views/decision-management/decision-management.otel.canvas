@@ -29,7 +29,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-create-validated",
@@ -64,7 +65,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-create-saved",
@@ -99,7 +101,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-create-committed",
@@ -134,7 +137,8 @@
 				"fill": "#8b5cf6",
 				"stroke": "#7c3aed",
 				"status": "draft"
-			}
+			},
+			"color": "#8b5cf6"
 		},
 		{
 			"id": "decision-create-complete",
@@ -173,7 +177,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-view-started",
@@ -204,7 +209,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-view-loaded",
@@ -239,7 +245,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-view-complete",
@@ -274,7 +281,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-list-started",
@@ -300,7 +308,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-list-loaded",
@@ -331,7 +340,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-list-complete",
@@ -366,7 +376,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-update-started",
@@ -401,7 +412,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-update-loaded",
@@ -436,7 +448,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-update-parsed",
@@ -471,7 +484,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-update-saved",
@@ -502,7 +516,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "decision-update-committed",
@@ -533,7 +548,8 @@
 				"fill": "#8b5cf6",
 				"stroke": "#7c3aed",
 				"status": "draft"
-			}
+			},
+			"color": "#8b5cf6"
 		},
 		{
 			"id": "decision-update-complete",
@@ -572,7 +588,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "decision-error",
@@ -616,7 +633,8 @@
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
 				"status": "draft"
-			}
+			},
+			"color": "#ef4444"
 		}
 	],
 	"edges": [

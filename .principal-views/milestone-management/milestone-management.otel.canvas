@@ -38,7 +38,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-create-validated",
@@ -73,7 +74,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "milestone-create-saved",
@@ -112,7 +114,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "milestone-create-committed",
@@ -147,7 +150,8 @@
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
 				"status": "draft"
-			}
+			},
+			"color": "#f59e0b"
 		},
 		{
 			"id": "milestone-create-complete",
@@ -186,7 +190,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-view-started",
@@ -221,7 +226,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-view-loaded",
@@ -256,7 +262,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "milestone-view-complete",
@@ -295,7 +302,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-list-started",
@@ -330,7 +338,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-list-loaded",
@@ -365,7 +374,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "milestone-list-complete",
@@ -404,7 +414,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-archive-started",
@@ -440,7 +451,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-archive-located",
@@ -479,7 +491,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "milestone-archive-moved",
@@ -514,7 +527,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "milestone-archive-committed",
@@ -549,7 +563,8 @@
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
 				"status": "draft"
-			}
+			},
+			"color": "#f59e0b"
 		},
 		{
 			"id": "milestone-archive-complete",
@@ -588,7 +603,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "milestone-error",
@@ -640,7 +656,8 @@
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
 				"status": "draft"
-			}
+			},
+			"color": "#ef4444"
 		}
 	],
 	"edges": [

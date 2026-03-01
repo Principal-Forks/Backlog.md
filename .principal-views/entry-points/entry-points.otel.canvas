@@ -41,7 +41,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "cli-request-parsed",
@@ -80,7 +81,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "cli-operation-dispatched",
@@ -115,7 +117,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "cli-request-complete",
@@ -154,7 +157,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "mcp-tool-invoked",
@@ -193,7 +197,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "mcp-tool-validated",
@@ -232,7 +237,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "mcp-operation-dispatched",
@@ -267,7 +273,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "mcp-tool-response",
@@ -306,7 +313,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "http-request-received",
@@ -349,7 +357,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "http-request-routed",
@@ -388,7 +397,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "http-operation-dispatched",
@@ -427,7 +437,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "http-response-sent",
@@ -470,7 +481,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "operation-executed",
@@ -517,7 +529,8 @@
 				"fill": "#8b5cf6",
 				"stroke": "#6d28d9",
 				"status": "draft"
-			}
+			},
+			"color": "#8b5cf6"
 		},
 		{
 			"id": "entry-error",
@@ -570,7 +583,8 @@
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
 				"status": "draft"
-			}
+			},
+			"color": "#ef4444"
 		}
 	],
 	"edges": [

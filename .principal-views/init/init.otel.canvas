@@ -45,7 +45,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "structure-created",
@@ -80,7 +81,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "config-saved",
@@ -127,7 +129,8 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "draft"
-			}
+			},
+			"color": "#3b82f6"
 		},
 		{
 			"id": "mcp-configured",
@@ -170,7 +173,8 @@
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
 				"status": "draft"
-			}
+			},
+			"color": "#f59e0b"
 		},
 		{
 			"id": "init-complete",
@@ -213,7 +217,8 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "draft"
-			}
+			},
+			"color": "#22c55e"
 		},
 		{
 			"id": "init-error",
@@ -256,7 +261,8 @@
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
 				"status": "draft"
-			}
+			},
+			"color": "#ef4444"
 		}
 	],
 	"edges": [
