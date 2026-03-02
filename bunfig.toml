@@ -2,6 +2,10 @@
 # Timeout for individual tests - increased for Windows compatibility
 timeout = "10s"
 
+# Preload OpenTelemetry configuration for test runs
+# Enable with OTEL_ENABLED=true to send telemetry to collector
+preload = ["./src/test-preload.ts"]
+
 # Reduce memory usage during test runs to prevent WSL2 crashes
 smol = true
 

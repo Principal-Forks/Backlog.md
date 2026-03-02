@@ -6,7 +6,7 @@ import { exportTestSpans } from "./otel-setup.ts";
 import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
 
 const WORKFLOW_DIR = ".principal-views/draft-management/draft-workflow";
-const SCOPE_NAME = "backlog-draft-management";
+const SCOPE_NAME = "backlog.md";
 
 let TEST_DIR: string;
 let backlog: Core;

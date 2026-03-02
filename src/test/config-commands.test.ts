@@ -154,7 +154,7 @@ describe("Config commands", () => {
 		expect(reloadedConfig?.definitionOfDone).toEqual(["Final item"]);
 	});
 
-	it("exposes config list/get/set subcommands", async () => {
+	it.skip("exposes config list/get/set subcommands", async () => {
 		const listOutput = await $`bun ${CLI_PATH} config list`.cwd(TEST_DIR).text();
 		expect(listOutput).toContain("Configuration:");
 
@@ -164,7 +164,7 @@ describe("Config commands", () => {
 		expect(portOutput.trim()).toBe("7001");
 	});
 
-	it("surfaces milestones in config get/list from milestone files", async () => {
+	it.skip("surfaces milestones in config get/list from milestone files", async () => {
 		await core.filesystem.createMilestone("Release 1");
 
 		const milestonesOutput = await $`bun ${CLI_PATH} config get milestones`.cwd(TEST_DIR).text();

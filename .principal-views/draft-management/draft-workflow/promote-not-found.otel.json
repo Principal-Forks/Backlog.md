@@ -25,15 +25,15 @@
 					},
 					"spans": [
 						{
-							"traceId": "bae0abe39924a8",
-							"spanId": "c86bec798a6ba",
-							"name": "draft.promotion",
-							"startTimeUnixNano": "1770675731091000000",
-							"endTimeUnixNano": "1770675731091000000",
+							"traceId": "400b290594f5d8",
+							"spanId": "b61a294773dac8",
+							"name": "draft.promote",
+							"startTimeUnixNano": "1772423968650000000",
+							"endTimeUnixNano": "1772423968650000000",
 							"attributes": [],
 							"events": [
 								{
-									"timeUnixNano": "1770675731091000000",
+									"timeUnixNano": "1772423968650000000",
 									"name": "draft.promote.started",
 									"attributes": [
 										{
@@ -51,7 +51,7 @@
 									]
 								},
 								{
-									"timeUnixNano": "1770675731091000000",
+									"timeUnixNano": "1772423968650000000",
 									"name": "draft.error",
 									"attributes": [
 										{

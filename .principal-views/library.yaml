@@ -1,0 +1,14 @@
+version: "1.0.0"
+name: "Backlog.md Component Library"
+
+resources:
+  backlog-md:
+    service.name: "backlog.md"
+    service.version: "${TRACER_VERSION}"
+    deployment.environment: "test"
+    owned-scopes:
+      - "backlog.md"
+
+nodeComponents: {}
+
+edgeComponents: {}

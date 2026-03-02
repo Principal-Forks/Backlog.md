@@ -6,17 +6,71 @@
 	"description": "Promoting a draft to a task",
 	"scenarios": [
 		{
+			"id": "success-with-commit",
+			"priority": 1,
+			"match": {
+				"events": ["draft.promote.started", "draft.promote.complete", "draft.promote.committed"]
+			},
+			"template": {
+				"summary": "✅ Draft promoted with auto-commit",
+				"events": {
+					"draft.promote.started": "Promoting draft {{draftId}} (autoCommit: {{autoCommit}})",
+					"draft.promote.loaded": "Located draft at {{fromPath}}",
+					"draft.promote.moved": "Moved {{fromPath}} → {{toPath}}",
+					"draft.promote.committed": "Committed: {{commitMessage}}",
+					"draft.promote.complete": "Completed in {{duration.ms}}ms (success: {{success}})"
+				}
+			},
+			"description": "Draft successfully promoted to task with git commit"
+		},
+		{
+			"id": "success-no-commit",
+			"priority": 2,
+			"match": {
+				"events": ["draft.promote.started", "draft.promote.complete"],
+				"excludeEvents": ["draft.promote.committed"]
+			},
+			"template": {
+				"summary": "✅ Draft promoted without commit",
+				"events": {
+					"draft.promote.started": "Promoting draft {{draftId}} (autoCommit: {{autoCommit}})",
+					"draft.promote.loaded": "Located draft at {{fromPath}}",
+					"draft.promote.moved": "Moved {{fromPath}} → {{toPath}}",
+					"draft.promote.complete": "Completed in {{duration.ms}}ms (success: {{success}})"
+				}
+			},
+			"description": "Draft successfully promoted to task without git commit"
+		},
+		{
+			"id": "not-found",
+			"priority": 3,
+			"match": {
+				"events": ["draft.promote.started", "draft.error"],
+				"attributes": {
+					"draft.error.error.type": "DraftNotFound"
+				}
+			},
+			"template": {
+				"summary": "❌ Draft not found",
+				"events": {
+					"draft.promote.started": "Attempting to promote draft {{draftId}}",
+					"draft.error": "Error: {{error.message}} (type: {{error.type}}, stage: {{error.stage}})"
+				}
+			},
+			"description": "Draft promotion failed - draft does not exist"
+		},
+		{
 			"id": "fallback",
 			"priority": 999,
 			"template": {
 				"summary": "📋 Draft promote execution captured",
 				"events": {
-					"draft.promote.started": "Promotion started",
-					"draft.promote.loaded": "Draft located",
-					"draft.promote.moved": "File moved",
-					"draft.promote.committed": "Changes committed",
-					"draft.promote.complete": "Promotion complete",
-					"draft.error": "Error occurred"
+					"draft.promote.started": "Started: draftId={{draftId}}",
+					"draft.promote.loaded": "Loaded: fromPath={{fromPath}}",
+					"draft.promote.moved": "Moved: {{fromPath}} → {{toPath}}",
+					"draft.promote.committed": "Committed: {{commitMessage}}",
+					"draft.promote.complete": "Complete: success={{success}}, duration={{duration.ms}}ms",
+					"draft.error": "Error: {{error.type}} - {{error.message}}"
 				}
 			},
 			"description": "Default fallback scenario for unmatched cases"

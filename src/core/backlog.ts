@@ -4,6 +4,7 @@ import { context, SpanStatusCode, trace } from "@opentelemetry/api";
 import { DEFAULT_DIRECTORIES, DEFAULT_STATUSES, FALLBACK_STATUS } from "../constants/index.ts";
 import { FileSystem } from "../file-system/operations.ts";
 import { GitOperations } from "../git/operations.ts";
+import { getTracer } from "../telemetry";
 import {
 	type AcceptanceCriterion,
 	type BacklogConfig,
@@ -2074,8 +2075,8 @@ export class Core {
 	}
 
 	async promoteDraft(draftId: string, autoCommit?: boolean): Promise<boolean> {
-		const tracer = trace.getTracer("backlog-draft-management");
-		const span = tracer.startSpan("draft.promotion");
+		const tracer = getTracer();
+		const span = tracer.startSpan("draft.promote");
 		const startTime = Date.now();
 
 		try {

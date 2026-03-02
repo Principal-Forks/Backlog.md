@@ -54,6 +54,7 @@
 	},
 	"scripts": {
 		"test": "bun test",
+		"test:otel": "OTEL_ENABLED=true bun test",
 		"format": "biome format --write .",
 		"lint": "biome lint --write .",
 		"check": "biome check .",
