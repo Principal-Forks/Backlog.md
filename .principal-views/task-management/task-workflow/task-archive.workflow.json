@@ -6,20 +6,31 @@
 	"description": "Archiving a task by moving it to the archive directory",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Task archive execution captured",
+				"summary": "Task archived",
 				"events": {
 					"task.archive.started": "Archive operation started",
 					"task.archive.located": "Task located",
 					"task.archive.moved": "File moved",
 					"task.archive.committed": "Changes committed",
-					"task.archive.complete": "Operation complete",
+					"task.archive.complete": "Operation complete"
+				}
+			},
+			"description": "Task archived successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Task archive failed",
+				"events": {
+					"task.archive.started": "Archive operation started",
 					"task.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Task archive failed with error"
 		}
 	],
 	"spanPattern": "task.archive"

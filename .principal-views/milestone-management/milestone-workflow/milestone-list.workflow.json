@@ -6,18 +6,29 @@
 	"description": "Listing milestones",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Milestone list execution captured",
+				"summary": "Milestones listed",
 				"events": {
 					"milestone.list.started": "List started",
 					"milestone.list.loaded": "Milestones loaded",
-					"milestone.list.complete": "List complete",
+					"milestone.list.complete": "List complete"
+				}
+			},
+			"description": "Milestones listed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Milestone list failed",
+				"events": {
+					"milestone.list.started": "List started",
 					"milestone.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Milestone list failed with error"
 		}
 	],
 	"spanPattern": "milestone.list"

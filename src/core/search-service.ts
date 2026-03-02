@@ -1,4 +1,6 @@
+import { SpanStatusCode } from "@opentelemetry/api";
 import Fuse, { type FuseResult, type FuseResultMatch } from "fuse.js";
+import { getTracer } from "../telemetry";
 import type {
 	Decision,
 	Document,
@@ -148,69 +150,229 @@ export class SearchService {
 	}
 
 	search(options: SearchOptions = {}): SearchResult[] {
-		if (!this.initialized) {
-			throw new Error("SearchService not initialized. Call ensureInitialized() first.");
-		}
+		const tracer = getTracer();
+		const span = tracer.startSpan("search.query");
 
-		const { query = "", limit, types, filters } = options;
+		try {
+			span.addEvent("search.query.started", {
+				hasQuery: !!options.query,
+				hasTypes: !!(options.types && options.types.length > 0),
+				hasFilters: !!options.filters,
+			});
 
-		const trimmedQuery = query.trim();
-		const allowedTypes = new Set<SearchResultType>(
-			types && types.length > 0 ? types : ["task", "document", "decision"],
-		);
-		const normalizedFilters = this.normalizeFilters(filters);
-
-		if (trimmedQuery === "") {
-			return this.collectWithoutQuery(allowedTypes, normalizedFilters, limit);
-		}
-
-		const fuse = this.fuse;
-		if (!fuse) {
-			return [];
-		}
-
-		const fuseResults = fuse.search(trimmedQuery);
-		const results: SearchResult[] = [];
-
-		for (const result of fuseResults) {
-			const entity = result.item;
-			if (!allowedTypes.has(entity.type)) {
-				continue;
+			if (!this.initialized) {
+				span.addEvent("search.error", {
+					operation: "query",
+					"error.type": "NotInitialized",
+					"error.message": "SearchService not initialized",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Not initialized" });
+				span.end();
+				throw new Error("SearchService not initialized. Call ensureInitialized() first.");
 			}
 
-			if (entity.type === "task" && !this.matchesTaskFilters(entity, normalizedFilters)) {
-				continue;
+			const { query = "", limit, types, filters } = options;
+
+			const trimmedQuery = query.trim();
+			const allowedTypes = new Set<SearchResultType>(
+				types && types.length > 0 ? types : ["task", "document", "decision"],
+			);
+			const normalizedFilters = this.normalizeFilters(filters);
+
+			span.addEvent("search.query.normalized", {
+				query: trimmedQuery,
+				allowedTypes: Array.from(allowedTypes),
+			});
+
+			if (trimmedQuery === "") {
+				const results = this.collectWithoutQuery(allowedTypes, normalizedFilters, limit);
+				span.addEvent("search.query.executed", {
+					resultCount: results.length,
+					queryType: "empty",
+				});
+				span.addEvent("search.query.filtered", {
+					resultCount: results.length,
+				});
+				span.addEvent("search.query.complete", {
+					resultCount: results.length,
+					success: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return results;
 			}
 
-			results.push(this.mapEntityToResult(entity, result));
-			if (limit && results.length >= limit) {
-				break;
+			const fuse = this.fuse;
+			if (!fuse) {
+				span.addEvent("search.query.complete", {
+					resultCount: 0,
+					success: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return [];
 			}
+
+			const fuseResults = fuse.search(trimmedQuery);
+
+			span.addEvent("search.query.executed", {
+				resultCount: fuseResults.length,
+				queryType: "fuse",
+			});
+
+			const results: SearchResult[] = [];
+
+			for (const result of fuseResults) {
+				const entity = result.item;
+				if (!allowedTypes.has(entity.type)) {
+					continue;
+				}
+
+				if (entity.type === "task" && !this.matchesTaskFilters(entity, normalizedFilters)) {
+					continue;
+				}
+
+				results.push(this.mapEntityToResult(entity, result));
+				if (limit && results.length >= limit) {
+					break;
+				}
+			}
+
+			span.addEvent("search.query.filtered", {
+				resultCount: results.length,
+			});
+
+			span.addEvent("search.query.complete", {
+				resultCount: results.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return results;
+		} catch (error) {
+			if (!span.isRecording()) {
+				throw error;
+			}
+			span.addEvent("search.error", {
+				operation: "query",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		return results;
 	}
 
 	private async initialize(): Promise<void> {
-		const snapshot = await this.store.ensureInitialized();
-		this.applySnapshot(snapshot.tasks, snapshot.documents, snapshot.decisions);
+		const tracer = getTracer();
+		const span = tracer.startSpan("search.initialize");
 
-		if (!this.unsubscribe) {
-			this.unsubscribe = this.store.subscribe((event) => {
-				this.handleStoreEvent(event);
+		try {
+			span.addEvent("search.initialize.started");
+
+			const snapshot = await this.store.ensureInitialized();
+
+			span.addEvent("search.initialize.snapshot", {
+				taskCount: snapshot.tasks.length,
+				documentCount: snapshot.documents.length,
+				decisionCount: snapshot.decisions.length,
 			});
-		}
 
-		this.initialized = true;
-		this.initializing = null;
+			this.applySnapshot(snapshot.tasks, snapshot.documents, snapshot.decisions);
+
+			span.addEvent("search.initialize.indexed", {
+				collectionSize: this.collection.length,
+			});
+
+			if (!this.unsubscribe) {
+				this.unsubscribe = this.store.subscribe((event) => {
+					this.handleStoreEvent(event);
+				});
+			}
+
+			this.initialized = true;
+			this.initializing = null;
+
+			span.addEvent("search.initialize.complete", {
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+		} catch (error) {
+			span.addEvent("search.error", {
+				operation: "initialize",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	private handleStoreEvent(event: ContentStoreEvent): void {
-		if (event.version <= this.version) {
-			return;
+		const tracer = getTracer();
+		const span = tracer.startSpan("search.index.update");
+
+		try {
+			span.addEvent("search.index.update.started", {
+				eventVersion: event.version,
+				currentVersion: this.version,
+			});
+
+			if (event.version <= this.version) {
+				span.addEvent("search.index.update.complete", {
+					skipped: true,
+					reason: "stale-version",
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return;
+			}
+
+			this.version = event.version;
+
+			span.addEvent("search.index.snapshot.applied", {
+				taskCount: event.snapshot.tasks.length,
+				documentCount: event.snapshot.documents.length,
+				decisionCount: event.snapshot.decisions.length,
+			});
+
+			this.applySnapshot(event.snapshot.tasks, event.snapshot.documents, event.snapshot.decisions);
+
+			span.addEvent("search.index.rebuilt", {
+				collectionSize: this.collection.length,
+			});
+
+			span.addEvent("search.index.update.complete", {
+				success: true,
+				newVersion: this.version,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+		} catch (error) {
+			span.addEvent("search.error", {
+				operation: "index-update",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-		this.version = event.version;
-		this.applySnapshot(event.snapshot.tasks, event.snapshot.documents, event.snapshot.decisions);
 	}
 
 	private applySnapshot(tasks: Task[], documents: Document[], decisions: Decision[]): void {

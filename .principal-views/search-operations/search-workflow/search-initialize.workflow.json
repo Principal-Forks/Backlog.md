@@ -6,19 +6,30 @@
 	"description": "Initializing the search service and building the index",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Search initialize execution captured",
+				"summary": "Search initialized",
 				"events": {
 					"search.initialize.started": "Initialization started",
 					"search.initialize.snapshot": "Snapshot loaded",
 					"search.initialize.indexed": "Index built",
-					"search.initialize.complete": "Initialization complete",
+					"search.initialize.complete": "Initialization complete"
+				}
+			},
+			"description": "Search initialized successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Search initialization failed",
+				"events": {
+					"search.initialize.started": "Initialization started",
 					"search.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Search initialization failed with error"
 		}
 	],
 	"spanPattern": "search.initialize"

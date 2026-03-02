@@ -6,20 +6,31 @@
 	"description": "Creating a new ADR (Architecture Decision Record)",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Decision create execution captured",
+				"summary": "Decision created",
 				"events": {
 					"decision.create.started": "Create operation started",
 					"decision.create.validated": "Decision validated",
 					"decision.create.saved": "Decision saved",
 					"decision.create.committed": "Changes committed",
-					"decision.create.complete": "Operation complete",
+					"decision.create.complete": "Operation complete"
+				}
+			},
+			"description": "Decision created successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Decision creation failed",
+				"events": {
+					"decision.create.started": "Create operation started",
 					"decision.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Decision creation failed with error"
 		}
 	],
 	"spanPattern": "decision.create"

@@ -6,20 +6,31 @@
 	"description": "Executing a search query across all entity types",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Search query execution captured",
+				"summary": "Search query completed",
 				"events": {
 					"search.query.started": "Query started",
 					"search.query.normalized": "Query normalized",
 					"search.query.executed": "Search executed",
 					"search.query.filtered": "Results filtered",
-					"search.query.complete": "Query complete",
+					"search.query.complete": "Query complete"
+				}
+			},
+			"description": "Search query completed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Search query failed",
+				"events": {
+					"search.query.started": "Query started",
 					"search.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Search query failed with error"
 		}
 	],
 	"spanPattern": "search.query"

@@ -6,20 +6,31 @@
 	"description": "CLI command for initializing a new Backlog.md workspace",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Backlog init execution captured",
+				"summary": "Backlog initialized",
 				"events": {
 					"init.started": "Initialization started",
 					"init.structure.created": "Structure created",
 					"init.config.saved": "Configuration saved",
 					"init.mcp.configured": "MCP configured",
-					"init.complete": "Initialization complete",
+					"init.complete": "Initialization complete"
+				}
+			},
+			"description": "Backlog initialized successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Backlog init failed",
+				"events": {
+					"init.started": "Initialization started",
 					"init.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Backlog init failed with error"
 		}
 	],
 	"spanPattern": "init"

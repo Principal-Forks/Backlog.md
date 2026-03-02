@@ -343,15 +343,65 @@ export class Core {
 	}
 
 	async getTask(taskId: string): Promise<Task | null> {
-		const store = await this.getContentStore();
-		const tasks = store.getTasks();
-		const match = tasks.find((task) => taskIdsEqual(taskId, task.id));
-		if (match) {
-			return match;
-		}
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.view");
 
-		// Pass raw ID to loadTask - it will handle prefix detection via getTaskPath
-		return await this.fs.loadTask(taskId);
+		try {
+			span.addEvent("task.view.started", {
+				taskId,
+			});
+
+			const store = await this.getContentStore();
+			const tasks = store.getTasks();
+			const match = tasks.find((task) => taskIdsEqual(taskId, task.id));
+			if (match) {
+				span.addEvent("task.view.loaded", {
+					taskId: match.id,
+					title: match.title,
+					source: "store",
+				});
+				span.addEvent("task.view.complete", {
+					taskId: match.id,
+					found: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return match;
+			}
+
+			// Pass raw ID to loadTask - it will handle prefix detection via getTaskPath
+			const task = await this.fs.loadTask(taskId);
+
+			if (task) {
+				span.addEvent("task.view.loaded", {
+					taskId: task.id,
+					title: task.title,
+					source: "filesystem",
+				});
+			}
+
+			span.addEvent("task.view.complete", {
+				taskId,
+				found: !!task,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return task;
+		} catch (error) {
+			span.addEvent("task.error", {
+				operation: "view",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				taskId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async getTaskWithSubtasks(taskId: string, localTasks?: Task[]): Promise<Task | null> {
@@ -983,27 +1033,72 @@ export class Core {
 	}
 
 	async createTask(task: Task, autoCommit?: boolean): Promise<string> {
-		if (!task.status) {
-			const config = await this.fs.loadConfig();
-			task.status = config?.defaultStatus || FALLBACK_STATUS;
-		}
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.create");
 
-		normalizeAssignee(task);
+		try {
+			span.addEvent("task.create.started", {
+				taskId: task.id,
+				title: task.title,
+				autoCommit: autoCommit ?? false,
+			});
 
-		const filepath = await this.fs.saveTask(task);
-		// Keep any in-process ContentStore in sync for immediate UI/search freshness.
-		if (this.contentStore) {
-			const savedTask = await this.fs.loadTask(task.id);
-			if (savedTask) {
-				this.contentStore.upsertTask(savedTask);
+			if (!task.status) {
+				const config = await this.fs.loadConfig();
+				task.status = config?.defaultStatus || FALLBACK_STATUS;
 			}
-		}
 
-		if (await this.shouldAutoCommit(autoCommit)) {
-			await this.git.addAndCommitTaskFile(task.id, filepath, "create");
-		}
+			normalizeAssignee(task);
 
-		return filepath;
+			span.addEvent("task.create.validated", {
+				taskId: task.id,
+				status: task.status,
+			});
+
+			const filepath = await this.fs.saveTask(task);
+
+			span.addEvent("task.create.saved", {
+				taskId: task.id,
+				filepath,
+			});
+
+			// Keep any in-process ContentStore in sync for immediate UI/search freshness.
+			if (this.contentStore) {
+				const savedTask = await this.fs.loadTask(task.id);
+				if (savedTask) {
+					this.contentStore.upsertTask(savedTask);
+				}
+			}
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				await this.git.addAndCommitTaskFile(task.id, filepath, "create");
+				span.addEvent("task.create.committed", {
+					taskId: task.id,
+				});
+			}
+
+			span.addEvent("task.create.complete", {
+				taskId: task.id,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return filepath;
+		} catch (error) {
+			span.addEvent("task.error", {
+				operation: "create",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				taskId: task.id,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async createDraft(task: Task, autoCommit?: boolean): Promise<string> {
@@ -1581,27 +1676,98 @@ export class Core {
 	}
 
 	async updateTaskFromInput(taskId: string, input: TaskUpdateInput, autoCommit?: boolean): Promise<Task> {
-		const task = await this.fs.loadTask(taskId);
-		if (!task) {
-			throw new Error(`Task not found: ${taskId}`);
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.edit");
+
+		try {
+			span.addEvent("task.edit.started", {
+				taskId,
+				autoCommit: autoCommit ?? false,
+			});
+
+			const task = await this.fs.loadTask(taskId);
+			if (!task) {
+				span.addEvent("task.error", {
+					operation: "edit",
+					"error.type": "TaskNotFound",
+					"error.message": `Task not found: ${taskId}`,
+					taskId,
+					"error.stage": "load",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Task not found" });
+				span.end();
+				throw new Error(`Task not found: ${taskId}`);
+			}
+
+			span.addEvent("task.edit.loaded", {
+				taskId,
+				title: task.title,
+			});
+
+			const requestedStatus = input.status?.trim().toLowerCase();
+			if (requestedStatus === "draft") {
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return await this.demoteTaskWithUpdates(task, input, autoCommit);
+			}
+
+			const { mutated } = await this.applyTaskUpdateInput(task, input, async (status) =>
+				this.requireCanonicalStatus(status),
+			);
+
+			span.addEvent("task.edit.validated", {
+				taskId,
+				mutated,
+			});
+
+			if (!mutated) {
+				span.addEvent("task.edit.complete", {
+					taskId,
+					success: true,
+					mutated: false,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return task;
+			}
+
+			await this.updateTask(task, autoCommit);
+
+			span.addEvent("task.edit.updated", {
+				taskId,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				span.addEvent("task.edit.committed", {
+					taskId,
+				});
+			}
+
+			span.addEvent("task.edit.complete", {
+				taskId,
+				success: true,
+				mutated: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			const refreshed = await this.fs.loadTask(taskId);
+			return refreshed ?? task;
+		} catch (error) {
+			span.addEvent("task.error", {
+				operation: "edit",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				taskId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		const requestedStatus = input.status?.trim().toLowerCase();
-		if (requestedStatus === "draft") {
-			return await this.demoteTaskWithUpdates(task, input, autoCommit);
-		}
-
-		const { mutated } = await this.applyTaskUpdateInput(task, input, async (status) =>
-			this.requireCanonicalStatus(status),
-		);
-
-		if (!mutated) {
-			return task;
-		}
-
-		await this.updateTask(task, autoCommit);
-		const refreshed = await this.fs.loadTask(taskId);
-		return refreshed ?? task;
 	}
 
 	async updateDraft(task: Task, autoCommit?: boolean): Promise<void> {
@@ -1973,75 +2139,211 @@ export class Core {
 	}
 
 	async archiveTask(taskId: string, autoCommit?: boolean): Promise<boolean> {
-		const taskToArchive = await this.fs.loadTask(taskId);
-		if (!taskToArchive) {
-			return false;
-		}
-		const normalizedTaskId = taskToArchive.id;
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.archive");
 
-		// Get paths before moving the file
-		const taskPath = taskToArchive.filePath ?? (await getTaskPath(normalizedTaskId, this));
-		const taskFilename = await getTaskFilename(normalizedTaskId, this);
+		try {
+			span.addEvent("task.archive.started", {
+				taskId,
+				autoCommit: autoCommit ?? false,
+			});
 
-		if (!taskPath || !taskFilename) return false;
-
-		const fromPath = taskPath;
-		const toPath = join(await this.fs.getArchiveTasksDir(), taskFilename);
-
-		const success = await this.fs.archiveTask(normalizedTaskId);
-		if (!success) {
-			return false;
-		}
-
-		const activeTasks = await this.fs.listTasks();
-		const sanitizedTasks = this.sanitizeArchivedTaskLinks(activeTasks, normalizedTaskId);
-		if (sanitizedTasks.length > 0) {
-			await this.updateTasksBulk(sanitizedTasks, undefined, false);
-		}
-
-		if (await this.shouldAutoCommit(autoCommit)) {
-			// Stage the file move for proper Git tracking
-			const repoRoot = await this.git.stageFileMove(fromPath, toPath);
-			for (const sanitizedTask of sanitizedTasks) {
-				if (sanitizedTask.filePath) {
-					await this.git.addFile(sanitizedTask.filePath);
-				}
+			const taskToArchive = await this.fs.loadTask(taskId);
+			if (!taskToArchive) {
+				span.addEvent("task.error", {
+					operation: "archive",
+					"error.type": "TaskNotFound",
+					"error.message": `Task ${taskId} not found`,
+					taskId,
+					"error.stage": "locate",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Task not found" });
+				span.end();
+				return false;
 			}
-			await this.git.commitChanges(`backlog: Archive task ${normalizedTaskId}`, repoRoot);
-		}
+			const normalizedTaskId = taskToArchive.id;
 
-		return true;
+			span.addEvent("task.archive.located", {
+				taskId: normalizedTaskId,
+				title: taskToArchive.title,
+			});
+
+			// Get paths before moving the file
+			const taskPath = taskToArchive.filePath ?? (await getTaskPath(normalizedTaskId, this));
+			const taskFilename = await getTaskFilename(normalizedTaskId, this);
+
+			if (!taskPath || !taskFilename) {
+				span.addEvent("task.error", {
+					operation: "archive",
+					"error.type": "PathNotFound",
+					"error.message": `Could not determine path for task ${normalizedTaskId}`,
+					taskId: normalizedTaskId,
+					"error.stage": "locate",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Path not found" });
+				span.end();
+				return false;
+			}
+
+			const fromPath = taskPath;
+			const toPath = join(await this.fs.getArchiveTasksDir(), taskFilename);
+
+			const success = await this.fs.archiveTask(normalizedTaskId);
+			if (!success) {
+				span.addEvent("task.error", {
+					operation: "archive",
+					"error.type": "MoveFailed",
+					"error.message": `Failed to move task ${normalizedTaskId} to archive`,
+					taskId: normalizedTaskId,
+					"error.stage": "move",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Move failed" });
+				span.end();
+				return false;
+			}
+
+			span.addEvent("task.archive.moved", {
+				taskId: normalizedTaskId,
+				fromPath,
+				toPath,
+			});
+
+			const activeTasks = await this.fs.listTasks();
+			const sanitizedTasks = this.sanitizeArchivedTaskLinks(activeTasks, normalizedTaskId);
+			if (sanitizedTasks.length > 0) {
+				await this.updateTasksBulk(sanitizedTasks, undefined, false);
+			}
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				// Stage the file move for proper Git tracking
+				const repoRoot = await this.git.stageFileMove(fromPath, toPath);
+				for (const sanitizedTask of sanitizedTasks) {
+					if (sanitizedTask.filePath) {
+						await this.git.addFile(sanitizedTask.filePath);
+					}
+				}
+				const commitMessage = `backlog: Archive task ${normalizedTaskId}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("task.archive.committed", {
+					taskId: normalizedTaskId,
+					commitMessage,
+				});
+			}
+
+			span.addEvent("task.archive.complete", {
+				taskId: normalizedTaskId,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return true;
+		} catch (error) {
+			span.addEvent("task.error", {
+				operation: "archive",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				taskId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async archiveMilestone(
 		identifier: string,
 		autoCommit?: boolean,
 	): Promise<{ success: boolean; sourcePath?: string; targetPath?: string; milestone?: Milestone }> {
-		const result = await this.fs.archiveMilestone(identifier);
+		const tracer = getTracer();
+		const span = tracer.startSpan("milestone.archive");
 
-		if (result.success && result.sourcePath && result.targetPath && (await this.shouldAutoCommit(autoCommit))) {
-			const repoRoot = await this.git.stageFileMove(result.sourcePath, result.targetPath);
-			const label = result.milestone?.id ? ` ${result.milestone.id}` : "";
-			const commitPaths = [result.sourcePath, result.targetPath];
-			try {
-				await this.git.commitFiles(`backlog: Archive milestone${label}`, commitPaths, repoRoot);
-			} catch (error) {
-				await this.git.resetPaths(commitPaths, repoRoot);
-				try {
-					await moveFile(result.targetPath, result.sourcePath);
-				} catch {
-					// Ignore rollback failure and propagate original commit error.
-				}
-				throw error;
+		try {
+			span.addEvent("milestone.archive.started", {
+				identifier,
+				autoCommit: autoCommit ?? false,
+			});
+
+			const result = await this.fs.archiveMilestone(identifier);
+
+			if (!result.success) {
+				span.addEvent("milestone.error", {
+					operation: "archive",
+					"error.type": "ArchiveFailed",
+					"error.message": `Failed to archive milestone ${identifier}`,
+					identifier,
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Archive failed" });
+				span.end();
+				return result;
 			}
-		}
 
-		return {
-			success: result.success,
-			sourcePath: result.sourcePath,
-			targetPath: result.targetPath,
-			milestone: result.milestone,
-		};
+			span.addEvent("milestone.archive.located", {
+				milestoneId: result.milestone?.id ?? identifier,
+				title: result.milestone?.title,
+			});
+
+			span.addEvent("milestone.archive.moved", {
+				milestoneId: result.milestone?.id ?? identifier,
+				sourcePath: result.sourcePath,
+				targetPath: result.targetPath,
+			});
+
+			if (result.sourcePath && result.targetPath && (await this.shouldAutoCommit(autoCommit))) {
+				const repoRoot = await this.git.stageFileMove(result.sourcePath, result.targetPath);
+				const label = result.milestone?.id ? ` ${result.milestone.id}` : "";
+				const commitPaths = [result.sourcePath, result.targetPath];
+				try {
+					const commitMessage = `backlog: Archive milestone${label}`;
+					await this.git.commitFiles(commitMessage, commitPaths, repoRoot);
+
+					span.addEvent("milestone.archive.committed", {
+						milestoneId: result.milestone?.id ?? identifier,
+						commitMessage,
+					});
+				} catch (error) {
+					await this.git.resetPaths(commitPaths, repoRoot);
+					try {
+						await moveFile(result.targetPath, result.sourcePath);
+					} catch {
+						// Ignore rollback failure and propagate original commit error.
+					}
+					throw error;
+				}
+			}
+
+			span.addEvent("milestone.archive.complete", {
+				milestoneId: result.milestone?.id ?? identifier,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			return {
+				success: result.success,
+				sourcePath: result.sourcePath,
+				targetPath: result.targetPath,
+				milestone: result.milestone,
+			};
+		} catch (error) {
+			span.addEvent("milestone.error", {
+				operation: "archive",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				identifier,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async renameMilestone(
@@ -2078,25 +2380,97 @@ export class Core {
 	}
 
 	async completeTask(taskId: string, autoCommit?: boolean): Promise<boolean> {
-		// Get paths before moving the file
-		const completedDir = this.fs.completedDir;
-		const taskPath = await getTaskPath(taskId, this);
-		const taskFilename = await getTaskFilename(taskId, this);
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.complete");
 
-		if (!taskPath || !taskFilename) return false;
+		try {
+			span.addEvent("task.complete.started", {
+				taskId,
+				autoCommit: autoCommit ?? false,
+			});
 
-		const fromPath = taskPath;
-		const toPath = join(completedDir, taskFilename);
+			// Get paths before moving the file
+			const completedDir = this.fs.completedDir;
+			const taskPath = await getTaskPath(taskId, this);
+			const taskFilename = await getTaskFilename(taskId, this);
 
-		const success = await this.fs.completeTask(taskId);
+			if (!taskPath || !taskFilename) {
+				span.addEvent("cleanup.error", {
+					operation: "complete",
+					"error.type": "TaskNotFound",
+					"error.message": `Task ${taskId} not found`,
+					taskId,
+					"error.stage": "locate",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Task not found" });
+				span.end();
+				return false;
+			}
 
-		if (success && (await this.shouldAutoCommit(autoCommit))) {
-			// Stage the file move for proper Git tracking
-			const repoRoot = await this.git.stageFileMove(fromPath, toPath);
-			await this.git.commitChanges(`backlog: Complete task ${normalizeTaskId(taskId)}`, repoRoot);
+			span.addEvent("task.complete.located", {
+				taskId,
+				sourcePath: taskPath,
+				filename: taskFilename,
+			});
+
+			const fromPath = taskPath;
+			const toPath = join(completedDir, taskFilename);
+
+			const success = await this.fs.completeTask(taskId);
+
+			if (!success) {
+				span.addEvent("cleanup.error", {
+					operation: "complete",
+					"error.type": "MoveFailed",
+					"error.message": `Failed to move task ${taskId} to completed`,
+					taskId,
+					"error.stage": "move",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Move failed" });
+				span.end();
+				return false;
+			}
+
+			span.addEvent("task.complete.moved", {
+				taskId,
+				fromPath,
+				toPath,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				// Stage the file move for proper Git tracking
+				const repoRoot = await this.git.stageFileMove(fromPath, toPath);
+				const commitMessage = `backlog: Complete task ${normalizeTaskId(taskId)}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("task.complete.committed", {
+					taskId,
+					commitMessage,
+				});
+			}
+
+			span.addEvent("task.complete.complete", {
+				taskId,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return success;
+		} catch (error) {
+			span.addEvent("cleanup.error", {
+				operation: "complete",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				taskId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		return success;
 	}
 
 	async getDoneTasksByAge(olderThanDays: number): Promise<Task[]> {
@@ -2293,15 +2667,88 @@ export class Core {
 	}
 
 	async demoteTask(taskId: string, autoCommit?: boolean): Promise<boolean> {
-		const success = await this.fs.demoteTask(taskId);
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.demote");
 
-		if (success && (await this.shouldAutoCommit(autoCommit))) {
-			const backlogDir = await this.getBacklogDirectoryName();
-			const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-			await this.git.commitChanges(`backlog: Demote task ${normalizeTaskId(taskId)}`, repoRoot);
+		try {
+			span.addEvent("task.demote.started", {
+				taskId,
+				autoCommit: autoCommit ?? false,
+			});
+
+			// Load task first to get details for telemetry
+			const task = await this.fs.loadTask(taskId);
+			if (!task) {
+				span.addEvent("task.error", {
+					operation: "demote",
+					"error.type": "TaskNotFound",
+					"error.message": `Task ${taskId} not found`,
+					taskId,
+					"error.stage": "locate",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Task not found" });
+				span.end();
+				return false;
+			}
+
+			span.addEvent("task.demote.loaded", {
+				taskId,
+				title: task.title,
+			});
+
+			const success = await this.fs.demoteTask(taskId);
+
+			if (!success) {
+				span.addEvent("task.error", {
+					operation: "demote",
+					"error.type": "DemoteFailed",
+					"error.message": `Failed to demote task ${taskId}`,
+					taskId,
+					"error.stage": "move",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Demote failed" });
+				span.end();
+				return false;
+			}
+
+			span.addEvent("task.demote.moved", {
+				taskId,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Demote task ${normalizeTaskId(taskId)}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("task.demote.committed", {
+					taskId,
+					commitMessage,
+				});
+			}
+
+			span.addEvent("task.demote.complete", {
+				taskId,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return success;
+		} catch (error) {
+			span.addEvent("task.error", {
+				operation: "demote",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				taskId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		return success;
 	}
 
 	/**
@@ -2422,43 +2869,142 @@ export class Core {
 	}
 
 	async createDecision(decision: Decision, autoCommit?: boolean): Promise<void> {
-		await this.fs.saveDecision(decision);
+		const tracer = getTracer();
+		const span = tracer.startSpan("decision.create");
 
-		if (await this.shouldAutoCommit(autoCommit)) {
-			const backlogDir = await this.getBacklogDirectoryName();
-			const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-			await this.git.commitChanges(`backlog: Add decision ${decision.id}`, repoRoot);
+		try {
+			span.addEvent("decision.create.started", {
+				decisionId: decision.id,
+				title: decision.title,
+				autoCommit: autoCommit ?? false,
+			});
+
+			span.addEvent("decision.create.validated", {
+				decisionId: decision.id,
+				status: decision.status,
+			});
+
+			await this.fs.saveDecision(decision);
+
+			span.addEvent("decision.create.saved", {
+				decisionId: decision.id,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Add decision ${decision.id}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("decision.create.committed", {
+					decisionId: decision.id,
+					commitMessage,
+				});
+			}
+
+			span.addEvent("decision.create.complete", {
+				decisionId: decision.id,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+		} catch (error) {
+			span.addEvent("decision.error", {
+				operation: "create",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				decisionId: decision.id,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
 	}
 
 	async updateDecisionFromContent(decisionId: string, content: string, autoCommit?: boolean): Promise<void> {
-		const existingDecision = await this.fs.loadDecision(decisionId);
-		if (!existingDecision) {
-			throw new Error(`Decision ${decisionId} not found`);
+		const tracer = getTracer();
+		const span = tracer.startSpan("decision.update");
+
+		try {
+			span.addEvent("decision.update.started", {
+				decisionId,
+				autoCommit: autoCommit ?? false,
+			});
+
+			const existingDecision = await this.fs.loadDecision(decisionId);
+			if (!existingDecision) {
+				span.addEvent("decision.error", {
+					operation: "update",
+					"error.type": "DecisionNotFound",
+					"error.message": `Decision ${decisionId} not found`,
+					decisionId,
+					"error.stage": "load",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Decision not found" });
+				span.end();
+				throw new Error(`Decision ${decisionId} not found`);
+			}
+
+			span.addEvent("decision.update.loaded", {
+				decisionId: existingDecision.id,
+				title: existingDecision.title,
+			});
+
+			// Parse the markdown content to extract the decision data
+			const matter = await import("gray-matter");
+			const { data } = matter.default(content);
+
+			const extractSection = (content: string, sectionName: string): string | undefined => {
+				const regex = new RegExp(`## ${sectionName}\\s*([\\s\\S]*?)(?=## |$)`, "i");
+				const match = content.match(regex);
+				return match ? match[1]?.trim() : undefined;
+			};
+
+			const updatedDecision = {
+				...existingDecision,
+				title: data.title || existingDecision.title,
+				status: data.status || existingDecision.status,
+				date: data.date || existingDecision.date,
+				context: extractSection(content, "Context") || existingDecision.context,
+				decision: extractSection(content, "Decision") || existingDecision.decision,
+				consequences: extractSection(content, "Consequences") || existingDecision.consequences,
+				alternatives: extractSection(content, "Alternatives") || existingDecision.alternatives,
+			};
+
+			span.addEvent("decision.update.validated", {
+				decisionId: updatedDecision.id,
+			});
+
+			await this.createDecision(updatedDecision, autoCommit);
+
+			span.addEvent("decision.update.complete", {
+				decisionId: updatedDecision.id,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+		} catch (error) {
+			if (!span.isRecording()) {
+				throw error; // Already ended
+			}
+			span.addEvent("decision.error", {
+				operation: "update",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				decisionId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		// Parse the markdown content to extract the decision data
-		const matter = await import("gray-matter");
-		const { data } = matter.default(content);
-
-		const extractSection = (content: string, sectionName: string): string | undefined => {
-			const regex = new RegExp(`## ${sectionName}\\s*([\\s\\S]*?)(?=## |$)`, "i");
-			const match = content.match(regex);
-			return match ? match[1]?.trim() : undefined;
-		};
-
-		const updatedDecision = {
-			...existingDecision,
-			title: data.title || existingDecision.title,
-			status: data.status || existingDecision.status,
-			date: data.date || existingDecision.date,
-			context: extractSection(content, "Context") || existingDecision.context,
-			decision: extractSection(content, "Decision") || existingDecision.decision,
-			consequences: extractSection(content, "Consequences") || existingDecision.consequences,
-			alternatives: extractSection(content, "Alternatives") || existingDecision.alternatives,
-		};
-
-		await this.createDecision(updatedDecision, autoCommit);
 	}
 
 	async createDecisionWithTitle(title: string, autoCommit?: boolean): Promise<Decision> {
@@ -2482,32 +3028,120 @@ export class Core {
 	}
 
 	async createDocument(doc: Document, autoCommit?: boolean, subPath = ""): Promise<void> {
-		const relativePath = await this.fs.saveDocument(doc, subPath);
-		doc.path = relativePath;
+		const tracer = getTracer();
+		const span = tracer.startSpan("document.create");
 
-		if (await this.shouldAutoCommit(autoCommit)) {
-			const backlogDir = await this.getBacklogDirectoryName();
-			const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-			await this.git.commitChanges(`backlog: Add document ${doc.id}`, repoRoot);
+		try {
+			span.addEvent("document.create.started", {
+				documentId: doc.id,
+				title: doc.title,
+				autoCommit: autoCommit ?? false,
+			});
+
+			span.addEvent("document.create.validated", {
+				documentId: doc.id,
+				type: doc.type,
+			});
+
+			const relativePath = await this.fs.saveDocument(doc, subPath);
+			doc.path = relativePath;
+
+			span.addEvent("document.create.saved", {
+				documentId: doc.id,
+				path: relativePath,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Add document ${doc.id}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("document.create.committed", {
+					documentId: doc.id,
+					commitMessage,
+				});
+			}
+
+			span.addEvent("document.create.complete", {
+				documentId: doc.id,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+		} catch (error) {
+			span.addEvent("document.error", {
+				operation: "create",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				documentId: doc.id,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
 	}
 
 	async updateDocument(existingDoc: Document, content: string, autoCommit?: boolean): Promise<void> {
-		const updatedDoc = {
-			...existingDoc,
-			rawContent: content,
-			updatedDate: new Date().toISOString().slice(0, 16).replace("T", " "),
-		};
+		const tracer = getTracer();
+		const span = tracer.startSpan("document.update");
 
-		let normalizedSubPath = "";
-		if (existingDoc.path) {
-			const segments = existingDoc.path.split(/[\\/]/).slice(0, -1);
-			if (segments.length > 0) {
-				normalizedSubPath = segments.join("/");
+		try {
+			span.addEvent("document.update.started", {
+				documentId: existingDoc.id,
+				autoCommit: autoCommit ?? false,
+			});
+
+			span.addEvent("document.update.loaded", {
+				documentId: existingDoc.id,
+				title: existingDoc.title,
+			});
+
+			const updatedDoc = {
+				...existingDoc,
+				rawContent: content,
+				updatedDate: new Date().toISOString().slice(0, 16).replace("T", " "),
+			};
+
+			span.addEvent("document.update.validated", {
+				documentId: updatedDoc.id,
+			});
+
+			let normalizedSubPath = "";
+			if (existingDoc.path) {
+				const segments = existingDoc.path.split(/[\\/]/).slice(0, -1);
+				if (segments.length > 0) {
+					normalizedSubPath = segments.join("/");
+				}
 			}
-		}
 
-		await this.createDocument(updatedDoc, autoCommit, normalizedSubPath);
+			await this.createDocument(updatedDoc, autoCommit, normalizedSubPath);
+
+			span.addEvent("document.update.complete", {
+				documentId: updatedDoc.id,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+		} catch (error) {
+			span.addEvent("document.error", {
+				operation: "update",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				documentId: existingDoc.id,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async createDocumentWithId(title: string, content: string, autoCommit?: boolean): Promise<Document> {

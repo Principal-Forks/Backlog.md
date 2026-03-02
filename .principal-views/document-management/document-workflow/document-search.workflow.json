@@ -6,18 +6,29 @@
 	"description": "Full-text search across document content",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Document search execution captured",
+				"summary": "Document search completed",
 				"events": {
 					"document.search.started": "Search operation started",
 					"document.search.executed": "Search executed",
-					"document.search.complete": "Operation complete",
+					"document.search.complete": "Operation complete"
+				}
+			},
+			"description": "Document search completed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Document search failed",
+				"events": {
+					"document.search.started": "Search operation started",
 					"document.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Document search failed with error"
 		}
 	],
 	"spanPattern": "document.search"

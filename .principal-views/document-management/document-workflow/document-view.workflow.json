@@ -6,18 +6,29 @@
 	"description": "Viewing a single document by ID",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Document view execution captured",
+				"summary": "Document viewed",
 				"events": {
 					"document.view.started": "View operation started",
 					"document.view.loaded": "Document loaded",
-					"document.view.complete": "Operation complete",
+					"document.view.complete": "Operation complete"
+				}
+			},
+			"description": "Document viewed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Document view failed",
+				"events": {
+					"document.view.started": "View operation started",
 					"document.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Document view failed with error"
 		}
 	],
 	"spanPattern": "document.view"

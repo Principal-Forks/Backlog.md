@@ -6,21 +6,32 @@
 	"description": "Editing an existing task",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Task edit execution captured",
+				"summary": "Task edited",
 				"events": {
 					"task.edit.started": "Edit started",
 					"task.edit.loaded": "Task loaded",
 					"task.edit.validated": "Validated",
 					"task.edit.updated": "Updated",
 					"task.edit.committed": "Committed",
-					"task.edit.complete": "Complete",
+					"task.edit.complete": "Complete"
+				}
+			},
+			"description": "Task edited successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Task edit failed",
+				"events": {
+					"task.edit.started": "Edit started",
 					"task.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Task edit failed with error"
 		}
 	],
 	"spanPattern": "task.edit"

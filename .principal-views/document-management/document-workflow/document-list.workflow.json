@@ -3,22 +3,33 @@
 	"canvas": ".principal-views/document-management/document-management.otel.canvas",
 	"mode": "span-tree",
 	"name": "Document List",
-	"description": "Listing all documents with optional search filter",
+	"description": "Listing all documents",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Document list execution captured",
+				"summary": "Documents listed",
 				"events": {
 					"document.list.started": "List operation started",
 					"document.list.loaded": "Documents loaded",
 					"document.list.filtered": "Documents filtered",
-					"document.list.complete": "Operation complete",
+					"document.list.complete": "Operation complete"
+				}
+			},
+			"description": "Documents listed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Document list failed",
+				"events": {
+					"document.list.started": "List operation started",
 					"document.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Document list failed with error"
 		}
 	],
 	"spanPattern": "document.list"

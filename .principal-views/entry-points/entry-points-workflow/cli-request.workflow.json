@@ -6,20 +6,31 @@
 	"description": "Command-line interface request lifecycle",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 CLI request execution captured",
+				"summary": "CLI request completed",
 				"events": {
 					"cli.request.received": "Request received",
 					"cli.request.parsed": "Request parsed",
 					"cli.operation.dispatched": "Operation dispatched",
 					"operation.executed": "Operation executed",
-					"cli.request.complete": "Request complete",
+					"cli.request.complete": "Request complete"
+				}
+			},
+			"description": "CLI request completed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "CLI request failed",
+				"events": {
+					"cli.request.received": "Request received",
 					"entry.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "CLI request failed with error"
 		}
 	],
 	"spanPattern": "cli.request"

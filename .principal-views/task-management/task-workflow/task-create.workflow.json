@@ -6,20 +6,31 @@
 	"description": "Creating a new task in the backlog",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Task create execution captured",
+				"summary": "Task created",
 				"events": {
 					"task.create.started": "Creation started",
 					"task.create.validated": "Validated",
 					"task.create.saved": "Saved",
 					"task.create.committed": "Committed",
-					"task.create.complete": "Complete",
+					"task.create.complete": "Complete"
+				}
+			},
+			"description": "Task created successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Task create failed",
+				"events": {
+					"task.create.started": "Creation started",
 					"task.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Task create failed with error"
 		}
 	],
 	"spanPattern": "task.create"

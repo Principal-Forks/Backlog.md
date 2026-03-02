@@ -1,4 +1,5 @@
 import { dirname, join } from "node:path";
+import { SpanStatusCode } from "@opentelemetry/api";
 import type { Server, ServerWebSocket } from "bun";
 import { $ } from "bun";
 import { Core } from "../core/backlog.ts";
@@ -6,6 +7,7 @@ import type { ContentStore } from "../core/content-store.ts";
 import { initializeProject } from "../core/init.ts";
 import type { SearchService } from "../core/search-service.ts";
 import { getTaskStatistics } from "../core/statistics.ts";
+import { getTracer } from "../telemetry";
 import type { SearchPriorityFilter, SearchResultType, Task, TaskUpdateInput } from "../types/index.ts";
 import { watchConfig } from "../utils/config-watcher.ts";
 import { getVersion } from "../utils/version.ts";
@@ -1348,21 +1350,51 @@ export class BacklogServer {
 	}
 
 	private async handleCleanupPreview(req: Request): Promise<Response> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("cleanup.preview");
+
 		try {
 			const url = new URL(req.url);
 			const ageParam = url.searchParams.get("age");
 
 			if (!ageParam) {
+				span.addEvent("cleanup.error", {
+					operation: "preview",
+					"error.type": "ValidationError",
+					"error.message": "Missing age parameter",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Missing age parameter" });
+				span.end();
 				return Response.json({ error: "Missing age parameter" }, { status: 400 });
 			}
 
 			const age = Number.parseInt(ageParam, 10);
 			if (Number.isNaN(age) || age < 0) {
+				span.addEvent("cleanup.error", {
+					operation: "preview",
+					"error.type": "ValidationError",
+					"error.message": "Invalid age parameter",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Invalid age parameter" });
+				span.end();
 				return Response.json({ error: "Invalid age parameter" }, { status: 400 });
 			}
 
+			span.addEvent("cleanup.preview.started", {
+				olderThanDays: age,
+			});
+
 			// Get Done tasks older than specified days
 			const tasksToCleanup = await this.core.getDoneTasksByAge(age);
+
+			const cutoffDate = new Date();
+			cutoffDate.setDate(cutoffDate.getDate() - age);
+
+			span.addEvent("cleanup.preview.filtered", {
+				totalTasks: tasksToCleanup.length,
+				matchedTasks: tasksToCleanup.length,
+				cutoffDate: cutoffDate.toISOString(),
+			});
 
 			// Return preview of tasks to be cleaned up
 			const preview = tasksToCleanup.map((task) => ({
@@ -1372,33 +1404,82 @@ export class BacklogServer {
 				createdDate: task.createdDate,
 			}));
 
+			span.addEvent("cleanup.preview.complete", {
+				taskCount: preview.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
 			return Response.json({
 				count: preview.length,
 				tasks: preview,
 			});
 		} catch (error) {
+			span.addEvent("cleanup.error", {
+				operation: "preview",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
 			console.error("Error getting cleanup preview:", error);
 			return Response.json({ error: "Failed to get cleanup preview" }, { status: 500 });
 		}
 	}
 
 	private async handleCleanupExecute(req: Request): Promise<Response> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("cleanup.batch");
+		const startTime = Date.now();
+
 		try {
 			const { age } = await req.json();
 
 			if (age === undefined || age === null) {
+				span.addEvent("cleanup.error", {
+					operation: "batch",
+					"error.type": "ValidationError",
+					"error.message": "Missing age parameter",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Missing age parameter" });
+				span.end();
 				return Response.json({ error: "Missing age parameter" }, { status: 400 });
 			}
 
 			const ageInDays = Number.parseInt(age, 10);
 			if (Number.isNaN(ageInDays) || ageInDays < 0) {
+				span.addEvent("cleanup.error", {
+					operation: "batch",
+					"error.type": "ValidationError",
+					"error.message": "Invalid age parameter",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Invalid age parameter" });
+				span.end();
 				return Response.json({ error: "Invalid age parameter" }, { status: 400 });
 			}
 
 			// Get Done tasks older than specified days
 			const tasksToCleanup = await this.core.getDoneTasksByAge(ageInDays);
 
+			span.addEvent("cleanup.batch.started", {
+				olderThanDays: ageInDays,
+				taskCount: tasksToCleanup.length,
+			});
+
 			if (tasksToCleanup.length === 0) {
+				span.addEvent("cleanup.batch.complete", {
+					movedCount: 0,
+					totalCount: 0,
+					success: true,
+					"duration.ms": Date.now() - startTime,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
 				return Response.json({
 					success: true,
 					movedCount: 0,
@@ -1410,7 +1491,16 @@ export class BacklogServer {
 			let successCount = 0;
 			const failedTasks: string[] = [];
 
-			for (const task of tasksToCleanup) {
+			for (let i = 0; i < tasksToCleanup.length; i++) {
+				const task = tasksToCleanup[i];
+				if (!task) continue;
+
+				span.addEvent("cleanup.batch.processing", {
+					currentIndex: i + 1,
+					totalCount: tasksToCleanup.length,
+					taskId: task.id,
+				});
+
 				try {
 					const success = await this.core.completeTask(task.id);
 					if (success) {
@@ -1427,6 +1517,17 @@ export class BacklogServer {
 			// Notify listeners to refresh
 			this.broadcastTasksUpdated();
 
+			span.addEvent("cleanup.batch.complete", {
+				movedCount: successCount,
+				totalCount: tasksToCleanup.length,
+				failedCount: failedTasks.length,
+				success: failedTasks.length === 0,
+				"duration.ms": Date.now() - startTime,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
 			return Response.json({
 				success: true,
 				movedCount: successCount,
@@ -1435,6 +1536,16 @@ export class BacklogServer {
 				message: `Moved ${successCount} of ${tasksToCleanup.length} tasks to completed folder`,
 			});
 		} catch (error) {
+			span.addEvent("cleanup.error", {
+				operation: "batch",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
 			console.error("Error executing cleanup:", error);
 			return Response.json({ error: "Failed to execute cleanup" }, { status: 500 });
 		}

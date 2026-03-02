@@ -6,20 +6,31 @@
 	"description": "Archiving a milestone by moving it to the archive directory",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Milestone archive execution captured",
+				"summary": "Milestone archived",
 				"events": {
 					"milestone.archive.started": "Archive operation started",
 					"milestone.archive.located": "Milestone located",
 					"milestone.archive.moved": "File moved",
 					"milestone.archive.committed": "Changes committed",
-					"milestone.archive.complete": "Operation complete",
+					"milestone.archive.complete": "Operation complete"
+				}
+			},
+			"description": "Milestone archived successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Milestone archive failed",
+				"events": {
+					"milestone.archive.started": "Archive operation started",
 					"milestone.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Milestone archive failed with error"
 		}
 	],
 	"spanPattern": "milestone.archive"

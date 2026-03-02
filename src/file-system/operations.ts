@@ -243,87 +243,183 @@ export class FileSystem {
 	}
 
 	async listTasks(filter?: TaskListFilter): Promise<Task[]> {
-		let tasksDir: string;
+		const tracer = getTracer();
+		const span = tracer.startSpan("task.list");
+
 		try {
-			tasksDir = await this.getTasksDir();
-		} catch (_error) {
-			return [];
-		}
+			span.addEvent("task.list.started", {
+				hasStatusFilter: !!filter?.status,
+				hasAssigneeFilter: !!filter?.assignee,
+			});
 
-		// Get configured task prefix
-		const config = await this.loadConfig();
-		const taskPrefix = (config?.prefixes?.task ?? "task").toLowerCase();
-		const globPattern = buildGlobPattern(taskPrefix);
-
-		let taskFiles: string[];
-		try {
-			taskFiles = await Array.fromAsync(new Bun.Glob(globPattern).scan({ cwd: tasksDir, followSymlinks: true }));
-		} catch (_error) {
-			return [];
-		}
-
-		let tasks: Task[] = [];
-		for (const file of taskFiles) {
-			const filepath = join(tasksDir, file);
+			let tasksDir: string;
 			try {
-				const content = await Bun.file(filepath).text();
-				const task = normalizeTaskIdentity(parseTask(content));
-				tasks.push({ ...task, filePath: filepath });
-			} catch (error) {
-				if (process.env.DEBUG) {
-					console.error(`Failed to parse task file ${filepath}`, error);
+				tasksDir = await this.getTasksDir();
+			} catch (_error) {
+				span.addEvent("task.list.complete", {
+					taskCount: 0,
+					success: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return [];
+			}
+
+			// Get configured task prefix
+			const config = await this.loadConfig();
+			const taskPrefix = (config?.prefixes?.task ?? "task").toLowerCase();
+			const globPattern = buildGlobPattern(taskPrefix);
+
+			let taskFiles: string[];
+			try {
+				taskFiles = await Array.fromAsync(new Bun.Glob(globPattern).scan({ cwd: tasksDir, followSymlinks: true }));
+			} catch (_error) {
+				span.addEvent("task.list.complete", {
+					taskCount: 0,
+					success: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return [];
+			}
+
+			let tasks: Task[] = [];
+			for (const file of taskFiles) {
+				const filepath = join(tasksDir, file);
+				try {
+					const content = await Bun.file(filepath).text();
+					const task = normalizeTaskIdentity(parseTask(content));
+					tasks.push({ ...task, filePath: filepath });
+				} catch (error) {
+					if (process.env.DEBUG) {
+						console.error(`Failed to parse task file ${filepath}`, error);
+					}
 				}
 			}
-		}
 
-		if (filter?.status) {
-			const statusLower = filter.status.toLowerCase();
-			tasks = tasks.filter((t) => t.status.toLowerCase() === statusLower);
-		}
+			span.addEvent("task.list.loaded", {
+				taskCount: tasks.length,
+			});
 
-		if (filter?.assignee) {
-			const assignee = filter.assignee;
-			tasks = tasks.filter((t) => t.assignee.includes(assignee));
-		}
+			if (filter?.status) {
+				const statusLower = filter.status.toLowerCase();
+				tasks = tasks.filter((t) => t.status.toLowerCase() === statusLower);
+			}
 
-		return sortByTaskId(tasks);
+			if (filter?.assignee) {
+				const assignee = filter.assignee;
+				tasks = tasks.filter((t) => t.assignee.includes(assignee));
+			}
+
+			span.addEvent("task.list.filtered", {
+				filteredCount: tasks.length,
+			});
+
+			const sortedTasks = sortByTaskId(tasks);
+
+			span.addEvent("task.list.complete", {
+				taskCount: sortedTasks.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return sortedTasks;
+		} catch (error) {
+			span.addEvent("task.error", {
+				operation: "list",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async listCompletedTasks(): Promise<Task[]> {
-		let completedDir: string;
+		const tracer = getTracer();
+		const span = tracer.startSpan("completed.tasks.list");
+
 		try {
-			completedDir = await this.getCompletedDir();
-		} catch (_error) {
-			return [];
-		}
+			span.addEvent("completed.tasks.list.started");
 
-		// Get configured task prefix
-		const config = await this.loadConfig();
-		const taskPrefix = (config?.prefixes?.task ?? "task").toLowerCase();
-		const globPattern = buildGlobPattern(taskPrefix);
-
-		let taskFiles: string[];
-		try {
-			taskFiles = await Array.fromAsync(new Bun.Glob(globPattern).scan({ cwd: completedDir, followSymlinks: true }));
-		} catch (_error) {
-			return [];
-		}
-
-		const tasks: Task[] = [];
-		for (const file of taskFiles) {
-			const filepath = join(completedDir, file);
+			let completedDir: string;
 			try {
-				const content = await Bun.file(filepath).text();
-				const task = parseTask(content);
-				tasks.push({ ...task, filePath: filepath });
-			} catch (error) {
-				if (process.env.DEBUG) {
-					console.error(`Failed to parse completed task file ${filepath}`, error);
+				completedDir = await this.getCompletedDir();
+			} catch (_error) {
+				span.addEvent("completed.tasks.list.complete", {
+					taskCount: 0,
+					success: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return [];
+			}
+
+			// Get configured task prefix
+			const config = await this.loadConfig();
+			const taskPrefix = (config?.prefixes?.task ?? "task").toLowerCase();
+			const globPattern = buildGlobPattern(taskPrefix);
+
+			let taskFiles: string[];
+			try {
+				taskFiles = await Array.fromAsync(new Bun.Glob(globPattern).scan({ cwd: completedDir, followSymlinks: true }));
+			} catch (_error) {
+				span.addEvent("completed.tasks.list.complete", {
+					taskCount: 0,
+					success: true,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return [];
+			}
+
+			const tasks: Task[] = [];
+			for (const file of taskFiles) {
+				const filepath = join(completedDir, file);
+				try {
+					const content = await Bun.file(filepath).text();
+					const task = parseTask(content);
+					tasks.push({ ...task, filePath: filepath });
+				} catch (error) {
+					if (process.env.DEBUG) {
+						console.error(`Failed to parse completed task file ${filepath}`, error);
+					}
 				}
 			}
-		}
 
-		return sortByTaskId(tasks);
+			span.addEvent("completed.tasks.list.loaded", {
+				taskCount: tasks.length,
+				completedDir,
+			});
+
+			const sortedTasks = sortByTaskId(tasks);
+
+			span.addEvent("completed.tasks.list.complete", {
+				taskCount: sortedTasks.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return sortedTasks;
+		} catch (error) {
+			span.addEvent("cleanup.error", {
+				operation: "list-completed",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async listArchivedTasks(): Promise<Task[]> {
@@ -693,7 +789,14 @@ export class FileSystem {
 	}
 
 	async loadDecision(decisionId: string): Promise<Decision | null> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("decision.view");
+
 		try {
+			span.addEvent("decision.view.started", {
+				decisionId,
+			});
+
 			const decisionsDir = await this.getDecisionsDir();
 			const files = await Array.fromAsync(
 				new Bun.Glob("decision-*.md").scan({ cwd: decisionsDir, followSymlinks: true }),
@@ -703,12 +806,42 @@ export class FileSystem {
 			const normalizedId = decisionId.replace(/^decision-/, "");
 			const decisionFile = files.find((file) => file.startsWith(`decision-${normalizedId} -`));
 
-			if (!decisionFile) return null;
+			if (!decisionFile) {
+				span.addEvent("decision.view.complete", {
+					decisionId,
+					found: false,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return null;
+			}
 
 			const filepath = join(decisionsDir, decisionFile);
 			const content = await Bun.file(filepath).text();
-			return parseDecision(content);
-		} catch (_error) {
+			const decision = parseDecision(content);
+
+			span.addEvent("decision.view.loaded", {
+				decisionId: decision.id,
+				title: decision.title,
+			});
+
+			span.addEvent("decision.view.complete", {
+				decisionId: decision.id,
+				found: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return decision;
+		} catch (error) {
+			span.addEvent("decision.error", {
+				operation: "view",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				decisionId,
+			});
+			span.setStatus({ code: SpanStatusCode.OK }); // Null return is valid
+			span.end();
 			return null;
 		}
 	}
@@ -775,7 +908,12 @@ export class FileSystem {
 	}
 
 	async listDecisions(): Promise<Decision[]> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("decision.list");
+
 		try {
+			span.addEvent("decision.list.started");
+
 			const decisionsDir = await this.getDecisionsDir();
 			const decisionFiles = await Array.fromAsync(
 				new Bun.Glob("decision-*.md").scan({ cwd: decisionsDir, followSymlinks: true }),
@@ -790,14 +928,40 @@ export class FileSystem {
 				const content = await Bun.file(filepath).text();
 				decisions.push(parseDecision(content));
 			}
-			return sortByTaskId(decisions);
-		} catch {
+
+			span.addEvent("decision.list.loaded", {
+				decisionCount: decisions.length,
+			});
+
+			const sorted = sortByTaskId(decisions);
+
+			span.addEvent("decision.list.complete", {
+				decisionCount: sorted.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return sorted;
+		} catch (error) {
+			span.addEvent("decision.error", {
+				operation: "list",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({ code: SpanStatusCode.OK }); // Empty list is valid
+			span.end();
 			return [];
 		}
 	}
 
 	async listDocuments(): Promise<Document[]> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("document.list");
+
 		try {
+			span.addEvent("document.list.started");
+
 			const docsDir = await this.getDocsDir();
 			// Recursively include all markdown files under docs, excluding README.md variants
 			const glob = new Bun.Glob("**/*.md");
@@ -815,20 +979,86 @@ export class FileSystem {
 				});
 			}
 
+			span.addEvent("document.list.loaded", {
+				documentCount: docs.length,
+			});
+
 			// Stable sort by title for UI/CLI listing
-			return docs.sort((a, b) => a.title.localeCompare(b.title));
-		} catch {
+			const sorted = docs.sort((a, b) => a.title.localeCompare(b.title));
+
+			span.addEvent("document.list.complete", {
+				documentCount: sorted.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return sorted;
+		} catch (error) {
+			span.addEvent("document.error", {
+				operation: "list",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({ code: SpanStatusCode.OK }); // Empty list is valid
+			span.end();
 			return [];
 		}
 	}
 
 	async loadDocument(id: string): Promise<Document> {
-		const documents = await this.listDocuments();
-		const document = documents.find((doc) => documentIdsEqual(id, doc.id));
-		if (!document) {
-			throw new Error(`Document not found: ${id}`);
+		const tracer = getTracer();
+		const span = tracer.startSpan("document.view");
+
+		try {
+			span.addEvent("document.view.started", {
+				documentId: id,
+			});
+
+			const documents = await this.listDocuments();
+			const document = documents.find((doc) => documentIdsEqual(id, doc.id));
+			if (!document) {
+				span.addEvent("document.error", {
+					operation: "view",
+					"error.type": "DocumentNotFound",
+					"error.message": `Document not found: ${id}`,
+					documentId: id,
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Document not found" });
+				span.end();
+				throw new Error(`Document not found: ${id}`);
+			}
+
+			span.addEvent("document.view.loaded", {
+				documentId: document.id,
+				title: document.title,
+			});
+
+			span.addEvent("document.view.complete", {
+				documentId: document.id,
+				found: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return document;
+		} catch (error) {
+			if (!span.isRecording()) {
+				throw error;
+			}
+			span.addEvent("document.error", {
+				operation: "view",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				documentId: id,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-		return document;
 	}
 
 	private buildMilestoneIdentifierKeys(identifier: string): Set<string> {
@@ -986,7 +1216,12 @@ ${rawContent.trim()}
 
 	// Milestone operations
 	async listMilestones(): Promise<Milestone[]> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("milestone.list");
+
 		try {
+			span.addEvent("milestone.list.started");
+
 			const milestonesDir = await this.getMilestonesDir();
 			const milestoneFiles = await Array.fromAsync(
 				new Bun.Glob("m-*.md").scan({ cwd: milestonesDir, followSymlinks: true }),
@@ -1001,9 +1236,30 @@ ${rawContent.trim()}
 				const content = await Bun.file(filepath).text();
 				milestones.push(parseMilestone(content));
 			}
+
+			span.addEvent("milestone.list.loaded", {
+				milestoneCount: milestones.length,
+			});
+
 			// Sort by ID for consistent ordering
-			return milestones.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
-		} catch {
+			const sorted = milestones.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+
+			span.addEvent("milestone.list.complete", {
+				milestoneCount: sorted.length,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return sorted;
+		} catch (error) {
+			span.addEvent("milestone.error", {
+				operation: "list",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({ code: SpanStatusCode.OK }); // Empty list is valid
+			span.end();
 			return [];
 		}
 	}
@@ -1030,76 +1286,145 @@ ${rawContent.trim()}
 	}
 
 	async loadMilestone(id: string): Promise<Milestone | null> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("milestone.view");
+
 		try {
+			span.addEvent("milestone.view.started", {
+				milestoneId: id,
+			});
+
 			const milestoneMatch = await this.findMilestoneFile(id, "active");
-			return milestoneMatch?.milestone ?? null;
-		} catch (_error) {
+			const milestone = milestoneMatch?.milestone ?? null;
+
+			if (milestone) {
+				span.addEvent("milestone.view.loaded", {
+					milestoneId: milestone.id,
+					title: milestone.title,
+				});
+			}
+
+			span.addEvent("milestone.view.complete", {
+				milestoneId: id,
+				found: !!milestone,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+			return milestone;
+		} catch (error) {
+			span.addEvent("milestone.error", {
+				operation: "view",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				milestoneId: id,
+			});
+			span.setStatus({ code: SpanStatusCode.OK }); // Null return is valid
+			span.end();
 			return null;
 		}
 	}
 
 	async createMilestone(title: string, description?: string): Promise<Milestone> {
-		const milestonesDir = await this.getMilestonesDir();
+		const tracer = getTracer();
+		const span = tracer.startSpan("milestone.create");
 
-		// Ensure milestones directory exists
-		await mkdir(milestonesDir, { recursive: true });
+		try {
+			span.addEvent("milestone.create.started", {
+				title,
+			});
 
-		// Find next available milestone ID
-		const archiveMilestonesDir = await this.getArchiveMilestonesDir();
-		await mkdir(archiveMilestonesDir, { recursive: true });
-		const [existingFiles, archivedFiles] = await Promise.all([
-			Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: milestonesDir, followSymlinks: true })),
-			Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: archiveMilestonesDir, followSymlinks: true })),
-		]);
-		const parseMilestoneId = async (dir: string, file: string): Promise<number | null> => {
-			if (file.toLowerCase() === "readme.md") {
-				return null;
-			}
-			const filepath = join(dir, file);
-			try {
-				const content = await Bun.file(filepath).text();
-				const parsed = parseMilestone(content);
-				const parsedIdMatch = parsed.id.match(/^m-(\d+)$/i);
-				if (parsedIdMatch?.[1]) {
-					return Number.parseInt(parsedIdMatch[1], 10);
+			const milestonesDir = await this.getMilestonesDir();
+
+			// Ensure milestones directory exists
+			await mkdir(milestonesDir, { recursive: true });
+
+			// Find next available milestone ID
+			const archiveMilestonesDir = await this.getArchiveMilestonesDir();
+			await mkdir(archiveMilestonesDir, { recursive: true });
+			const [existingFiles, archivedFiles] = await Promise.all([
+				Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: milestonesDir, followSymlinks: true })),
+				Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: archiveMilestonesDir, followSymlinks: true })),
+			]);
+			const parseMilestoneId = async (dir: string, file: string): Promise<number | null> => {
+				if (file.toLowerCase() === "readme.md") {
+					return null;
 				}
-			} catch {
-				// Fall through to filename-based fallback.
-			}
-			const filenameIdMatch = file.match(/^m-(\d+)/i);
-			if (filenameIdMatch?.[1]) {
-				return Number.parseInt(filenameIdMatch[1], 10);
-			}
-			return null;
-		};
-		const existingIds = (
-			await Promise.all([
-				...existingFiles.map((file) => parseMilestoneId(milestonesDir, file)),
-				...archivedFiles.map((file) => parseMilestoneId(archiveMilestonesDir, file)),
-			])
-		).filter((id): id is number => typeof id === "number" && id >= 0);
+				const filepath = join(dir, file);
+				try {
+					const content = await Bun.file(filepath).text();
+					const parsed = parseMilestone(content);
+					const parsedIdMatch = parsed.id.match(/^m-(\d+)$/i);
+					if (parsedIdMatch?.[1]) {
+						return Number.parseInt(parsedIdMatch[1], 10);
+					}
+				} catch {
+					// Fall through to filename-based fallback.
+				}
+				const filenameIdMatch = file.match(/^m-(\d+)/i);
+				if (filenameIdMatch?.[1]) {
+					return Number.parseInt(filenameIdMatch[1], 10);
+				}
+				return null;
+			};
+			const existingIds = (
+				await Promise.all([
+					...existingFiles.map((file) => parseMilestoneId(milestonesDir, file)),
+					...archivedFiles.map((file) => parseMilestoneId(archiveMilestonesDir, file)),
+				])
+			).filter((id): id is number => typeof id === "number" && id >= 0);
 
-		const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 0;
-		const id = `m-${nextId}`;
+			const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 0;
+			const id = `m-${nextId}`;
 
-		const filename = this.buildMilestoneFilename(id, title);
-		const content = this.serializeMilestoneContent(
-			id,
-			title,
-			`## Description
+			span.addEvent("milestone.create.validated", {
+				milestoneId: id,
+			});
+
+			const filename = this.buildMilestoneFilename(id, title);
+			const content = this.serializeMilestoneContent(
+				id,
+				title,
+				`## Description
 
 ${description || `Milestone: ${title}`}`,
-		);
+			);
 
-		const filepath = join(milestonesDir, filename);
-		await Bun.write(filepath, content);
+			const filepath = join(milestonesDir, filename);
+			await Bun.write(filepath, content);
 
-		return {
-			id,
-			title,
-			description: description || `Milestone: ${title}`,
-			rawContent: parseMilestone(content).rawContent,
-		};
+			span.addEvent("milestone.create.saved", {
+				milestoneId: id,
+				filepath,
+			});
+
+			span.addEvent("milestone.create.complete", {
+				milestoneId: id,
+				success: true,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			return {
+				id,
+				title,
+				description: description || `Milestone: ${title}`,
+				rawContent: parseMilestone(content).rawContent,
+			};
+		} catch (error) {
+			span.addEvent("milestone.error", {
+				operation: "create",
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
+		}
 	}
 
 	async renameMilestone(

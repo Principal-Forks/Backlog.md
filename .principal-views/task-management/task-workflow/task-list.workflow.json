@@ -6,19 +6,30 @@
 	"description": "Listing and filtering tasks",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Task list execution captured",
+				"summary": "Tasks listed",
 				"events": {
 					"task.list.started": "List started",
 					"task.list.loaded": "Tasks loaded",
 					"task.list.filtered": "Filters applied",
-					"task.list.complete": "List complete",
+					"task.list.complete": "List complete"
+				}
+			},
+			"description": "Tasks listed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Task list failed",
+				"events": {
+					"task.list.started": "List started",
 					"task.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Task list failed with error"
 		}
 	],
 	"spanPattern": "task.list"

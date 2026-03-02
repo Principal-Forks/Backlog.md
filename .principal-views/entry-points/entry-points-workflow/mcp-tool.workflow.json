@@ -6,20 +6,31 @@
 	"description": "Model Context Protocol tool invocation lifecycle",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 MCP tool execution captured",
+				"summary": "MCP tool completed",
 				"events": {
 					"mcp.tool.invoked": "Tool invoked",
 					"mcp.tool.validated": "Parameters validated",
 					"mcp.operation.dispatched": "Operation dispatched",
 					"operation.executed": "Operation executed",
-					"mcp.tool.response": "Response sent",
+					"mcp.tool.response": "Response sent"
+				}
+			},
+			"description": "MCP tool completed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "MCP tool failed",
+				"events": {
+					"mcp.tool.invoked": "Tool invoked",
 					"entry.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "MCP tool failed with error"
 		}
 	],
 	"spanPattern": "mcp.tool"

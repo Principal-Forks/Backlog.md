@@ -6,20 +6,31 @@
 	"description": "Moving a single task to the completed folder",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Task complete execution captured",
+				"summary": "Task completed",
 				"events": {
 					"task.complete.started": "Complete started",
 					"task.complete.located": "Task located",
 					"task.complete.moved": "Task moved",
 					"task.complete.committed": "Changes committed",
-					"task.complete.complete": "Operation complete",
+					"task.complete.complete": "Operation complete"
+				}
+			},
+			"description": "Task completed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Task complete failed",
+				"events": {
+					"task.complete.started": "Complete started",
 					"cleanup.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Task complete failed with error"
 		}
 	],
 	"spanPattern": "task.complete"

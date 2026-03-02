@@ -6,18 +6,29 @@
 	"description": "Viewing milestone details",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Milestone view execution captured",
+				"summary": "Milestone viewed",
 				"events": {
 					"milestone.view.started": "View started",
 					"milestone.view.loaded": "Milestone loaded",
-					"milestone.view.complete": "View complete",
+					"milestone.view.complete": "View complete"
+				}
+			},
+			"description": "Milestone viewed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Milestone view failed",
+				"events": {
+					"milestone.view.started": "View started",
 					"milestone.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Milestone view failed with error"
 		}
 	],
 	"spanPattern": "milestone.view"

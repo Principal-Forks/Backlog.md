@@ -6,18 +6,29 @@
 	"description": "Listing all decisions/ADRs",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Decision list execution captured",
+				"summary": "Decisions listed",
 				"events": {
 					"decision.list.started": "List operation started",
 					"decision.list.loaded": "Decisions loaded",
-					"decision.list.complete": "Operation complete",
+					"decision.list.complete": "Operation complete"
+				}
+			},
+			"description": "Decisions listed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Decision list failed",
+				"events": {
+					"decision.list.started": "List operation started",
 					"decision.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Decision list failed with error"
 		}
 	],
 	"spanPattern": "decision.list"

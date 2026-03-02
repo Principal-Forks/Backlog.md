@@ -6,18 +6,29 @@
 	"description": "Viewing task details",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Task view execution captured",
+				"summary": "Task viewed",
 				"events": {
 					"task.view.started": "View started",
 					"task.view.loaded": "Task loaded",
-					"task.view.complete": "View complete",
+					"task.view.complete": "View complete"
+				}
+			},
+			"description": "Task viewed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Task view failed",
+				"events": {
+					"task.view.started": "View started",
 					"task.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Task view failed with error"
 		}
 	],
 	"spanPattern": "task.view"

@@ -6,19 +6,30 @@
 	"description": "Updating the search index when content changes",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Search index update execution captured",
+				"summary": "Search index updated",
 				"events": {
 					"search.index.update.started": "Update started",
 					"search.index.snapshot.applied": "Snapshot applied",
 					"search.index.rebuilt": "Index rebuilt",
-					"search.index.update.complete": "Update complete",
+					"search.index.update.complete": "Update complete"
+				}
+			},
+			"description": "Search index updated successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Search index update failed",
+				"events": {
+					"search.index.update.started": "Update started",
 					"search.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Search index update failed with error"
 		}
 	],
 	"spanPattern": "search.index.update"

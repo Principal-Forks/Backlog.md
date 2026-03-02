@@ -6,21 +6,32 @@
 	"description": "Updating an existing decision/ADR from markdown content",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Decision update execution captured",
+				"summary": "Decision updated",
 				"events": {
 					"decision.update.started": "Update operation started",
 					"decision.update.loaded": "Decision loaded",
 					"decision.update.parsed": "Content parsed",
 					"decision.update.saved": "Decision saved",
 					"decision.update.committed": "Changes committed",
-					"decision.update.complete": "Operation complete",
+					"decision.update.complete": "Operation complete"
+				}
+			},
+			"description": "Decision updated successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Decision update failed",
+				"events": {
+					"decision.update.started": "Update operation started",
 					"decision.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Decision update failed with error"
 		}
 	],
 	"spanPattern": "decision.update"

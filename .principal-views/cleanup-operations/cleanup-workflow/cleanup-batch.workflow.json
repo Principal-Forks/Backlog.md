@@ -6,18 +6,29 @@
 	"description": "Batch cleanup operation moving multiple Done tasks to completed folder",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Cleanup batch execution captured",
+				"summary": "Cleanup batch completed",
 				"events": {
 					"cleanup.batch.started": "Batch started",
 					"cleanup.batch.processing": "Processing tasks",
-					"cleanup.batch.complete": "Batch complete",
+					"cleanup.batch.complete": "Batch complete"
+				}
+			},
+			"description": "Batch cleanup completed successfully"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Cleanup batch failed",
+				"events": {
+					"cleanup.batch.started": "Batch started",
 					"cleanup.error": "Error occurred"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Batch cleanup failed with error"
 		}
 	],
 	"spanPattern": "cleanup.batch"
