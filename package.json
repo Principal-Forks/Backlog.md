@@ -54,7 +54,7 @@
 	},
 	"scripts": {
 		"test": "bun test",
-		"test:otel": "OTEL_ENABLED=true bun test",
+		"test:otel": "OTEL_ENABLED=true OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 bun test",
 		"format": "biome format --write .",
 		"lint": "biome lint --write .",
 		"check": "biome check .",

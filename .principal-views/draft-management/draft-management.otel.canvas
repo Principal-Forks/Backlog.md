@@ -146,6 +146,39 @@
 			"color": "#f59e0b"
 		},
 		{
+			"id": "draft-create-commit-skipped",
+			"type": "text",
+			"x": 350,
+			"y": 500,
+			"width": 200,
+			"height": 100,
+			"text": "# Commit Skipped\n\nGit commit skipped (autoCommit disabled).",
+			"pv": {
+				"event": {
+					"name": "draft.create.commit-skipped",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration",
+					"files": ["src/core/backlog.ts"]
+				},
+				"shape": "rectangle",
+				"fill": "#94a3b8",
+				"stroke": "#64748b",
+				"status": "implemented"
+			},
+			"color": "#94a3b8"
+		},
+		{
 			"id": "draft-create-complete",
 			"type": "text",
 			"x": 100,
@@ -186,94 +219,59 @@
 			"color": "#22c55e"
 		},
 		{
-			"id": "draft-view-started",
+			"id": "filesystem-draft-view-started",
 			"type": "text",
 			"x": 400,
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# View Started\n\nDraft view operation initiated.",
+			"text": "# View Started (Filesystem)\n\nDraft view initiated at filesystem level (bypasses Core).",
 			"pv": {
 				"event": {
-					"name": "draft.view.started",
+					"name": "filesystem.draft.view.started",
 					"attributes": {
 						"draftId": {
 							"type": "string",
 							"required": true
-						},
-						"format": {
-							"type": "string",
-							"required": false
 						}
 					}
 				},
 				"sources": [
-					"src/cli.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": ["src/file-system/operations.ts"]
 				},
 				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
+				"fill": "#a855f7",
+				"stroke": "#7c3aed",
+				"status": "implemented"
 			},
-			"color": "#22c55e"
+			"color": "#a855f7"
 		},
 		{
-			"id": "draft-view-loaded",
+			"id": "filesystem-draft-view-complete",
 			"type": "text",
 			"x": 400,
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# View Loaded\n\nDraft data loaded from filesystem.",
+			"text": "# View Complete (Filesystem)\n\nDraft loaded successfully from filesystem.",
 			"pv": {
 				"event": {
-					"name": "draft.view.loaded",
+					"name": "filesystem.draft.view.complete",
 					"attributes": {
 						"draftId": {
 							"type": "string",
 							"required": true
 						},
-						"source": {
+						"filepath": {
 							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"sources": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "draft-view-complete",
-			"type": "text",
-			"x": 400,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# View Complete\n\nDraft view completed successfully.",
-			"pv": {
-				"event": {
-					"name": "draft.view.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
 							"required": true
 						},
-						"draftId": {
+						"title": {
 							"type": "string",
 							"required": true
 						},
@@ -284,162 +282,194 @@
 					}
 				},
 				"sources": [
-					"src/cli.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": ["src/file-system/operations.ts"]
 				},
 				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
+				"fill": "#a855f7",
+				"stroke": "#7c3aed",
+				"status": "implemented"
 			},
-			"color": "#22c55e"
+			"color": "#a855f7"
 		},
 		{
-			"id": "draft-list-started",
+			"id": "filesystem-draft-view-not-found",
+			"type": "text",
+			"x": 400,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# View Not Found (Filesystem)\n\nDraft not found in filesystem.",
+			"pv": {
+				"event": {
+					"name": "filesystem.draft.view.not-found",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/file-system/operations.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle",
+					"files": ["src/file-system/operations.ts"]
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706",
+				"status": "implemented"
+			},
+			"color": "#f59e0b"
+		},
+		{
+			"id": "filesystem-draft-list-started",
 			"type": "text",
 			"x": 700,
 			"y": 50,
 			"width": 200,
 			"height": 100,
-			"text": "# List Started\n\nDraft list operation initiated with filters.",
+			"text": "# List Started (Filesystem)\n\nDraft list initiated at filesystem level (bypasses Core).",
 			"pv": {
 				"event": {
-					"name": "draft.list.started",
-					"attributes": {
-						"filters": {
-							"type": "object",
-							"required": false
-						},
-						"format": {
-							"type": "string",
-							"required": false
-						}
-					}
+					"name": "filesystem.draft.list.started"
 				},
 				"sources": [
-					"src/cli.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": ["src/file-system/operations.ts"]
 				},
 				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
+				"fill": "#a855f7",
+				"stroke": "#7c3aed",
+				"status": "implemented"
 			},
-			"color": "#22c55e"
+			"color": "#a855f7"
 		},
 		{
-			"id": "draft-list-loaded",
+			"id": "filesystem-draft-list-scanned",
 			"type": "text",
 			"x": 700,
 			"y": 200,
 			"width": 200,
 			"height": 100,
-			"text": "# List Loaded\n\nDrafts loaded from filesystem.",
+			"text": "# List Scanned (Filesystem)\n\nDrafts directory scanned for files.",
 			"pv": {
 				"event": {
-					"name": "draft.list.loaded",
+					"name": "filesystem.draft.list.scanned",
 					"attributes": {
-						"totalCount": {
+						"filesFound": {
 							"type": "number",
 							"required": true
 						}
 					}
 				},
 				"sources": [
-					"src/core/backlog.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": ["src/file-system/operations.ts"]
 				},
 				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft"
+				"fill": "#a855f7",
+				"stroke": "#7c3aed",
+				"status": "implemented"
 			},
-			"color": "#3b82f6"
+			"color": "#a855f7"
 		},
 		{
-			"id": "draft-list-filtered",
+			"id": "filesystem-draft-list-complete",
 			"type": "text",
 			"x": 700,
 			"y": 350,
 			"width": 200,
 			"height": 100,
-			"text": "# List Filtered\n\nFilters applied to draft list.",
+			"text": "# List Complete (Filesystem)\n\nDraft list operation completed.",
 			"pv": {
 				"event": {
-					"name": "draft.list.filtered",
+					"name": "filesystem.draft.list.complete",
 					"attributes": {
-						"resultCount": {
+						"count": {
 							"type": "number",
 							"required": true
 						},
-						"appliedFilters": {
-							"type": "object",
-							"required": false
+						"duration.ms": {
+							"type": "number",
+							"required": true
 						}
 					}
 				},
 				"sources": [
-					"src/core/backlog.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "lifecycle",
+					"files": ["src/file-system/operations.ts"]
 				},
 				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft"
+				"fill": "#a855f7",
+				"stroke": "#7c3aed",
+				"status": "implemented"
 			},
-			"color": "#3b82f6"
+			"color": "#a855f7"
 		},
 		{
-			"id": "draft-list-complete",
+			"id": "filesystem-draft-error",
 			"type": "text",
 			"x": 700,
 			"y": 500,
 			"width": 200,
 			"height": 100,
-			"text": "# List Complete\n\nDraft list operation completed successfully.",
+			"text": "# Filesystem Error\n\nFilesystem-level draft operation failed.",
 			"pv": {
 				"event": {
-					"name": "draft.list.complete",
+					"name": "filesystem.draft.error",
 					"attributes": {
-						"success": {
-							"type": "boolean",
+						"error.type": {
+							"type": "string",
 							"required": true
 						},
-						"resultCount": {
-							"type": "number",
+						"error.message": {
+							"type": "string",
 							"required": true
 						},
-						"duration.ms": {
-							"type": "number",
+						"operation": {
+							"type": "string",
 							"required": true
+						},
+						"draftId": {
+							"type": "string",
+							"required": false
 						}
 					}
 				},
 				"sources": [
-					"src/cli.ts"
+					"src/file-system/operations.ts"
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "error",
+					"files": ["src/file-system/operations.ts"]
 				},
 				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
+				"fill": "#ef4444",
+				"stroke": "#dc2626",
+				"status": "implemented"
 			},
-			"color": "#22c55e"
+			"color": "#ef4444"
 		},
 		{
 			"id": "draft-promote-started",
@@ -596,6 +626,39 @@
 				"status": "implemented"
 			},
 			"color": "#f59e0b"
+		},
+		{
+			"id": "draft-promote-commit-skipped",
+			"type": "text",
+			"x": 350,
+			"y": 1300,
+			"width": 200,
+			"height": 100,
+			"text": "# Commit Skipped\n\nGit commit skipped (autoCommit disabled).",
+			"pv": {
+				"event": {
+					"name": "draft.promote.commit-skipped",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration",
+					"files": ["src/core/backlog.ts"]
+				},
+				"shape": "rectangle",
+				"fill": "#94a3b8",
+				"stroke": "#64748b",
+				"status": "implemented"
+			},
+			"color": "#94a3b8"
 		},
 		{
 			"id": "draft-promote-complete",
@@ -790,6 +853,39 @@
 			"color": "#f59e0b"
 		},
 		{
+			"id": "draft-archive-commit-skipped",
+			"type": "text",
+			"x": 650,
+			"y": 1300,
+			"width": 200,
+			"height": 100,
+			"text": "# Commit Skipped\n\nGit commit skipped (autoCommit disabled).",
+			"pv": {
+				"event": {
+					"name": "draft.archive.commit-skipped",
+					"attributes": {
+						"draftId": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"sources": [
+					"src/core/backlog.ts"
+				],
+				"otel": {
+					"kind": "event",
+					"category": "integration",
+					"files": ["src/core/backlog.ts"]
+				},
+				"shape": "rectangle",
+				"fill": "#94a3b8",
+				"stroke": "#64748b",
+				"status": "implemented"
+			},
+			"color": "#94a3b8"
+		},
+		{
 			"id": "draft-archive-complete",
 			"type": "text",
 			"x": 400,
@@ -927,53 +1023,63 @@
 			}
 		},
 		{
-			"id": "view-started-loaded",
-			"fromNode": "draft-view-started",
+			"id": "fs-view-started-complete",
+			"fromNode": "filesystem-draft-view-started",
 			"fromSide": "bottom",
-			"toNode": "draft-view-loaded",
+			"toNode": "filesystem-draft-view-complete",
 			"toSide": "top",
 			"pv": {
 				"edgeType": "flow"
 			}
 		},
 		{
-			"id": "view-loaded-complete",
-			"fromNode": "draft-view-loaded",
+			"id": "fs-view-started-not-found",
+			"fromNode": "filesystem-draft-view-started",
 			"fromSide": "bottom",
-			"toNode": "draft-view-complete",
+			"toNode": "filesystem-draft-view-not-found",
 			"toSide": "top",
 			"pv": {
 				"edgeType": "flow"
 			}
 		},
 		{
-			"id": "list-started-loaded",
-			"fromNode": "draft-list-started",
+			"id": "fs-list-started-scanned",
+			"fromNode": "filesystem-draft-list-started",
 			"fromSide": "bottom",
-			"toNode": "draft-list-loaded",
+			"toNode": "filesystem-draft-list-scanned",
 			"toSide": "top",
 			"pv": {
 				"edgeType": "flow"
 			}
 		},
 		{
-			"id": "list-loaded-filtered",
-			"fromNode": "draft-list-loaded",
+			"id": "fs-list-scanned-complete",
+			"fromNode": "filesystem-draft-list-scanned",
 			"fromSide": "bottom",
-			"toNode": "draft-list-filtered",
+			"toNode": "filesystem-draft-list-complete",
 			"toSide": "top",
 			"pv": {
 				"edgeType": "flow"
 			}
 		},
 		{
-			"id": "list-filtered-complete",
-			"fromNode": "draft-list-filtered",
-			"fromSide": "bottom",
-			"toNode": "draft-list-complete",
-			"toSide": "top",
+			"id": "fs-list-started-error",
+			"fromNode": "filesystem-draft-list-started",
+			"fromSide": "right",
+			"toNode": "filesystem-draft-error",
+			"toSide": "left",
 			"pv": {
-				"edgeType": "flow"
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "fs-view-started-error",
+			"fromNode": "filesystem-draft-view-started",
+			"fromSide": "right",
+			"toNode": "filesystem-draft-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
 			}
 		},
 		{
@@ -1067,26 +1173,6 @@
 			}
 		},
 		{
-			"id": "view-started-error",
-			"fromNode": "draft-view-started",
-			"fromSide": "right",
-			"toNode": "draft-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "list-started-error",
-			"fromNode": "draft-list-started",
-			"fromSide": "right",
-			"toNode": "draft-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
 			"id": "promote-started-error",
 			"fromNode": "draft-promote-started",
 			"fromSide": "right",
@@ -1104,6 +1190,66 @@
 			"toSide": "left",
 			"pv": {
 				"edgeType": "error"
+			}
+		},
+		{
+			"id": "create-saved-commit-skipped",
+			"fromNode": "draft-create-saved",
+			"fromSide": "right",
+			"toNode": "draft-create-commit-skipped",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "create-commit-skipped-complete",
+			"fromNode": "draft-create-commit-skipped",
+			"fromSide": "bottom",
+			"toNode": "draft-create-complete",
+			"toSide": "right",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "archive-moved-commit-skipped",
+			"fromNode": "draft-archive-moved",
+			"fromSide": "right",
+			"toNode": "draft-archive-commit-skipped",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "archive-commit-skipped-complete",
+			"fromNode": "draft-archive-commit-skipped",
+			"fromSide": "bottom",
+			"toNode": "draft-archive-complete",
+			"toSide": "right",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "promote-moved-commit-skipped",
+			"fromNode": "draft-promote-moved",
+			"fromSide": "right",
+			"toNode": "draft-promote-commit-skipped",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "promote-commit-skipped-complete",
+			"fromNode": "draft-promote-commit-skipped",
+			"fromSide": "bottom",
+			"toNode": "draft-promote-complete",
+			"toSide": "right",
+			"pv": {
+				"edgeType": "flow"
 			}
 		}
 	],

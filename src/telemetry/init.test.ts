@@ -26,7 +26,7 @@ describe("Telemetry Initialization", () => {
 		expect(process.env.OTEL_EXPORTER_OTLP_ENDPOINT).toBeUndefined();
 
 		// If we were to initialize telemetry here without setting the env var,
-		// it should default to localhost:4319
+		// it should default to localhost:4318
 		// (We can't actually test this without mocking because it would initialize the global provider)
 	});
 
@@ -41,8 +41,8 @@ describe("Telemetry Initialization", () => {
 
 		// Default would be used when neither is set
 		delete process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
-		const fallback = undefined ?? process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? "http://localhost:4319/v1/traces";
-		expect(fallback).toBe("http://localhost:4319/v1/traces");
+		const fallback = undefined ?? process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? "http://localhost:4318/v1/traces";
+		expect(fallback).toBe("http://localhost:4318/v1/traces");
 	});
 
 	test("OTEL_ENABLED=false disables telemetry", () => {

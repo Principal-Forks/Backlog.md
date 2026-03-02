@@ -4,14 +4,14 @@ This directory contains the OpenTelemetry (OTEL) instrumentation for the Backlog
 
 ## Overview
 
-The CLI uses OpenTelemetry to emit traces for instrumented operations. **Telemetry is enabled by default** and sends traces to `http://localhost:4319/v1/traces`. Traces are exported immediately using `SimpleSpanProcessor` when a CLI command completes.
+The CLI uses OpenTelemetry to emit traces for instrumented operations. **Telemetry is enabled by default** and sends traces to `http://localhost:4318/v1/traces`. Traces are exported immediately using `SimpleSpanProcessor` when a CLI command completes.
 
 ## Configuration
 
 ### Environment Variables
 
 - **`OTEL_EXPORTER_OTLP_ENDPOINT`**: The OTLP collector endpoint URL
-  - Default: `http://localhost:4319/v1/traces`
+  - Default: `http://localhost:4318/v1/traces`
   - Override to send to a different collector
 
 - **`OTEL_ENABLED`**: Enable/disable telemetry
@@ -24,7 +24,7 @@ The CLI uses OpenTelemetry to emit traces for instrumented operations. **Telemet
 ### Example Usage
 
 ```bash
-# Use default configuration (sends to localhost:4319)
+# Use default configuration (sends to localhost:4318)
 backlog task list
 
 # Disable telemetry
@@ -32,7 +32,7 @@ export OTEL_ENABLED=false
 backlog task list
 
 # Custom collector endpoint
-export OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-collector.example.com:4319/v1/traces
+export OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-collector.example.com:4318/v1/traces
 backlog task list
 
 # Custom service name
@@ -155,7 +155,7 @@ Shutdown Telemetry (flush remaining spans)
 
 ### No traces appearing in collector
 
-1. **Verify collector is running** on `localhost:4319` (or your custom endpoint)
+1. **Verify collector is running** on `localhost:4318` (or your custom endpoint)
 2. Check that `OTEL_ENABLED` is not set to `false`
 3. If using a custom endpoint, verify `OTEL_EXPORTER_OTLP_ENDPOINT` is correct
 4. Look for errors in CLI output (initialization failures are logged to stderr)

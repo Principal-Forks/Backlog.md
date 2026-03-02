@@ -6,20 +6,46 @@
 	"description": "Creating a new draft in the backlog",
 	"scenarios": [
 		{
-			"id": "fallback",
-			"priority": 999,
+			"id": "success-with-commit",
+			"priority": 1,
 			"template": {
-				"summary": "📋 Draft create execution captured",
+				"summary": "Draft created with auto-commit",
 				"events": {
-					"draft.create.started": "Creation started",
-					"draft.create.validated": "Validated",
-					"draft.create.saved": "Saved",
-					"draft.create.committed": "Committed",
-					"draft.create.complete": "Complete",
-					"draft.error": "Error occurred"
+					"draft.create.started": "Creating draft {{draftId}} (autoCommit: {{autoCommit}})",
+					"draft.create.validated": "Validated: status={{status}}",
+					"draft.create.saved": "Saved to {{filepath}}",
+					"draft.create.committed": "Committed: {{commitMessage}}",
+					"draft.create.complete": "Completed in {{duration.ms}}ms"
 				}
 			},
-			"description": "Default fallback scenario for unmatched cases"
+			"description": "Draft successfully created with git commit"
+		},
+		{
+			"id": "success-no-commit",
+			"priority": 2,
+			"template": {
+				"summary": "Draft created without commit",
+				"events": {
+					"draft.create.started": "Creating draft {{draftId}} (autoCommit: {{autoCommit}})",
+					"draft.create.validated": "Validated: status={{status}}",
+					"draft.create.saved": "Saved to {{filepath}}",
+					"draft.create.commit-skipped": "Commit skipped",
+					"draft.create.complete": "Completed in {{duration.ms}}ms"
+				}
+			},
+			"description": "Draft successfully created without git commit"
+		},
+		{
+			"id": "error",
+			"priority": 3,
+			"template": {
+				"summary": "Draft creation failed",
+				"events": {
+					"draft.create.started": "Attempting to create draft {{draftId}}",
+					"draft.error": "Error: {{error.message}} (type: {{error.type}})"
+				}
+			},
+			"description": "Draft creation failed with error"
 		}
 	],
 	"spanPattern": "draft.create"

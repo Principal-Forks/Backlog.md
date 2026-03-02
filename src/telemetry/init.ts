@@ -9,13 +9,13 @@ let isInitialized = false;
 /**
  * Default OTLP endpoint for traces
  */
-const DEFAULT_OTLP_ENDPOINT = "http://localhost:4319/v1/traces";
+const DEFAULT_OTLP_ENDPOINT = "http://localhost:4318/v1/traces";
 
 /**
  * Configuration for OpenTelemetry initialization
  */
 export interface OTelConfig {
-	/** OTLP endpoint URL (defaults to 'http://localhost:4319/v1/traces') */
+	/** OTLP endpoint URL (defaults to 'http://localhost:4318/v1/traces') */
 	endpoint?: string;
 	/** Whether to enable telemetry (defaults to true) */
 	enabled?: boolean;
@@ -26,10 +26,10 @@ export interface OTelConfig {
 /**
  * Initialize OpenTelemetry tracing with SimpleSpanProcessor for immediate export
  *
- * Telemetry is enabled by default and sends to http://localhost:4319/v1/traces
+ * Telemetry is enabled by default and sends to http://localhost:4318/v1/traces
  *
  * Environment variables:
- * - OTEL_EXPORTER_OTLP_ENDPOINT: Collector endpoint URL (defaults to http://localhost:4319/v1/traces)
+ * - OTEL_EXPORTER_OTLP_ENDPOINT: Collector endpoint URL (defaults to http://localhost:4318/v1/traces)
  * - OTEL_ENABLED: Set to 'false' to disable telemetry
  * - OTEL_SERVICE_NAME: Service name (defaults to 'backlog-cli')
  */

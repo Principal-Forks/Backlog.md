@@ -1,0 +1,35 @@
+{
+	"version": "1.0.0",
+	"canvas": ".principal-views/draft-management/draft-management.otel.canvas",
+	"mode": "span-tree",
+	"name": "Filesystem Draft List",
+	"description": "Listing drafts - filesystem-level operation (bypasses Core)",
+	"scenarios": [
+		{
+			"id": "success",
+			"priority": 1,
+			"template": {
+				"summary": "Drafts listed (filesystem)",
+				"events": {
+					"filesystem.draft.list.started": "Scanning drafts directory",
+					"filesystem.draft.list.scanned": "Found {{filesFound}} files",
+					"filesystem.draft.list.complete": "Returned {{count}} drafts in {{duration.ms}}ms"
+				}
+			},
+			"description": "Drafts successfully listed from filesystem"
+		},
+		{
+			"id": "error",
+			"priority": 2,
+			"template": {
+				"summary": "Draft list failed (filesystem)",
+				"events": {
+					"filesystem.draft.list.started": "Scanning drafts directory",
+					"filesystem.draft.error": "Error: {{error.message}} (type: {{error.type}})"
+				}
+			},
+			"description": "Draft list operation failed"
+		}
+	],
+	"spanPattern": "filesystem.draft.list"
+}

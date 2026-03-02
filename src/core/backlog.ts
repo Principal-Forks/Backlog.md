@@ -1007,18 +1007,72 @@ export class Core {
 	}
 
 	async createDraft(task: Task, autoCommit?: boolean): Promise<string> {
-		// Drafts always have status "Draft", regardless of config default
-		task.status = "Draft";
-		normalizeAssignee(task);
+		const tracer = getTracer();
+		const span = tracer.startSpan("draft.create");
+		const startTime = Date.now();
 
-		const filepath = await this.fs.saveDraft(task);
+		try {
+			span.addEvent("draft.create.started", {
+				draftId: task.id,
+				title: task.title,
+				autoCommit: autoCommit ?? false,
+			});
 
-		if (await this.shouldAutoCommit(autoCommit)) {
-			await this.git.addFile(filepath);
-			await this.git.commitTaskChange(task.id, `Create draft ${task.id}`, filepath);
+			// Drafts always have status "Draft", regardless of config default
+			task.status = "Draft";
+			normalizeAssignee(task);
+
+			span.addEvent("draft.create.validated", {
+				draftId: task.id,
+				status: task.status,
+			});
+
+			const filepath = await this.fs.saveDraft(task);
+
+			span.addEvent("draft.create.saved", {
+				draftId: task.id,
+				filepath,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				await this.git.addFile(filepath);
+				await this.git.commitTaskChange(task.id, `Create draft ${task.id}`, filepath);
+
+				span.addEvent("draft.create.committed", {
+					draftId: task.id,
+					commitMessage: `Create draft ${task.id}`,
+				});
+			} else {
+				span.addEvent("draft.create.commit-skipped", {
+					draftId: task.id,
+				});
+			}
+
+			const duration = Date.now() - startTime;
+			span.addEvent("draft.create.complete", {
+				draftId: task.id,
+				filepath,
+				"duration.ms": duration,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			return filepath;
+		} catch (error) {
+			span.addEvent("draft.error", {
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				operation: "create",
+				draftId: task.id,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		return filepath;
 	}
 
 	async updateTask(task: Task, autoCommit?: boolean): Promise<void> {
@@ -2063,15 +2117,96 @@ export class Core {
 	}
 
 	async archiveDraft(draftId: string, autoCommit?: boolean): Promise<boolean> {
-		const success = await this.fs.archiveDraft(draftId);
+		const tracer = getTracer();
+		const span = tracer.startSpan("draft.archive");
+		const startTime = Date.now();
 
-		if (success && (await this.shouldAutoCommit(autoCommit))) {
-			const backlogDir = await this.getBacklogDirectoryName();
-			const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-			await this.git.commitChanges(`backlog: Archive draft ${normalizeId(draftId, "draft")}`, repoRoot);
+		try {
+			span.addEvent("draft.archive.started", {
+				draftId,
+				autoCommit: autoCommit ?? false,
+			});
+
+			// Check if draft exists first
+			const draft = await this.fs.loadDraft(draftId);
+			if (!draft) {
+				span.addEvent("draft.error", {
+					"error.type": "DraftNotFound",
+					"error.message": `Draft ${draftId} not found`,
+					operation: "archive",
+					draftId,
+					"error.stage": "locate",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Draft not found" });
+				span.end();
+				return false;
+			}
+
+			span.addEvent("draft.archive.located", {
+				draftId,
+				title: draft.title,
+			});
+
+			const success = await this.fs.archiveDraft(draftId);
+
+			if (!success) {
+				span.addEvent("draft.error", {
+					"error.type": "ArchiveFailed",
+					"error.message": `Failed to archive draft ${draftId}`,
+					operation: "archive",
+					draftId,
+					"error.stage": "move",
+				});
+				span.setStatus({ code: SpanStatusCode.ERROR, message: "Archive failed" });
+				span.end();
+				return false;
+			}
+
+			span.addEvent("draft.archive.moved", {
+				draftId,
+			});
+
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Archive draft ${normalizeId(draftId, "draft")}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("draft.archive.committed", {
+					draftId,
+					commitMessage,
+				});
+			} else {
+				span.addEvent("draft.archive.commit-skipped", {
+					draftId,
+				});
+			}
+
+			const duration = Date.now() - startTime;
+			span.addEvent("draft.archive.complete", {
+				draftId,
+				success: true,
+				"duration.ms": duration,
+			});
+
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			return success;
+		} catch (error) {
+			span.addEvent("draft.error", {
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				operation: "archive",
+				draftId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
+			throw error;
 		}
-
-		return success;
 	}
 
 	async promoteDraft(draftId: string, autoCommit?: boolean): Promise<boolean> {
@@ -2115,6 +2250,10 @@ export class Core {
 				// Emit draft.promote.committed event
 				span.addEvent("draft.promote.committed", {
 					commitMessage,
+					draftId,
+				});
+			} else {
+				span.addEvent("draft.promote.commit-skipped", {
 					draftId,
 				});
 			}

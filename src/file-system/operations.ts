@@ -1,10 +1,11 @@
 import { mkdir, rename, unlink } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
-import { trace } from "@opentelemetry/api";
+import { SpanStatusCode, trace } from "@opentelemetry/api";
 import { DEFAULT_DIRECTORIES, DEFAULT_FILES, DEFAULT_STATUSES } from "../constants/index.ts";
 import { parseDecision, parseDocument, parseMilestone, parseTask } from "../markdown/parser.ts";
 import { serializeDecision, serializeDocument, serializeTask } from "../markdown/serializer.ts";
+import { getTracer } from "../telemetry";
 import type { BacklogConfig, Decision, Document, Milestone, Task, TaskListFilter } from "../types/index.ts";
 import { documentIdsEqual, normalizeDocumentId } from "../utils/document-id.ts";
 import {
@@ -555,7 +556,15 @@ export class FileSystem {
 	}
 
 	async loadDraft(draftId: string): Promise<Task | null> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("filesystem.draft.view");
+		const startTime = Date.now();
+
 		try {
+			span.addEvent("filesystem.draft.view.started", {
+				draftId,
+			});
+
 			const draftsDir = await this.getDraftsDir();
 			// Search for draft files with draft- prefix
 			const files = await Array.fromAsync(
@@ -566,23 +575,62 @@ export class FileSystem {
 
 			// Find matching draft file
 			const draftFile = files.find((f) => f.startsWith(`${filenameId} -`) || f.startsWith(`${filenameId}-`));
-			if (!draftFile) return null;
+			if (!draftFile) {
+				span.addEvent("filesystem.draft.view.not-found", {
+					draftId,
+				});
+				span.setStatus({ code: SpanStatusCode.OK });
+				span.end();
+				return null;
+			}
 
 			const filepath = join(draftsDir, draftFile);
 			const content = await Bun.file(filepath).text();
 			const task = normalizeTaskIdentity(parseTask(content));
+
+			const duration = Date.now() - startTime;
+			span.addEvent("filesystem.draft.view.complete", {
+				draftId,
+				filepath,
+				title: task.title,
+				"duration.ms": duration,
+			});
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
 			return { ...task, filePath: filepath };
-		} catch {
+		} catch (error) {
+			span.addEvent("filesystem.draft.error", {
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				operation: "view",
+				draftId,
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
 			return null;
 		}
 	}
 
 	async listDrafts(): Promise<Task[]> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("filesystem.draft.list");
+		const startTime = Date.now();
+
 		try {
+			span.addEvent("filesystem.draft.list.started");
+
 			const draftsDir = await this.getDraftsDir();
 			const taskFiles = await Array.fromAsync(
 				new Bun.Glob(buildGlobPattern("draft")).scan({ cwd: draftsDir, followSymlinks: true }),
 			);
+
+			span.addEvent("filesystem.draft.list.scanned", {
+				filesFound: taskFiles.length,
+			});
 
 			const tasks: Task[] = [];
 			for (const file of taskFiles) {
@@ -592,8 +640,28 @@ export class FileSystem {
 				tasks.push({ ...task, filePath: filepath });
 			}
 
-			return sortByTaskId(tasks);
-		} catch {
+			const sorted = sortByTaskId(tasks);
+
+			const duration = Date.now() - startTime;
+			span.addEvent("filesystem.draft.list.complete", {
+				count: sorted.length,
+				"duration.ms": duration,
+			});
+			span.setStatus({ code: SpanStatusCode.OK });
+			span.end();
+
+			return sorted;
+		} catch (error) {
+			span.addEvent("filesystem.draft.error", {
+				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
+				"error.message": error instanceof Error ? error.message : String(error),
+				operation: "list",
+			});
+			span.setStatus({
+				code: SpanStatusCode.ERROR,
+				message: error instanceof Error ? error.message : String(error),
+			});
+			span.end();
 			return [];
 		}
 	}
