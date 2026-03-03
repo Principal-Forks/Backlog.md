@@ -9,11 +9,15 @@
 			"id": "success",
 			"priority": 1,
 			"template": {
-				"summary": "Cleanup batch completed",
+				"summary": "Cleanup batch completed: {{movedCount}}/{{totalCount}} tasks moved in {{duration.ms}}ms",
 				"events": {
-					"cleanup.batch.started": "Batch started",
-					"cleanup.batch.processing": "Processing tasks",
-					"cleanup.batch.complete": "Batch complete"
+					"cleanup.batch.started": "Batch started: {{taskCount}} tasks older than {{olderThanDays}} days",
+					"cleanup.batch.processing": "Processing task {{currentIndex}}/{{totalCount}}: {{taskId}}",
+					"cleanup.batch.complete": "Batch complete: {{movedCount}}/{{totalCount}} moved, {{failedCount}} failed ({{success}}) in {{duration.ms}}ms",
+					"cleanup.preview.started": "Preview started for tasks older than {{olderThanDays}} days",
+					"cleanup.preview.filtered": "Filtered {{matchedTasks}}/{{totalTasks}} tasks before {{cutoffDate}}",
+					"cleanup.preview.complete": "Preview complete: {{taskCount}} tasks ({{success}})",
+					"cleanup.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} for task {{taskId}}"
 				}
 			},
 			"description": "Batch cleanup completed successfully"
@@ -22,10 +26,15 @@
 			"id": "error",
 			"priority": 2,
 			"template": {
-				"summary": "Cleanup batch failed",
+				"summary": "Cleanup batch failed: {{error.message}}",
 				"events": {
-					"cleanup.batch.started": "Batch started",
-					"cleanup.error": "Error occurred"
+					"cleanup.batch.started": "Batch started: {{taskCount}} tasks older than {{olderThanDays}} days",
+					"cleanup.batch.processing": "Processing task {{currentIndex}}/{{totalCount}}: {{taskId}}",
+					"cleanup.batch.complete": "Batch complete: {{movedCount}}/{{totalCount}} moved, {{failedCount}} failed ({{success}}) in {{duration.ms}}ms",
+					"cleanup.preview.started": "Preview started for tasks older than {{olderThanDays}} days",
+					"cleanup.preview.filtered": "Filtered {{matchedTasks}}/{{totalTasks}} tasks before {{cutoffDate}}",
+					"cleanup.preview.complete": "Preview complete: {{taskCount}} tasks ({{success}})",
+					"cleanup.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} for task {{taskId}}"
 				}
 			},
 			"description": "Batch cleanup failed with error"

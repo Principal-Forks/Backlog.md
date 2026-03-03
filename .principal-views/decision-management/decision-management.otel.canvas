@@ -319,7 +319,12 @@
 			"pv": {
 				"event": {
 					"name": "decision.list.started",
-					"attributes": {}
+					"attributes": {
+						"operation": {
+							"type": "string",
+							"required": true
+						}
+					}
 				},
 				"sources": [
 					"src/file-system/operations.ts"

@@ -9,13 +9,22 @@
 			"id": "success",
 			"priority": 1,
 			"template": {
-				"summary": "Search query completed",
+				"summary": "Search '{{query}}' found {{resultCount}} results ({{success}}) in {{duration.ms}}ms",
 				"events": {
-					"search.query.started": "Query started",
-					"search.query.normalized": "Query normalized",
-					"search.query.executed": "Search executed",
-					"search.query.filtered": "Results filtered",
-					"search.query.complete": "Query complete"
+					"search.initialize.started": "Initialization {{operation}} started",
+					"search.initialize.snapshot": "Snapshot loaded: {{taskCount}} tasks, {{documentCount}} docs, {{decisionCount}} decisions",
+					"search.initialize.indexed": "Index built: {{totalEntities}} entities ({{taskVariants}} task variants)",
+					"search.initialize.complete": "Initialization complete ({{success}}) in {{duration.ms}}ms",
+					"search.query.started": "Query started: '{{query}}' types={{types}} limit={{limit}}",
+					"search.query.normalized": "Normalized: '{{trimmedQuery}}' types={{types}} filters={{filters}}",
+					"search.query.executed": "Executed: {{rawResultCount}} raw results in {{searchDuration.ms}}ms",
+					"search.query.filtered": "Filtered to {{filteredCount}}: {{taskCount}} tasks, {{documentCount}} docs, {{decisionCount}} decisions",
+					"search.query.complete": "Complete: {{resultCount}} results ({{success}}) in {{duration.ms}}ms",
+					"search.index.update.started": "Update started: {{trigger}} (version: {{version}})",
+					"search.index.snapshot.applied": "Snapshot applied: {{taskCount}} tasks, {{documentCount}} docs, {{decisionCount}} decisions",
+					"search.index.rebuilt": "Index rebuilt: {{totalEntities}} entities in {{rebuildDuration.ms}}ms",
+					"search.index.update.complete": "Update complete v{{version}} ({{success}})",
+					"search.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}}"
 				}
 			},
 			"description": "Search query completed successfully"
@@ -24,10 +33,22 @@
 			"id": "error",
 			"priority": 2,
 			"template": {
-				"summary": "Search query failed",
+				"summary": "Search query failed: {{error.message}}",
 				"events": {
-					"search.query.started": "Query started",
-					"search.error": "Error occurred"
+					"search.initialize.started": "Initialization {{operation}} started",
+					"search.initialize.snapshot": "Snapshot loaded: {{taskCount}} tasks, {{documentCount}} docs, {{decisionCount}} decisions",
+					"search.initialize.indexed": "Index built: {{totalEntities}} entities ({{taskVariants}} task variants)",
+					"search.initialize.complete": "Initialization complete ({{success}}) in {{duration.ms}}ms",
+					"search.query.started": "Query started: '{{query}}' types={{types}} limit={{limit}}",
+					"search.query.normalized": "Normalized: '{{trimmedQuery}}' types={{types}} filters={{filters}}",
+					"search.query.executed": "Executed: {{rawResultCount}} raw results in {{searchDuration.ms}}ms",
+					"search.query.filtered": "Filtered to {{filteredCount}}: {{taskCount}} tasks, {{documentCount}} docs, {{decisionCount}} decisions",
+					"search.query.complete": "Complete: {{resultCount}} results ({{success}}) in {{duration.ms}}ms",
+					"search.index.update.started": "Update started: {{trigger}} (version: {{version}})",
+					"search.index.snapshot.applied": "Snapshot applied: {{taskCount}} tasks, {{documentCount}} docs, {{decisionCount}} decisions",
+					"search.index.rebuilt": "Index rebuilt: {{totalEntities}} entities in {{rebuildDuration.ms}}ms",
+					"search.index.update.complete": "Update complete v{{version}} ({{success}})",
+					"search.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}}"
 				}
 			},
 			"description": "Search query failed with error"

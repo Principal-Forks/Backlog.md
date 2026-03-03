@@ -9,13 +9,26 @@
 			"id": "success",
 			"priority": 1,
 			"template": {
-				"summary": "MCP tool completed",
+				"summary": "MCP {{toolName}} completed ({{success}}) in {{duration.ms}}ms",
 				"events": {
-					"mcp.tool.invoked": "Tool invoked",
-					"mcp.tool.validated": "Parameters validated",
-					"mcp.operation.dispatched": "Operation dispatched",
-					"operation.executed": "Operation executed",
-					"mcp.tool.response": "Response sent"
+					"cli.request.received": "CLI received {{command}} {{subcommand}} with args: {{args}} (cwd: {{cwd}})",
+					"cli.request.parsed": "CLI parsed {{operation}} for {{entityType}} (valid: {{validationPassed}})",
+					"cli.operation.dispatched": "CLI dispatched {{operation}} to {{handler}}",
+					"cli.request.complete": "CLI complete ({{success}}) exit: {{exitCode}} in {{duration.ms}}ms",
+					"mcp.tool.invoked": "Invoked {{toolName}} with params: {{parameters}} (client: {{clientId}})",
+					"mcp.tool.validated": "Validated {{toolName}} for {{operation}} (valid: {{validationPassed}})",
+					"mcp.operation.dispatched": "Dispatched {{operation}} to {{handler}}",
+					"mcp.tool.response": "Response sent ({{success}}) {{contentLength}} bytes in {{duration.ms}}ms",
+					"http.request.received": "HTTP received {{method}} {{path}} from {{clientIp}} ({{userAgent}})",
+					"http.request.routed": "HTTP routed {{route}} to {{handler}} for {{operation}}",
+					"http.operation.dispatched": "HTTP dispatched {{operation}} to {{handler}} with body: {{requestBody}}",
+					"http.response.sent": "HTTP response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms",
+					"operation.executed": "Executed {{operation}} on {{entityType}} {{entityId}} ({{success}}) in {{duration.ms}}ms",
+					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})",
+					"completed.tasks.list.started": "List {{operation}} started",
+					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
+					"completed.tasks.list.complete": "Listed {{taskCount}} completed tasks ({{success}})",
+					"cleanup.error": "Cleanup error in {{operation}}: {{error.message}}"
 				}
 			},
 			"description": "MCP tool completed successfully"
@@ -24,10 +37,26 @@
 			"id": "error",
 			"priority": 2,
 			"template": {
-				"summary": "MCP tool failed",
+				"summary": "MCP tool failed: {{error.message}}",
 				"events": {
-					"mcp.tool.invoked": "Tool invoked",
-					"entry.error": "Error occurred"
+					"cli.request.received": "CLI received {{command}} {{subcommand}} with args: {{args}} (cwd: {{cwd}})",
+					"cli.request.parsed": "CLI parsed {{operation}} for {{entityType}} (valid: {{validationPassed}})",
+					"cli.operation.dispatched": "CLI dispatched {{operation}} to {{handler}}",
+					"cli.request.complete": "CLI complete ({{success}}) exit: {{exitCode}} in {{duration.ms}}ms",
+					"mcp.tool.invoked": "Invoked {{toolName}} with params: {{parameters}} (client: {{clientId}})",
+					"mcp.tool.validated": "Validated {{toolName}} for {{operation}} (valid: {{validationPassed}})",
+					"mcp.operation.dispatched": "Dispatched {{operation}} to {{handler}}",
+					"mcp.tool.response": "Response sent ({{success}}) {{contentLength}} bytes in {{duration.ms}}ms",
+					"http.request.received": "HTTP received {{method}} {{path}} from {{clientIp}} ({{userAgent}})",
+					"http.request.routed": "HTTP routed {{route}} to {{handler}} for {{operation}}",
+					"http.operation.dispatched": "HTTP dispatched {{operation}} to {{handler}} with body: {{requestBody}}",
+					"http.response.sent": "HTTP response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms",
+					"operation.executed": "Executed {{operation}} on {{entityType}} {{entityId}} ({{success}}) in {{duration.ms}}ms",
+					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})",
+					"completed.tasks.list.started": "List {{operation}} started",
+					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
+					"completed.tasks.list.complete": "Listed {{taskCount}} completed tasks ({{success}})",
+					"cleanup.error": "Cleanup error in {{operation}}: {{error.message}}"
 				}
 			},
 			"description": "MCP tool failed with error"

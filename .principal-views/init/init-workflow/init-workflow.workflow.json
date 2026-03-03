@@ -9,13 +9,14 @@
 			"id": "success",
 			"priority": 1,
 			"template": {
-				"summary": "Backlog initialized",
+				"summary": "Backlog {{projectName}} initialized ({{success}}) in {{duration.ms}}ms",
 				"events": {
-					"init.started": "Initialization started",
-					"init.structure.created": "Structure created",
-					"init.config.saved": "Configuration saved",
-					"init.mcp.configured": "MCP configured",
-					"init.complete": "Initialization complete"
+					"init.started": "Init {{projectName}} (mode: {{integrationMode}}, reinit: {{isReInitialization}}, clients: {{mcpClients}}, advanced: {{hasAdvancedConfig}})",
+					"init.structure.created": "Created {{created.directories}} directories and {{created.files}} files",
+					"init.config.saved": "Saved config: {{config.projectName}} prefix={{config.taskPrefix}} autoCommit={{config.autoCommit}} zeroPadded={{config.zeroPaddedIds}} editor={{config.defaultEditor}}",
+					"init.mcp.configured": "MCP configured: {{mcp.clients}} (success: {{mcp.successCount}}, failed: {{mcp.failureCount}}, errors: {{mcp.hasErrors}})",
+					"init.complete": "Init complete ({{success}}, reinit: {{isReInitialization}}, mcp: {{hasMcpResults}}) in {{duration.ms}}ms",
+					"init.error": "Error at {{error.stage}}: {{error.type}} - {{error.message}} ({{error.stack}})"
 				}
 			},
 			"description": "Backlog initialized successfully"
@@ -24,10 +25,14 @@
 			"id": "error",
 			"priority": 2,
 			"template": {
-				"summary": "Backlog init failed",
+				"summary": "Backlog init failed: {{error.message}}",
 				"events": {
-					"init.started": "Initialization started",
-					"init.error": "Error occurred"
+					"init.started": "Init {{projectName}} (mode: {{integrationMode}}, reinit: {{isReInitialization}}, clients: {{mcpClients}}, advanced: {{hasAdvancedConfig}})",
+					"init.structure.created": "Created {{created.directories}} directories and {{created.files}} files",
+					"init.config.saved": "Saved config: {{config.projectName}} prefix={{config.taskPrefix}} autoCommit={{config.autoCommit}} zeroPadded={{config.zeroPaddedIds}} editor={{config.defaultEditor}}",
+					"init.mcp.configured": "MCP configured: {{mcp.clients}} (success: {{mcp.successCount}}, failed: {{mcp.failureCount}}, errors: {{mcp.hasErrors}})",
+					"init.complete": "Init complete ({{success}}, reinit: {{isReInitialization}}, mcp: {{hasMcpResults}}) in {{duration.ms}}ms",
+					"init.error": "Error at {{error.stage}}: {{error.type}} - {{error.message}} ({{error.stack}})"
 				}
 			},
 			"description": "Backlog init failed with error"

@@ -1295,6 +1295,46 @@
 			"pv": {
 				"edgeType": "flow"
 			}
+		},
+		{
+			"id": "create-saved-fs-view",
+			"fromNode": "draft-create-saved",
+			"fromSide": "right",
+			"toNode": "filesystem-draft-view-started",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "child-span"
+			}
+		},
+		{
+			"id": "promote-loaded-fs-view",
+			"fromNode": "draft-promote-loaded",
+			"fromSide": "right",
+			"toNode": "filesystem-draft-view-started",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "child-span"
+			}
+		},
+		{
+			"id": "archive-located-fs-view",
+			"fromNode": "draft-archive-located",
+			"fromSide": "right",
+			"toNode": "filesystem-draft-view-started",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "child-span"
+			}
+		},
+		{
+			"id": "fs-view-complete-fs-list",
+			"fromNode": "filesystem-draft-view-complete",
+			"fromSide": "right",
+			"toNode": "filesystem-draft-list-started",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "flow"
+			}
 		}
 	],
 	"pv": {
@@ -1313,6 +1353,12 @@
 				"style": "dashed",
 				"width": 2,
 				"color": "#ef4444"
+			},
+			"child-span": {
+				"label": "Creates Child Span",
+				"style": "dashed",
+				"width": 2,
+				"color": "#8b5cf6"
 			}
 		},
 		"markdown": ".principal-views/draft-management.md"

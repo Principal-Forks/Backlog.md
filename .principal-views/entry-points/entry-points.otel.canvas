@@ -597,7 +597,12 @@
 			"pv": {
 				"event": {
 					"name": "completed.tasks.list.started",
-					"attributes": {}
+					"attributes": {
+						"operation": {
+							"type": "string",
+							"required": true
+						}
+					}
 				},
 				"otel": {
 					"kind": "event",
@@ -913,6 +918,16 @@
 			"toSide": "top",
 			"pv": {
 				"edgeType": "error"
+			}
+		},
+		{
+			"id": "operation-completed-list",
+			"fromNode": "operation-executed",
+			"fromSide": "right",
+			"toNode": "completed-tasks-list-started",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "child-span"
 			}
 		}
 	],

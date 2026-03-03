@@ -9,11 +9,26 @@
 			"id": "success",
 			"priority": 1,
 			"template": {
-				"summary": "Completed tasks listed",
+				"summary": "Listed {{taskCount}} completed tasks ({{success}})",
 				"events": {
-					"completed.tasks.list.started": "List started",
-					"completed.tasks.list.loaded": "Tasks loaded",
-					"completed.tasks.list.complete": "List complete"
+					"cli.request.received": "CLI received {{command}} {{subcommand}} with args: {{args}} (cwd: {{cwd}})",
+					"cli.request.parsed": "CLI parsed {{operation}} for {{entityType}} (valid: {{validationPassed}})",
+					"cli.operation.dispatched": "CLI dispatched {{operation}} to {{handler}}",
+					"cli.request.complete": "CLI complete ({{success}}) exit: {{exitCode}} in {{duration.ms}}ms",
+					"mcp.tool.invoked": "MCP invoked {{toolName}} with params: {{parameters}} (client: {{clientId}})",
+					"mcp.tool.validated": "MCP validated {{toolName}} for {{operation}} (valid: {{validationPassed}})",
+					"mcp.operation.dispatched": "MCP dispatched {{operation}} to {{handler}}",
+					"mcp.tool.response": "MCP response ({{success}}) {{contentLength}} bytes in {{duration.ms}}ms",
+					"http.request.received": "HTTP received {{method}} {{path}} from {{clientIp}} ({{userAgent}})",
+					"http.request.routed": "HTTP routed {{route}} to {{handler}} for {{operation}}",
+					"http.operation.dispatched": "HTTP dispatched {{operation}} to {{handler}} with body: {{requestBody}}",
+					"http.response.sent": "HTTP response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms",
+					"operation.executed": "Executed {{operation}} on {{entityType}} {{entityId}} ({{success}}) in {{duration.ms}}ms",
+					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})",
+					"completed.tasks.list.started": "List {{operation}} started",
+					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
+					"completed.tasks.list.complete": "Listed {{taskCount}} completed tasks ({{success}})",
+					"cleanup.error": "Cleanup error in {{operation}}: {{error.message}}"
 				}
 			},
 			"description": "Completed tasks listed successfully"
@@ -22,10 +37,26 @@
 			"id": "error",
 			"priority": 2,
 			"template": {
-				"summary": "Completed tasks list failed",
+				"summary": "Completed tasks list failed: {{error.message}}",
 				"events": {
-					"completed.tasks.list.started": "List started",
-					"cleanup.error": "Error occurred"
+					"cli.request.received": "CLI received {{command}} {{subcommand}} with args: {{args}} (cwd: {{cwd}})",
+					"cli.request.parsed": "CLI parsed {{operation}} for {{entityType}} (valid: {{validationPassed}})",
+					"cli.operation.dispatched": "CLI dispatched {{operation}} to {{handler}}",
+					"cli.request.complete": "CLI complete ({{success}}) exit: {{exitCode}} in {{duration.ms}}ms",
+					"mcp.tool.invoked": "MCP invoked {{toolName}} with params: {{parameters}} (client: {{clientId}})",
+					"mcp.tool.validated": "MCP validated {{toolName}} for {{operation}} (valid: {{validationPassed}})",
+					"mcp.operation.dispatched": "MCP dispatched {{operation}} to {{handler}}",
+					"mcp.tool.response": "MCP response ({{success}}) {{contentLength}} bytes in {{duration.ms}}ms",
+					"http.request.received": "HTTP received {{method}} {{path}} from {{clientIp}} ({{userAgent}})",
+					"http.request.routed": "HTTP routed {{route}} to {{handler}} for {{operation}}",
+					"http.operation.dispatched": "HTTP dispatched {{operation}} to {{handler}} with body: {{requestBody}}",
+					"http.response.sent": "HTTP response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms",
+					"operation.executed": "Executed {{operation}} on {{entityType}} {{entityId}} ({{success}}) in {{duration.ms}}ms",
+					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})",
+					"completed.tasks.list.started": "List {{operation}} started",
+					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
+					"completed.tasks.list.complete": "Listed {{taskCount}} completed tasks ({{success}})",
+					"cleanup.error": "Cleanup error in {{operation}}: {{error.message}}"
 				}
 			},
 			"description": "Completed tasks list failed with error"
