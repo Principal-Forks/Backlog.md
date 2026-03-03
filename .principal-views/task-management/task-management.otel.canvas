@@ -32,12 +32,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -68,12 +71,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -104,12 +110,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -140,12 +149,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "integration"
+					"category": "integration",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#f59e0b"
 		},
@@ -180,12 +192,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -221,12 +236,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -257,12 +275,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -293,12 +314,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -329,12 +353,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -365,12 +392,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "integration"
+					"category": "integration",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#f59e0b"
 		},
@@ -405,12 +435,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -441,12 +474,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -481,12 +517,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -521,12 +560,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -557,12 +599,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -593,12 +638,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -629,12 +677,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -669,12 +720,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -706,12 +760,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -742,12 +799,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -778,12 +838,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -814,12 +877,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "integration"
+					"category": "integration",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#f59e0b"
 		},
@@ -854,12 +920,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -907,12 +976,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "error"
+					"category": "error",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#ef4444"
 		},
@@ -944,12 +1016,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -984,12 +1059,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -1021,12 +1099,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -1057,12 +1138,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "integration"
+					"category": "integration",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#f59e0b"
 		},
@@ -1097,12 +1181,218 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
+			},
+			"color": "#22c55e"
+		},
+		{
+			"id": "task-complete-started",
+			"type": "text",
+			"x": 400,
+			"y": 1350,
+			"width": 200,
+			"height": 100,
+			"text": "# Complete Started\n\nTask completion initiated.",
+			"pv": {
+				"event": {
+					"name": "task.complete.started",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"autoCommit": {
+							"type": "boolean",
+							"required": false
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"status": "implemented",
+				"sources": [
+					"src/core/backlog.ts"
+				]
+			},
+			"color": "#22c55e"
+		},
+		{
+			"id": "task-complete-located",
+			"type": "text",
+			"x": 400,
+			"y": 1500,
+			"width": 200,
+			"height": 100,
+			"text": "# Complete Located\n\nTask file located.",
+			"pv": {
+				"event": {
+					"name": "task.complete.located",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"sourcePath": {
+							"type": "string",
+							"required": true
+						},
+						"filename": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"status": "implemented",
+				"sources": [
+					"src/core/backlog.ts"
+				]
+			},
+			"color": "#3b82f6"
+		},
+		{
+			"id": "task-complete-moved",
+			"type": "text",
+			"x": 400,
+			"y": 1650,
+			"width": 200,
+			"height": 100,
+			"text": "# Complete Moved\n\nTask moved to completed folder.",
+			"pv": {
+				"event": {
+					"name": "task.complete.moved",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"fromPath": {
+							"type": "string",
+							"required": true
+						},
+						"toPath": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "operation",
+					"files": [
+						"src/core/backlog.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"status": "implemented",
+				"sources": [
+					"src/core/backlog.ts"
+				]
+			},
+			"color": "#3b82f6"
+		},
+		{
+			"id": "task-complete-committed",
+			"type": "text",
+			"x": 400,
+			"y": 1800,
+			"width": 200,
+			"height": 100,
+			"text": "# Complete Committed\n\nChanges committed to git.",
+			"pv": {
+				"event": {
+					"name": "task.complete.committed",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"commitMessage": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "integration",
+					"files": [
+						"src/core/backlog.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706",
+				"status": "implemented",
+				"sources": [
+					"src/core/backlog.ts"
+				]
+			},
+			"color": "#f59e0b"
+		},
+		{
+			"id": "task-complete-complete",
+			"type": "text",
+			"x": 400,
+			"y": 1950,
+			"width": 200,
+			"height": 100,
+			"text": "# Complete Done\n\nTask completion finished.",
+			"pv": {
+				"event": {
+					"name": "task.complete.complete",
+					"attributes": {
+						"taskId": {
+							"type": "string",
+							"required": true
+						},
+						"success": {
+							"type": "boolean",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"status": "implemented",
+				"sources": [
+					"src/core/backlog.ts"
+				]
 			},
 			"color": "#22c55e"
 		}
@@ -1381,6 +1671,56 @@
 		{
 			"id": "archive-started-error",
 			"fromNode": "task-archive-started",
+			"fromSide": "right",
+			"toNode": "task-error",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "error"
+			}
+		},
+		{
+			"id": "complete-started-located",
+			"fromNode": "task-complete-started",
+			"fromSide": "bottom",
+			"toNode": "task-complete-located",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-located-moved",
+			"fromNode": "task-complete-located",
+			"fromSide": "bottom",
+			"toNode": "task-complete-moved",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-moved-committed",
+			"fromNode": "task-complete-moved",
+			"fromSide": "bottom",
+			"toNode": "task-complete-committed",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-committed-complete",
+			"fromNode": "task-complete-committed",
+			"fromSide": "bottom",
+			"toNode": "task-complete-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "complete-started-error",
+			"fromNode": "task-complete-started",
 			"fromSide": "right",
 			"toNode": "task-error",
 			"toSide": "left",

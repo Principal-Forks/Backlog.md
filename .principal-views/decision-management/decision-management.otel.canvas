@@ -23,12 +23,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -59,12 +62,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "validation"
+					"category": "validation",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -95,12 +101,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "io"
+					"category": "io",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -131,12 +140,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "git"
+					"category": "git",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
 				"stroke": "#7c3aed",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#8b5cf6"
 		},
@@ -171,12 +183,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -203,12 +218,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -239,12 +257,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "io"
+					"category": "io",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -275,12 +296,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -302,12 +326,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -334,12 +361,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "io"
+					"category": "io",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -370,12 +400,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -406,12 +439,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -442,12 +478,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "io"
+					"category": "io",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -582,12 +621,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -627,12 +669,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "error"
+					"category": "error",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#ef4444"
 		}

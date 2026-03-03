@@ -39,12 +39,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/init.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -75,12 +78,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/init.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -123,12 +129,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/core/init.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -167,12 +176,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "integration"
+					"category": "integration",
+					"files": [
+						"src/core/init.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#f59e0b"
 		},
@@ -211,12 +223,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/core/init.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -255,12 +270,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "error"
+					"category": "error",
+					"files": [
+						"src/core/init.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#ef4444"
 		}

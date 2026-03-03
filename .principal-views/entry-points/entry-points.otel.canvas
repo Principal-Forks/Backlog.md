@@ -585,6 +585,153 @@
 				"status": "draft"
 			},
 			"color": "#ef4444"
+		},
+		{
+			"id": "completed-tasks-list-started",
+			"type": "text",
+			"x": 1500,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# List Started\n\nCompleted tasks list initiated.",
+			"pv": {
+				"event": {
+					"name": "completed.tasks.list.started",
+					"attributes": {}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"status": "implemented",
+				"sources": [
+					"src/file-system/operations.ts"
+				]
+			},
+			"color": "#22c55e"
+		},
+		{
+			"id": "completed-tasks-list-loaded",
+			"type": "text",
+			"x": 1500,
+			"y": 200,
+			"width": 200,
+			"height": 100,
+			"text": "# List Loaded\n\nCompleted tasks loaded.",
+			"pv": {
+				"event": {
+					"name": "completed.tasks.list.loaded",
+					"attributes": {
+						"taskCount": {
+							"type": "number",
+							"required": true
+						},
+						"completedDir": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8",
+				"status": "implemented",
+				"sources": [
+					"src/file-system/operations.ts"
+				]
+			},
+			"color": "#3b82f6"
+		},
+		{
+			"id": "completed-tasks-list-complete",
+			"type": "text",
+			"x": 1500,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# List Complete\n\nCompleted tasks list done.",
+			"pv": {
+				"event": {
+					"name": "completed.tasks.list.complete",
+					"attributes": {
+						"taskCount": {
+							"type": "number",
+							"required": true
+						},
+						"success": {
+							"type": "boolean",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "lifecycle",
+					"files": [
+						"src/file-system/operations.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a",
+				"status": "implemented",
+				"sources": [
+					"src/file-system/operations.ts"
+				]
+			},
+			"color": "#22c55e"
+		},
+		{
+			"id": "completed-tasks-list-error",
+			"type": "text",
+			"x": 1500,
+			"y": 500,
+			"width": 200,
+			"height": 100,
+			"text": "# List Error\n\nError listing completed tasks.",
+			"pv": {
+				"event": {
+					"name": "cleanup.error",
+					"attributes": {
+						"operation": {
+							"type": "string",
+							"required": true
+						},
+						"error.message": {
+							"type": "string",
+							"required": true
+						}
+					}
+				},
+				"otel": {
+					"kind": "event",
+					"category": "error",
+					"files": [
+						"src/file-system/operations.ts"
+					]
+				},
+				"shape": "rectangle",
+				"fill": "#ef4444",
+				"stroke": "#dc2626",
+				"status": "implemented",
+				"sources": [
+					"src/file-system/operations.ts"
+				]
+			},
+			"color": "#ef4444"
 		}
 	],
 	"edges": [
@@ -736,6 +883,36 @@
 			"toSide": "top",
 			"pv": {
 				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "completed-list-started-loaded",
+			"fromNode": "completed-tasks-list-started",
+			"fromSide": "bottom",
+			"toNode": "completed-tasks-list-loaded",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "completed-list-loaded-complete",
+			"fromNode": "completed-tasks-list-loaded",
+			"fromSide": "bottom",
+			"toNode": "completed-tasks-list-complete",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "flow"
+			}
+		},
+		{
+			"id": "completed-list-started-error",
+			"fromNode": "completed-tasks-list-started",
+			"fromSide": "bottom",
+			"toNode": "completed-tasks-list-error",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "error"
 			}
 		}
 	],

@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0",
-	"canvas": ".principal-views/cleanup-operations/cleanup-operations.otel.canvas",
+	"canvas": ".principal-views/task-management/task-management.otel.canvas",
 	"mode": "span-tree",
 	"name": "Task Complete",
 	"description": "Moving a single task to the completed folder",
@@ -27,7 +27,7 @@
 				"summary": "Task complete failed",
 				"events": {
 					"task.complete.started": "Complete started",
-					"cleanup.error": "Error occurred"
+					"task.error": "Error occurred"
 				}
 			},
 			"description": "Task complete failed with error"

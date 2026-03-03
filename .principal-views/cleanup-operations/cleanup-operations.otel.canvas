@@ -24,12 +24,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/server/index.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -64,12 +67,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/server/index.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -100,12 +106,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/server/index.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -136,12 +145,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/server/index.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -176,12 +188,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/server/index.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -224,300 +239,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "lifecycle"
+					"category": "lifecycle",
+					"files": [
+						"src/server/index.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "task-complete-started",
-			"type": "text",
-			"x": 800,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# Task Completion Started\n\nSingle task completion initiated.",
-			"pv": {
-				"event": {
-					"name": "task.complete.started",
-					"attributes": {
-						"taskId": {
-							"type": "string",
-							"required": true
-						},
-						"autoCommit": {
-							"type": "boolean",
-							"required": false
-						}
-					}
-				},
-				"sources": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "task-complete-located",
-			"type": "text",
-			"x": 800,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Task Located\n\nTask file located in tasks directory.",
-			"pv": {
-				"event": {
-					"name": "task.complete.located",
-					"attributes": {
-						"taskId": {
-							"type": "string",
-							"required": true
-						},
-						"sourcePath": {
-							"type": "string",
-							"required": true
-						},
-						"filename": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"sources": [
-					"src/core/backlog.ts",
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "io"
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "task-complete-moved",
-			"type": "text",
-			"x": 800,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# Task Moved\n\nTask file moved to completed directory.",
-			"pv": {
-				"event": {
-					"name": "task.complete.moved",
-					"attributes": {
-						"taskId": {
-							"type": "string",
-							"required": true
-						},
-						"fromPath": {
-							"type": "string",
-							"required": true
-						},
-						"toPath": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"sources": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "io"
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "task-complete-committed",
-			"type": "text",
-			"x": 800,
-			"y": 500,
-			"width": 240,
-			"height": 110,
-			"text": "# Changes Committed\n\nTask completion committed to git.",
-			"pv": {
-				"event": {
-					"name": "task.complete.committed",
-					"attributes": {
-						"taskId": {
-							"type": "string",
-							"required": true
-						},
-						"commitMessage": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"sources": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "git"
-				},
-				"shape": "rectangle",
-				"fill": "#8b5cf6",
-				"stroke": "#7c3aed",
-				"status": "draft"
-			},
-			"color": "#8b5cf6"
-		},
-		{
-			"id": "task-complete-complete",
-			"type": "text",
-			"x": 800,
-			"y": 650,
-			"width": 240,
-			"height": 110,
-			"text": "# Completion Complete\n\nTask completion operation finished.",
-			"pv": {
-				"event": {
-					"name": "task.complete.complete",
-					"attributes": {
-						"taskId": {
-							"type": "string",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"sources": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "completed-tasks-list-started",
-			"type": "text",
-			"x": 1150,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# List Started\n\nList completed tasks operation started.",
-			"pv": {
-				"event": {
-					"name": "completed.tasks.list.started",
-					"attributes": {}
-				},
-				"sources": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "completed-tasks-list-loaded",
-			"type": "text",
-			"x": 1150,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Tasks Loaded\n\nCompleted tasks loaded from directory.",
-			"pv": {
-				"event": {
-					"name": "completed.tasks.list.loaded",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"completedDir": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"sources": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "io"
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "completed-tasks-list-complete",
-			"type": "text",
-			"x": 1150,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# List Complete\n\nCompleted tasks list operation finished.",
-			"pv": {
-				"event": {
-					"name": "completed.tasks.list.complete",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"sources": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#22c55e"
 		},
@@ -561,12 +291,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "error"
+					"category": "error",
+					"files": [
+						"src/core/backlog.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#ef4444"
 		}
@@ -623,108 +356,8 @@
 			}
 		},
 		{
-			"id": "batch-to-task-complete",
-			"fromNode": "cleanup-batch-processing",
-			"fromSide": "right",
-			"toNode": "task-complete-started",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "child-span"
-			}
-		},
-		{
 			"id": "batch-to-error",
 			"fromNode": "cleanup-batch-started",
-			"fromSide": "right",
-			"toNode": "cleanup-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "complete-start-to-located",
-			"fromNode": "task-complete-started",
-			"fromSide": "bottom",
-			"toNode": "task-complete-located",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "complete-located-to-moved",
-			"fromNode": "task-complete-located",
-			"fromSide": "bottom",
-			"toNode": "task-complete-moved",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "complete-moved-to-committed",
-			"fromNode": "task-complete-moved",
-			"fromSide": "bottom",
-			"toNode": "task-complete-committed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "complete-committed-to-complete",
-			"fromNode": "task-complete-committed",
-			"fromSide": "bottom",
-			"toNode": "task-complete-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "complete-moved-to-complete",
-			"fromNode": "task-complete-moved",
-			"fromSide": "right",
-			"toNode": "task-complete-complete",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "complete-to-error",
-			"fromNode": "task-complete-started",
-			"fromSide": "right",
-			"toNode": "cleanup-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "list-start-to-loaded",
-			"fromNode": "completed-tasks-list-started",
-			"fromSide": "bottom",
-			"toNode": "completed-tasks-list-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "list-loaded-to-complete",
-			"fromNode": "completed-tasks-list-loaded",
-			"fromSide": "bottom",
-			"toNode": "completed-tasks-list-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "list-to-error",
-			"fromNode": "completed-tasks-list-started",
 			"fromSide": "right",
 			"toNode": "cleanup-error",
 			"toSide": "left",
