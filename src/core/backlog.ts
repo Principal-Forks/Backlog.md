@@ -23,6 +23,11 @@ import {
 import { normalizeAssignee } from "../utils/assignee.ts";
 import { documentIdsEqual } from "../utils/document-id.ts";
 import { openInEditor } from "../utils/editor.ts";
+import {
+	createMilestoneFilterValueResolver,
+	normalizeMilestoneFilterValue,
+	resolveClosestMilestoneFilterValue,
+} from "../utils/milestone-filter.ts";
 import { buildIdRegex, extractAnyPrefix, getPrefixForType, normalizeId } from "../utils/prefix-config.ts";
 import {
 	getCanonicalStatus as resolveCanonicalStatus,
@@ -181,7 +186,11 @@ export class Core {
 		return this.searchService;
 	}
 
-	private applyTaskFilters(tasks: Task[], filters?: TaskListFilter): Task[] {
+	private applyTaskFilters(
+		tasks: Task[],
+		filters?: TaskListFilter,
+		resolveMilestoneFilterValue?: (milestoneValue: string) => string,
+	): Task[] {
 		if (!filters) {
 			return tasks;
 		}
@@ -197,6 +206,17 @@ export class Core {
 		if (filters.priority) {
 			const priorityLower = String(filters.priority).toLowerCase();
 			result = result.filter((task) => (task.priority ?? "").toLowerCase() === priorityLower);
+		}
+		if (filters.milestone) {
+			const milestoneFilter = resolveClosestMilestoneFilterValue(
+				filters.milestone,
+				result.map((task) => resolveMilestoneFilterValue?.(task.milestone ?? "") ?? task.milestone ?? ""),
+			);
+			result = result.filter(
+				(task) =>
+					normalizeMilestoneFilterValue(resolveMilestoneFilterValue?.(task.milestone ?? "") ?? task.milestone ?? "") ===
+					milestoneFilter,
+			);
 		}
 		if (filters.parentTaskId) {
 			const parentFilter = filters.parentTaskId;
@@ -289,9 +309,16 @@ export class Core {
 		const { filters, query, limit } = options;
 		const trimmedQuery = query?.trim();
 		const includeCrossBranch = options.includeCrossBranch ?? true;
+		const milestoneResolverPromise = filters?.milestone
+			? Promise.all([this.fs.listMilestones(), this.fs.listArchivedMilestones()]).then(
+					([activeMilestones, archivedMilestones]) =>
+						createMilestoneFilterValueResolver([...activeMilestones, ...archivedMilestones]),
+				)
+			: undefined;
 
-		const applyFiltersAndLimit = (collection: Task[]): Task[] => {
-			let filtered = this.applyTaskFilters(collection, filters);
+		const applyFiltersAndLimit = async (collection: Task[]): Promise<Task[]> => {
+			const resolveMilestoneFilterValue = milestoneResolverPromise ? await milestoneResolverPromise : undefined;
+			let filtered = this.applyTaskFilters(collection, filters, resolveMilestoneFilterValue);
 			if (!includeCrossBranch) {
 				filtered = this.filterLocalEditableTasks(filtered);
 			}
@@ -304,7 +331,7 @@ export class Core {
 		if (!trimmedQuery) {
 			const store = await this.getContentStore();
 			const tasks = store.getTasks();
-			return applyFiltersAndLimit(tasks);
+			return await applyFiltersAndLimit(tasks);
 		}
 
 		const searchService = await this.getSearchService();
@@ -339,7 +366,7 @@ export class Core {
 			tasks.push(task);
 		}
 
-		return applyFiltersAndLimit(tasks);
+		return await applyFiltersAndLimit(tasks);
 	}
 
 	async getTask(taskId: string): Promise<Task | null> {
