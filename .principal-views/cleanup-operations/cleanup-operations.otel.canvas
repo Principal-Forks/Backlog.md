@@ -18,7 +18,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/server/index.ts"
 				],
@@ -62,7 +62,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -101,7 +101,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -140,7 +140,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -183,7 +183,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -234,7 +234,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -285,7 +285,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/server/index.ts"
 				],

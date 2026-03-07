@@ -22,7 +22,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/cli.ts"
 				],
@@ -62,7 +62,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -101,7 +101,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -140,7 +140,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/git/operations.ts"
 				],
 				"otel": {
@@ -175,7 +175,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -218,7 +218,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -253,7 +253,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -300,7 +300,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -335,7 +335,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -364,7 +364,7 @@
 				"event": {
 					"name": "filesystem.draft.list.started"
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -399,7 +399,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -438,7 +438,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -485,7 +485,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -524,7 +524,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -563,7 +563,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -599,7 +599,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -635,7 +635,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -670,7 +670,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -713,7 +713,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -752,7 +752,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts",
 					"src/core/backlog.ts"
 				],
@@ -796,7 +796,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -835,7 +835,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -874,7 +874,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/git/operations.ts"
 				],
 				"otel": {
@@ -909,7 +909,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -952,7 +952,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -1007,7 +1007,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {

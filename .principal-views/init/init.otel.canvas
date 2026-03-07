@@ -34,7 +34,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/init.ts"
 				],
 				"otel": {
@@ -73,7 +73,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/init.ts"
 				],
 				"otel": {
@@ -124,7 +124,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/init.ts"
 				],
 				"otel": {
@@ -171,7 +171,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/init.ts"
 				],
 				"otel": {
@@ -218,7 +218,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/init.ts"
 				],
 				"otel": {
@@ -265,7 +265,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/init.ts"
 				],
 				"otel": {

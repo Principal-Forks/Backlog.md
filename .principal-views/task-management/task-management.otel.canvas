@@ -26,7 +26,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/cli.ts"
 				],
@@ -66,7 +66,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -105,7 +105,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -144,7 +144,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/git/operations.ts"
 				],
 				"otel": {
@@ -187,7 +187,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -230,7 +230,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/cli.ts"
 				],
@@ -270,7 +270,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -309,7 +309,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -348,7 +348,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -387,7 +387,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/git/operations.ts"
 				],
 				"otel": {
@@ -430,7 +430,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -469,7 +469,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -512,7 +512,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -555,7 +555,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -594,7 +594,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -633,7 +633,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -672,7 +672,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -715,7 +715,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -754,7 +754,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts",
 					"src/core/backlog.ts"
 				],
@@ -794,7 +794,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -833,7 +833,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -872,7 +872,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/git/operations.ts"
 				],
 				"otel": {
@@ -915,7 +915,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -970,7 +970,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts",
 					"src/core/backlog.ts"
 				],
@@ -1010,7 +1010,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts",
 					"src/core/backlog.ts"
 				],
@@ -1054,7 +1054,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -1093,7 +1093,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/file-system/operations.ts"
 				],
@@ -1133,7 +1133,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -1176,7 +1176,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -1226,7 +1226,7 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				]
 			},
@@ -1269,7 +1269,7 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				]
 			},
@@ -1312,7 +1312,7 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				]
 			},
@@ -1351,7 +1351,7 @@
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				]
 			},
@@ -1390,7 +1390,7 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				]
 			},

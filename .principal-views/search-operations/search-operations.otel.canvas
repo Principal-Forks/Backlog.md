@@ -18,7 +18,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -61,7 +61,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -100,7 +100,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -139,7 +139,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -182,7 +182,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -225,7 +225,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -264,7 +264,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -311,7 +311,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -354,7 +354,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -393,7 +393,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -436,7 +436,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -475,7 +475,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -514,7 +514,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {
@@ -561,7 +561,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/search-service.ts"
 				],
 				"otel": {

@@ -22,7 +22,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/mcp/tools/documents/handlers.ts"
 				],
@@ -62,7 +62,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -101,7 +101,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -140,7 +140,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -183,7 +183,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -218,7 +218,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -257,7 +257,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -296,7 +296,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -331,7 +331,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts",
 					"src/mcp/tools/documents/handlers.ts"
 				],
@@ -367,7 +367,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -406,7 +406,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -442,7 +442,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -485,7 +485,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/mcp/tools/documents/handlers.ts"
 				],
@@ -525,7 +525,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -564,7 +564,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -599,7 +599,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				],
 				"otel": {
@@ -631,7 +631,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -671,7 +671,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -710,7 +710,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -746,7 +746,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -786,7 +786,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/tools/documents/handlers.ts"
 				],
 				"otel": {
@@ -830,7 +830,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts",
 					"src/mcp/tools/documents/handlers.ts"
 				],

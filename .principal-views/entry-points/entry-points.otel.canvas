@@ -30,7 +30,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -70,7 +70,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -106,7 +106,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -146,7 +146,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts"
 				],
 				"otel": {
@@ -186,7 +186,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/server.ts"
 				],
 				"otel": {
@@ -226,7 +226,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/server.ts"
 				],
 				"otel": {
@@ -262,7 +262,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/server.ts"
 				],
 				"otel": {
@@ -302,7 +302,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/mcp/server.ts"
 				],
 				"otel": {
@@ -346,7 +346,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -386,7 +386,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -426,7 +426,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -470,7 +470,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/server/index.ts"
 				],
 				"otel": {
@@ -518,7 +518,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/core/backlog.ts"
 				],
 				"otel": {
@@ -570,7 +570,7 @@
 						}
 					}
 				},
-				"sources": [
+				"references": [
 					"src/cli.ts",
 					"src/mcp/server.ts",
 					"src/server/index.ts"
@@ -615,7 +615,7 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				]
 			},
@@ -654,7 +654,7 @@
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				]
 			},
@@ -693,7 +693,7 @@
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				]
 			},
@@ -732,7 +732,7 @@
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
 				"status": "implemented",
-				"sources": [
+				"references": [
 					"src/file-system/operations.ts"
 				]
 			},
