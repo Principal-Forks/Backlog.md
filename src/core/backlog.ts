@@ -3002,11 +3002,43 @@ export class Core {
 				alternatives: extractSection(content, "Alternatives") || existingDecision.alternatives,
 			};
 
-			span.addEvent("decision.update.validated", {
+			// Track which fields were updated
+			const fieldsUpdated: string[] = [];
+			if (updatedDecision.title !== existingDecision.title) fieldsUpdated.push("title");
+			if (updatedDecision.status !== existingDecision.status) fieldsUpdated.push("status");
+			if (updatedDecision.date !== existingDecision.date) fieldsUpdated.push("date");
+			if (updatedDecision.context !== existingDecision.context) fieldsUpdated.push("context");
+			if (updatedDecision.decision !== existingDecision.decision) fieldsUpdated.push("decision");
+			if (updatedDecision.consequences !== existingDecision.consequences) fieldsUpdated.push("consequences");
+			if (updatedDecision.alternatives !== existingDecision.alternatives) fieldsUpdated.push("alternatives");
+
+			span.addEvent("decision.update.parsed", {
 				decisionId: updatedDecision.id,
+				fieldsUpdated: fieldsUpdated.join(", "),
 			});
 
-			await this.createDecision(updatedDecision, autoCommit);
+			// Save the decision
+			await this.fs.saveDecision(updatedDecision);
+
+			// Calculate decision path for the event
+			const normalizedId = updatedDecision.id.replace(/^decision-/, "");
+			const backlogDir = await this.getBacklogDirectoryName();
+			const decisionPath = `${backlogDir}/decisions/decision-${normalizedId} - ${updatedDecision.title}.md`;
+
+			span.addEvent("decision.update.saved", {
+				decisionPath,
+			});
+
+			// Handle git commit if autoCommit is enabled
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Update decision ${updatedDecision.id}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("decision.update.committed", {
+					commitMessage,
+				});
+			}
 
 			span.addEvent("decision.update.complete", {
 				decisionId: updatedDecision.id,
@@ -3136,6 +3168,7 @@ export class Core {
 
 			span.addEvent("document.update.validated", {
 				documentId: updatedDoc.id,
+				updatedDate: updatedDoc.updatedDate,
 			});
 
 			let normalizedSubPath = "";
@@ -3146,7 +3179,25 @@ export class Core {
 				}
 			}
 
-			await this.createDocument(updatedDoc, autoCommit, normalizedSubPath);
+			// Save the document directly instead of delegating to createDocument
+			const relativePath = await this.fs.saveDocument(updatedDoc, normalizedSubPath);
+			updatedDoc.path = relativePath;
+
+			span.addEvent("document.update.saved", {
+				documentPath: relativePath,
+			});
+
+			// Handle git commit if autoCommit is enabled
+			if (await this.shouldAutoCommit(autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				const commitMessage = `backlog: Update document ${updatedDoc.id}`;
+				await this.git.commitChanges(commitMessage, repoRoot);
+
+				span.addEvent("document.update.committed", {
+					commitMessage,
+				});
+			}
 
 			span.addEvent("document.update.complete", {
 				documentId: updatedDoc.id,

@@ -568,12 +568,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},
@@ -604,12 +607,15 @@
 				],
 				"otel": {
 					"kind": "event",
-					"category": "operation"
+					"category": "operation",
+					"files": [
+						"src/file-system/operations.ts"
+					]
 				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "implemented"
 			},
 			"color": "#3b82f6"
 		},

@@ -1,3 +1,4 @@
+import { getTracer } from "../../../telemetry";
 import type { Document, DocumentSearchResult } from "../../../types/index.ts";
 import { McpError } from "../../errors/mcp-errors.ts";
 import type { McpServer } from "../../server.ts";
@@ -72,6 +73,17 @@ export class DocumentHandlers {
 					})
 				: documents;
 
+		// Emit filtered event when search criteria was applied
+		if (search && search.length > 0) {
+			const tracer = getTracer();
+			const span = tracer.startSpan("document.list.filter");
+			span.addEvent("document.list.filtered", {
+				matchedCount: filtered.length,
+				search,
+			});
+			span.end();
+		}
+
 		if (filtered.length === 0) {
 			return {
 				content: [
@@ -139,6 +151,15 @@ export class DocumentHandlers {
 	}
 
 	async searchDocuments(args: DocumentSearchArgs): Promise<CallToolResult> {
+		const tracer = getTracer();
+		const span = tracer.startSpan("document.search");
+		const startTime = Date.now();
+
+		span.addEvent("document.search.started", {
+			query: args.query,
+			limit: args.limit ?? 0,
+		});
+
 		const searchService = await this.core.getSearchService();
 		const results = searchService.search({
 			query: args.query,
@@ -147,7 +168,19 @@ export class DocumentHandlers {
 		});
 
 		const documents = results.filter((result): result is DocumentSearchResult => result.type === "document");
+
+		span.addEvent("document.search.executed", {
+			query: args.query,
+			resultCount: documents.length,
+		});
+
 		if (documents.length === 0) {
+			span.addEvent("document.search.complete", {
+				resultCount: 0,
+				success: true,
+				"duration.ms": Date.now() - startTime,
+			});
+			span.end();
 			return {
 				content: [
 					{
@@ -164,6 +197,13 @@ export class DocumentHandlers {
 			const scoreText = this.formatScore(result.score);
 			lines.push(`  ${document.id} - ${document.title}${scoreText}`);
 		}
+
+		span.addEvent("document.search.complete", {
+			resultCount: documents.length,
+			success: true,
+			"duration.ms": Date.now() - startTime,
+		});
+		span.end();
 
 		return {
 			content: [
