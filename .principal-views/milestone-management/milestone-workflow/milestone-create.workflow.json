@@ -15,19 +15,7 @@
 					"milestone.create.validated": "Validated {{milestoneId}} (nextId: {{nextId}})",
 					"milestone.create.saved": "Saved {{milestoneId}} to {{filepath}} as {{filename}}",
 					"milestone.create.committed": "Committed {{milestoneId}}: {{commitMessage}}",
-					"milestone.create.complete": "Milestone {{milestoneId}} created ({{success}}) in {{duration.ms}}ms",
-					"milestone.view.started": "Viewing milestone {{milestoneId}} (format: {{format}})",
-					"milestone.view.loaded": "Loaded {{milestoneId}}: {{title}}",
-					"milestone.view.complete": "Milestone {{milestoneId}} viewed ({{success}}) in {{duration.ms}}ms",
-					"milestone.list.started": "List started (includeArchived: {{includeArchived}}, format: {{format}})",
-					"milestone.list.loaded": "Loaded {{totalCount}} milestones ({{archivedCount}} archived)",
-					"milestone.list.complete": "Listed {{resultCount}} milestones ({{success}}) in {{duration.ms}}ms",
-					"milestone.archive.started": "Archiving milestone {{identifier}} (autoCommit: {{autoCommit}})",
-					"milestone.archive.located": "Located {{milestoneId}} at {{milestonePath}}: {{milestoneTitle}}",
-					"milestone.archive.moved": "Moved from {{fromPath}} to {{toPath}}",
-					"milestone.archive.committed": "Committed {{milestoneId}}: {{commitMessage}}",
-					"milestone.archive.complete": "Milestone {{milestoneId}} archived ({{success}}) in {{duration.ms}}ms",
-					"milestone.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} for {{identifier}} ({{error.stack}})"
+					"milestone.create.complete": "Milestone {{milestoneId}} created ({{success}}) in {{duration.ms}}ms"
 				}
 			},
 			"description": "Milestone created successfully"
@@ -40,20 +28,6 @@
 				"events": {
 					"milestone.create.started": "Creating milestone: {{title}} (desc: {{description}}, autoCommit: {{autoCommit}})",
 					"milestone.create.validated": "Validated {{milestoneId}} (nextId: {{nextId}})",
-					"milestone.create.saved": "Saved {{milestoneId}} to {{filepath}} as {{filename}}",
-					"milestone.create.committed": "Committed {{milestoneId}}: {{commitMessage}}",
-					"milestone.create.complete": "Milestone {{milestoneId}} created ({{success}}) in {{duration.ms}}ms",
-					"milestone.view.started": "Viewing milestone {{milestoneId}} (format: {{format}})",
-					"milestone.view.loaded": "Loaded {{milestoneId}}: {{title}}",
-					"milestone.view.complete": "Milestone {{milestoneId}} viewed ({{success}}) in {{duration.ms}}ms",
-					"milestone.list.started": "List started (includeArchived: {{includeArchived}}, format: {{format}})",
-					"milestone.list.loaded": "Loaded {{totalCount}} milestones ({{archivedCount}} archived)",
-					"milestone.list.complete": "Listed {{resultCount}} milestones ({{success}}) in {{duration.ms}}ms",
-					"milestone.archive.started": "Archiving milestone {{identifier}} (autoCommit: {{autoCommit}})",
-					"milestone.archive.located": "Located {{milestoneId}} at {{milestonePath}}: {{milestoneTitle}}",
-					"milestone.archive.moved": "Moved from {{fromPath}} to {{toPath}}",
-					"milestone.archive.committed": "Committed {{milestoneId}}: {{commitMessage}}",
-					"milestone.archive.complete": "Milestone {{milestoneId}} archived ({{success}}) in {{duration.ms}}ms",
 					"milestone.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} for {{identifier}} ({{error.stack}})"
 				}
 			},

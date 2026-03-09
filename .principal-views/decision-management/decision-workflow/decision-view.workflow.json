@@ -11,24 +11,9 @@
 			"template": {
 				"summary": "Decision {{decisionId}} viewed ({{success}})",
 				"events": {
-					"decision.create.started": "Creating decision: {{title}}",
-					"decision.create.validated": "Validated {{decisionId}} (normalized: {{normalizedId}})",
-					"decision.create.saved": "Saved to {{decisionPath}} as {{filename}}",
-					"decision.create.committed": "Committed: {{commitMessage}} (sha: {{commitSha}})",
-					"decision.create.complete": "Decision {{decisionId}} created ({{success}}) in {{duration.ms}}ms",
 					"decision.view.started": "Viewing decision {{decisionId}}",
 					"decision.view.loaded": "Loaded {{decisionId}} from {{decisionPath}}",
-					"decision.view.complete": "Decision {{decisionId}} viewed ({{success}})",
-					"decision.list.started": "List {{operation}} started",
-					"decision.list.loaded": "Loaded {{decisionCount}} decisions",
-					"decision.list.complete": "Listed {{decisionCount}} decisions ({{success}})",
-					"decision.update.started": "Updating decision {{decisionId}} with content: {{content}}",
-					"decision.update.loaded": "Loaded {{decisionId}} from {{decisionPath}}",
-					"decision.update.parsed": "Parsed {{decisionId}}, fields updated: {{fieldsUpdated}}",
-					"decision.update.saved": "Saved to {{decisionPath}}",
-					"decision.update.committed": "Committed: {{commitMessage}}",
-					"decision.update.complete": "Decision {{decisionId}} updated ({{success}}) in {{duration.ms}}ms",
-					"decision.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}}"
+					"decision.view.complete": "Decision {{decisionId}} viewed ({{success}})"
 				}
 			},
 			"description": "Decision viewed successfully"
@@ -39,23 +24,8 @@
 			"template": {
 				"summary": "Decision view failed: {{error.message}}",
 				"events": {
-					"decision.create.started": "Creating decision: {{title}}",
-					"decision.create.validated": "Validated {{decisionId}} (normalized: {{normalizedId}})",
-					"decision.create.saved": "Saved to {{decisionPath}} as {{filename}}",
-					"decision.create.committed": "Committed: {{commitMessage}} (sha: {{commitSha}})",
-					"decision.create.complete": "Decision {{decisionId}} created ({{success}}) in {{duration.ms}}ms",
 					"decision.view.started": "Viewing decision {{decisionId}}",
 					"decision.view.loaded": "Loaded {{decisionId}} from {{decisionPath}}",
-					"decision.view.complete": "Decision {{decisionId}} viewed ({{success}})",
-					"decision.list.started": "List {{operation}} started",
-					"decision.list.loaded": "Loaded {{decisionCount}} decisions",
-					"decision.list.complete": "Listed {{decisionCount}} decisions ({{success}})",
-					"decision.update.started": "Updating decision {{decisionId}} with content: {{content}}",
-					"decision.update.loaded": "Loaded {{decisionId}} from {{decisionPath}}",
-					"decision.update.parsed": "Parsed {{decisionId}}, fields updated: {{fieldsUpdated}}",
-					"decision.update.saved": "Saved to {{decisionPath}}",
-					"decision.update.committed": "Committed: {{commitMessage}}",
-					"decision.update.complete": "Decision {{decisionId}} updated ({{success}}) in {{duration.ms}}ms",
 					"decision.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}}"
 				}
 			},

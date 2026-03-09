@@ -11,24 +11,11 @@
 			"template": {
 				"summary": "HTTP {{method}} {{path}} completed ({{statusCode}}) in {{duration.ms}}ms",
 				"events": {
-					"cli.request.received": "CLI received {{command}} {{subcommand}} with args: {{args}} (cwd: {{cwd}})",
-					"cli.request.parsed": "CLI parsed {{operation}} for {{entityType}} (valid: {{validationPassed}})",
-					"cli.operation.dispatched": "CLI dispatched {{operation}} to {{handler}}",
-					"cli.request.complete": "CLI complete ({{success}}) exit: {{exitCode}} in {{duration.ms}}ms",
-					"mcp.tool.invoked": "MCP invoked {{toolName}} with params: {{parameters}} (client: {{clientId}})",
-					"mcp.tool.validated": "MCP validated {{toolName}} for {{operation}} (valid: {{validationPassed}})",
-					"mcp.operation.dispatched": "MCP dispatched {{operation}} to {{handler}}",
-					"mcp.tool.response": "MCP response ({{success}}) {{contentLength}} bytes in {{duration.ms}}ms",
 					"http.request.received": "Received {{method}} {{path}} from {{clientIp}} ({{userAgent}})",
 					"http.request.routed": "Routed {{route}} to {{handler}} for {{operation}}",
 					"http.operation.dispatched": "Dispatched {{operation}} to {{handler}} with body: {{requestBody}}",
-					"http.response.sent": "Sent response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms",
 					"operation.executed": "Executed {{operation}} on {{entityType}} {{entityId}} ({{success}}) in {{duration.ms}}ms",
-					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})",
-					"completed.tasks.list.started": "List {{operation}} started",
-					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
-					"completed.tasks.list.complete": "Listed {{taskCount}} completed tasks ({{success}})",
-					"cleanup.error": "Cleanup error in {{operation}}: {{error.message}}"
+					"http.response.sent": "Sent response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms"
 				}
 			},
 			"description": "HTTP request completed successfully"
@@ -39,24 +26,9 @@
 			"template": {
 				"summary": "HTTP request failed: {{error.message}}",
 				"events": {
-					"cli.request.received": "CLI received {{command}} {{subcommand}} with args: {{args}} (cwd: {{cwd}})",
-					"cli.request.parsed": "CLI parsed {{operation}} for {{entityType}} (valid: {{validationPassed}})",
-					"cli.operation.dispatched": "CLI dispatched {{operation}} to {{handler}}",
-					"cli.request.complete": "CLI complete ({{success}}) exit: {{exitCode}} in {{duration.ms}}ms",
-					"mcp.tool.invoked": "MCP invoked {{toolName}} with params: {{parameters}} (client: {{clientId}})",
-					"mcp.tool.validated": "MCP validated {{toolName}} for {{operation}} (valid: {{validationPassed}})",
-					"mcp.operation.dispatched": "MCP dispatched {{operation}} to {{handler}}",
-					"mcp.tool.response": "MCP response ({{success}}) {{contentLength}} bytes in {{duration.ms}}ms",
 					"http.request.received": "Received {{method}} {{path}} from {{clientIp}} ({{userAgent}})",
 					"http.request.routed": "Routed {{route}} to {{handler}} for {{operation}}",
-					"http.operation.dispatched": "Dispatched {{operation}} to {{handler}} with body: {{requestBody}}",
-					"http.response.sent": "Sent response ({{success}}) {{statusCode}} ({{responseSize}} bytes) in {{duration.ms}}ms",
-					"operation.executed": "Executed {{operation}} on {{entityType}} {{entityId}} ({{success}}) in {{duration.ms}}ms",
-					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})",
-					"completed.tasks.list.started": "List {{operation}} started",
-					"completed.tasks.list.loaded": "Loaded {{taskCount}} tasks from {{completedDir}}",
-					"completed.tasks.list.complete": "Listed {{taskCount}} completed tasks ({{success}})",
-					"cleanup.error": "Cleanup error in {{operation}}: {{error.message}}"
+					"entry.error": "Error in {{entryPoint}} {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} ({{error.stack}})"
 				}
 			},
 			"description": "HTTP request failed with error"

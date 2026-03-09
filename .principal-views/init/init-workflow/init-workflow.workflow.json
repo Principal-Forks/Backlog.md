@@ -15,8 +15,7 @@
 					"init.structure.created": "Created {{created.directories}} directories and {{created.files}} files",
 					"init.config.saved": "Saved config: {{config.projectName}} prefix={{config.taskPrefix}} autoCommit={{config.autoCommit}} zeroPadded={{config.zeroPaddedIds}} editor={{config.defaultEditor}}",
 					"init.mcp.configured": "MCP configured: {{mcp.clients}} (success: {{mcp.successCount}}, failed: {{mcp.failureCount}}, errors: {{mcp.hasErrors}})",
-					"init.complete": "Init complete ({{success}}, reinit: {{isReInitialization}}, mcp: {{hasMcpResults}}) in {{duration.ms}}ms",
-					"init.error": "Error at {{error.stage}}: {{error.type}} - {{error.message}} ({{error.stack}})"
+					"init.complete": "Init complete ({{success}}, reinit: {{isReInitialization}}, mcp: {{hasMcpResults}}) in {{duration.ms}}ms"
 				}
 			},
 			"description": "Backlog initialized successfully"
@@ -30,8 +29,6 @@
 					"init.started": "Init {{projectName}} (mode: {{integrationMode}}, reinit: {{isReInitialization}}, clients: {{mcpClients}}, advanced: {{hasAdvancedConfig}})",
 					"init.structure.created": "Created {{created.directories}} directories and {{created.files}} files",
 					"init.config.saved": "Saved config: {{config.projectName}} prefix={{config.taskPrefix}} autoCommit={{config.autoCommit}} zeroPadded={{config.zeroPaddedIds}} editor={{config.defaultEditor}}",
-					"init.mcp.configured": "MCP configured: {{mcp.clients}} (success: {{mcp.successCount}}, failed: {{mcp.failureCount}}, errors: {{mcp.hasErrors}})",
-					"init.complete": "Init complete ({{success}}, reinit: {{isReInitialization}}, mcp: {{hasMcpResults}}) in {{duration.ms}}ms",
 					"init.error": "Error at {{error.stage}}: {{error.type}} - {{error.message}} ({{error.stack}})"
 				}
 			},

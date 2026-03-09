@@ -13,11 +13,7 @@
 				"events": {
 					"cleanup.preview.started": "Preview started for tasks older than {{olderThanDays}} days",
 					"cleanup.preview.filtered": "Filtered {{matchedTasks}}/{{totalTasks}} tasks before {{cutoffDate}}",
-					"cleanup.preview.complete": "Preview complete: {{taskCount}} tasks ({{success}})",
-					"cleanup.batch.started": "Batch started: {{taskCount}} tasks older than {{olderThanDays}} days",
-					"cleanup.batch.processing": "Processing task {{currentIndex}}/{{totalCount}}: {{taskId}}",
-					"cleanup.batch.complete": "Batch complete: {{movedCount}}/{{totalCount}} moved, {{failedCount}} failed ({{success}}) in {{duration.ms}}ms",
-					"cleanup.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} for task {{taskId}}"
+					"cleanup.preview.complete": "Preview complete: {{taskCount}} tasks ({{success}})"
 				}
 			},
 			"description": "Cleanup preview completed successfully"
@@ -30,10 +26,6 @@
 				"events": {
 					"cleanup.preview.started": "Preview started for tasks older than {{olderThanDays}} days",
 					"cleanup.preview.filtered": "Filtered {{matchedTasks}}/{{totalTasks}} tasks before {{cutoffDate}}",
-					"cleanup.preview.complete": "Preview complete: {{taskCount}} tasks ({{success}})",
-					"cleanup.batch.started": "Batch started: {{taskCount}} tasks older than {{olderThanDays}} days",
-					"cleanup.batch.processing": "Processing task {{currentIndex}}/{{totalCount}}: {{taskId}}",
-					"cleanup.batch.complete": "Batch complete: {{movedCount}}/{{totalCount}} moved, {{failedCount}} failed ({{success}}) in {{duration.ms}}ms",
 					"cleanup.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}} for task {{taskId}}"
 				}
 			},

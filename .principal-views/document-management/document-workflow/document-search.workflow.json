@@ -11,28 +11,9 @@
 			"template": {
 				"summary": "Search found {{resultCount}} results ({{success}}) in {{duration.ms}}ms",
 				"events": {
-					"document.create.started": "Creating document: {{title}} (content: {{content}})",
-					"document.create.validated": "Validated {{documentId}} (normalized: {{normalizedId}})",
-					"document.create.saved": "Saved to {{documentPath}} as {{filename}}",
-					"document.create.committed": "Committed: {{commitMessage}} (sha: {{commitSha}})",
-					"document.create.complete": "Document {{documentId}} created ({{success}}) in {{duration.ms}}ms",
-					"document.view.started": "Viewing document {{documentId}}",
-					"document.view.loaded": "Loaded {{documentId}} from {{documentPath}}",
-					"document.view.complete": "Document {{documentId}} viewed ({{success}})",
-					"document.list.started": "List operation started (search: {{search}})",
-					"document.list.loaded": "Loaded {{documentCount}} documents",
-					"document.list.filtered": "Filtered to {{matchedCount}} matches for '{{search}}'",
-					"document.list.complete": "Listed {{documentCount}} documents ({{success}})",
-					"document.update.started": "Updating document {{documentId}} (title: {{title}}, content: {{content}})",
-					"document.update.loaded": "Loaded {{documentId}} from {{documentPath}}",
-					"document.update.validated": "Validated {{documentId}}, updated: {{updatedDate}}",
-					"document.update.saved": "Saved to {{documentPath}}",
-					"document.update.committed": "Committed: {{commitMessage}}",
-					"document.update.complete": "Document {{documentId}} updated ({{success}}) in {{duration.ms}}ms",
 					"document.search.started": "Searching for '{{query}}' (limit: {{limit}})",
 					"document.search.executed": "Query '{{query}}' returned {{resultCount}} results",
-					"document.search.complete": "Search complete: {{resultCount}} results ({{success}}) in {{duration.ms}}ms",
-					"document.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}}"
+					"document.search.complete": "Search complete: {{resultCount}} results ({{success}}) in {{duration.ms}}ms"
 				}
 			},
 			"description": "Document search completed successfully"
@@ -43,27 +24,8 @@
 			"template": {
 				"summary": "Document search failed: {{error.message}}",
 				"events": {
-					"document.create.started": "Creating document: {{title}} (content: {{content}})",
-					"document.create.validated": "Validated {{documentId}} (normalized: {{normalizedId}})",
-					"document.create.saved": "Saved to {{documentPath}} as {{filename}}",
-					"document.create.committed": "Committed: {{commitMessage}} (sha: {{commitSha}})",
-					"document.create.complete": "Document {{documentId}} created ({{success}}) in {{duration.ms}}ms",
-					"document.view.started": "Viewing document {{documentId}}",
-					"document.view.loaded": "Loaded {{documentId}} from {{documentPath}}",
-					"document.view.complete": "Document {{documentId}} viewed ({{success}})",
-					"document.list.started": "List operation started (search: {{search}})",
-					"document.list.loaded": "Loaded {{documentCount}} documents",
-					"document.list.filtered": "Filtered to {{matchedCount}} matches for '{{search}}'",
-					"document.list.complete": "Listed {{documentCount}} documents ({{success}})",
-					"document.update.started": "Updating document {{documentId}} (title: {{title}}, content: {{content}})",
-					"document.update.loaded": "Loaded {{documentId}} from {{documentPath}}",
-					"document.update.validated": "Validated {{documentId}}, updated: {{updatedDate}}",
-					"document.update.saved": "Saved to {{documentPath}}",
-					"document.update.committed": "Committed: {{commitMessage}}",
-					"document.update.complete": "Document {{documentId}} updated ({{success}}) in {{duration.ms}}ms",
 					"document.search.started": "Searching for '{{query}}' (limit: {{limit}})",
 					"document.search.executed": "Query '{{query}}' returned {{resultCount}} results",
-					"document.search.complete": "Search complete: {{resultCount}} results ({{success}}) in {{duration.ms}}ms",
 					"document.error": "Error in {{operation}}: {{error.type}} - {{error.message}} at {{error.stage}}"
 				}
 			},
