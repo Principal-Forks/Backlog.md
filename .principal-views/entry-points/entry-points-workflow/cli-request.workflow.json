@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/entry-points/entry-points.otel.canvas",
-	"mode": "span-tree",
 	"name": "CLI Request",
 	"description": "Command-line interface request lifecycle",
 	"scenarios": [

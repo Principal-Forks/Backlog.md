@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/search-operations/search-operations.otel.canvas",
-	"mode": "span-tree",
 	"name": "Search Initialize",
 	"description": "Initializing the search service and building the index",
 	"scenarios": [

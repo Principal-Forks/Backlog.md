@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/draft-management/draft-management.otel.canvas",
-	"mode": "span-tree",
 	"name": "Filesystem Draft View",
 	"description": "Viewing a draft - filesystem-level operation (bypasses Core)",
 	"scenarios": [

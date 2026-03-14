@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/document-management/document-management.otel.canvas",
-	"mode": "span-tree",
 	"name": "Document View",
 	"description": "Viewing a single document by ID",
 	"scenarios": [

@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/cleanup-operations/cleanup-operations.otel.canvas",
-	"mode": "span-tree",
 	"name": "Cleanup Batch",
 	"description": "Batch cleanup operation moving multiple Done tasks to completed folder",
 	"scenarios": [

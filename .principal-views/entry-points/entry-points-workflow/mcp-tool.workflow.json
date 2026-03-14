@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/entry-points/entry-points.otel.canvas",
-	"mode": "span-tree",
 	"name": "MCP Tool Call",
 	"description": "Model Context Protocol tool invocation lifecycle",
 	"scenarios": [

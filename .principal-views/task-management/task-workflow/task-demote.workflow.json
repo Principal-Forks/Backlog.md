@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/task-management/task-management.otel.canvas",
-	"mode": "span-tree",
 	"name": "Task Demote",
 	"description": "Demoting a task back to draft status",
 	"scenarios": [

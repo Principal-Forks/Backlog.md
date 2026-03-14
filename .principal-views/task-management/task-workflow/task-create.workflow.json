@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/task-management/task-management.otel.canvas",
-	"mode": "span-tree",
 	"name": "Task Create",
 	"description": "Creating a new task in the backlog",
 	"scenarios": [

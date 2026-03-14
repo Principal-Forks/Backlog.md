@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/milestone-management/milestone-management.otel.canvas",
-	"mode": "span-tree",
 	"name": "Milestone Archive",
 	"description": "Archiving a milestone by moving it to the archive directory",
 	"scenarios": [

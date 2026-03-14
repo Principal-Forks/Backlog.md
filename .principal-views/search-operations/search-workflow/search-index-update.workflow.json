@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/search-operations/search-operations.otel.canvas",
-	"mode": "span-tree",
 	"name": "Search Index Update",
 	"description": "Updating the search index when content changes",
 	"scenarios": [

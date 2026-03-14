@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/cleanup-operations/cleanup-operations.otel.canvas",
-	"mode": "span-tree",
 	"name": "Cleanup Preview",
 	"description": "Preview which tasks would be affected by cleanup operation",
 	"scenarios": [

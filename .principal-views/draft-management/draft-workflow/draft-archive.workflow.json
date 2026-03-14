@@ -1,7 +1,6 @@
 {
 	"version": "1.0.0",
 	"canvas": ".principal-views/draft-management/draft-management.otel.canvas",
-	"mode": "span-tree",
 	"name": "Draft Archive",
 	"description": "Archiving a draft by moving it to the archive directory",
 	"scenarios": [
