@@ -1,0 +1,206 @@
+{
+	"nodes": [
+		{
+			"id": "backlog-md-scope",
+			"type": "text",
+			"x": 400,
+			"y": 200,
+			"width": 300,
+			"height": 150,
+			"text": "# Backlog.md\n\nCore library for task management operations. Handles CRUD for tasks, milestones, drafts, and documents.",
+			"pv": {
+				"nodeType": "scope",
+				"description": "Core library for task management operations. Handles CRUD for tasks, milestones, drafts, and documents.",
+				"otel": {
+					"scope": "backlog.md"
+				},
+				"shape": "rectangle",
+				"fill": "#3b82f6",
+				"stroke": "#1d4ed8"
+			},
+			"color": "#3b82f6"
+		},
+		{
+			"id": "cli-scope",
+			"type": "text",
+			"x": 100,
+			"y": 50,
+			"width": 200,
+			"height": 100,
+			"text": "# CLI\n\nCommand-line interface. Parses args, validates input, dispatches operations.",
+			"pv": {
+				"nodeType": "scope",
+				"description": "Command-line interface. Parses args, validates input, dispatches operations.",
+				"otel": {
+					"scope": "backlog.md.cli"
+				},
+				"shape": "rectangle",
+				"fill": "#22c55e",
+				"stroke": "#16a34a"
+			},
+			"color": "#22c55e"
+		},
+		{
+			"id": "mcp-scope",
+			"type": "text",
+			"x": 100,
+			"y": 200,
+			"width": 200,
+			"height": 100,
+			"text": "# MCP Server\n\nModel Context Protocol server for AI assistant integration.",
+			"pv": {
+				"nodeType": "scope",
+				"description": "Model Context Protocol server for AI assistant integration.",
+				"otel": {
+					"scope": "backlog.md.mcp"
+				},
+				"shape": "rectangle",
+				"fill": "#8b5cf6",
+				"stroke": "#6d28d9"
+			},
+			"color": "#8b5cf6"
+		},
+		{
+			"id": "http-scope",
+			"type": "text",
+			"x": 100,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# HTTP Server\n\nHTTP/REST API server for web clients.",
+			"pv": {
+				"nodeType": "scope",
+				"description": "HTTP/REST API server for web clients.",
+				"otel": {
+					"scope": "backlog.md.http"
+				},
+				"shape": "rectangle",
+				"fill": "#f59e0b",
+				"stroke": "#d97706"
+			},
+			"color": "#f59e0b"
+		},
+		{
+			"id": "tui-scope",
+			"type": "text",
+			"x": 100,
+			"y": -100,
+			"width": 200,
+			"height": 100,
+			"text": "# Terminal UI\n\nInteractive terminal interface with boards, views, and search.",
+			"pv": {
+				"nodeType": "scope",
+				"description": "Interactive terminal interface with boards, views, and search.",
+				"otel": {
+					"scope": "backlog.md.tui"
+				},
+				"shape": "rectangle",
+				"fill": "#ec4899",
+				"stroke": "#db2777"
+			},
+			"color": "#ec4899"
+		},
+		{
+			"id": "web-scope",
+			"type": "text",
+			"x": -200,
+			"y": 350,
+			"width": 200,
+			"height": 100,
+			"text": "# Web UI\n\nReact-based browser interface.",
+			"pv": {
+				"nodeType": "scope",
+				"description": "React-based browser interface.",
+				"otel": {
+					"scope": "backlog.md.web"
+				},
+				"shape": "rectangle",
+				"fill": "#06b6d4",
+				"stroke": "#0891b2"
+			},
+			"color": "#06b6d4"
+		}
+	],
+	"edges": [
+		{
+			"id": "cli-core",
+			"fromNode": "cli-scope",
+			"fromSide": "right",
+			"toNode": "backlog-md-scope",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "calls"
+			}
+		},
+		{
+			"id": "mcp-core",
+			"fromNode": "mcp-scope",
+			"fromSide": "right",
+			"toNode": "backlog-md-scope",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "calls"
+			}
+		},
+		{
+			"id": "http-core",
+			"fromNode": "http-scope",
+			"fromSide": "right",
+			"toNode": "backlog-md-scope",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "calls"
+			}
+		},
+		{
+			"id": "tui-core",
+			"fromNode": "tui-scope",
+			"fromSide": "right",
+			"toNode": "backlog-md-scope",
+			"toSide": "top",
+			"pv": {
+				"edgeType": "calls"
+			}
+		},
+		{
+			"id": "cli-tui",
+			"fromNode": "cli-scope",
+			"fromSide": "top",
+			"toNode": "tui-scope",
+			"toSide": "bottom",
+			"pv": {
+				"edgeType": "launches"
+			}
+		},
+		{
+			"id": "web-http",
+			"fromNode": "web-scope",
+			"fromSide": "right",
+			"toNode": "http-scope",
+			"toSide": "left",
+			"pv": {
+				"edgeType": "calls"
+			}
+		}
+	],
+	"pv": {
+		"name": "Architecture Scopes",
+		"version": "1.0.0",
+		"description": "Defines the instrumentation scopes for the Backlog.md system.",
+		"markdown": ".principal-views/architecture.md",
+		"edgeTypes": {
+			"calls": {
+				"label": "Calls",
+				"style": "solid",
+				"width": 2,
+				"color": "#64748b"
+			},
+			"launches": {
+				"label": "Launches",
+				"style": "dashed",
+				"width": 2,
+				"color": "#22c55e"
+			}
+		}
+	}
+}

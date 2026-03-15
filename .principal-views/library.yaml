@@ -8,6 +8,11 @@ resources:
     deployment.environment: "test"
     owned-scopes:
       - "backlog.md"
+      - "backlog.md.cli"
+      - "backlog.md.mcp"
+      - "backlog.md.http"
+      - "backlog.md.tui"
+      - "backlog.md.web"
 
 nodeComponents: {}
 
