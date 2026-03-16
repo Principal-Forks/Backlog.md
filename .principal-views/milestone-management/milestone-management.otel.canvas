@@ -31,8 +31,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -40,7 +38,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -70,8 +69,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -79,7 +76,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -113,8 +111,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -122,7 +118,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -151,14 +148,11 @@
 				"references": [
 					"src/git/operations.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "integration"
-				},
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#f59e0b"
 		},
@@ -192,8 +186,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -201,7 +193,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -231,8 +224,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -240,7 +231,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -270,8 +262,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -279,7 +269,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -313,8 +304,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -322,7 +311,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -352,8 +342,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -361,7 +349,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -391,8 +380,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -400,7 +387,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -434,8 +422,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -443,7 +429,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -474,8 +461,6 @@
 					"src/core/backlog.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/backlog.ts"
 					]
@@ -483,7 +468,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -517,8 +503,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/backlog.ts"
 					]
@@ -526,7 +510,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -556,8 +541,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/backlog.ts"
 					]
@@ -565,7 +548,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -595,8 +579,6 @@
 					"src/git/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "integration",
 					"files": [
 						"src/core/backlog.ts"
 					]
@@ -604,7 +586,8 @@
 				"shape": "rectangle",
 				"fill": "#f59e0b",
 				"stroke": "#d97706",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#f59e0b"
 		},
@@ -638,8 +621,6 @@
 					"src/cli.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/backlog.ts"
 					]
@@ -647,7 +628,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -694,8 +676,6 @@
 					"src/file-system/operations.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "error",
 					"files": [
 						"src/core/backlog.ts"
 					]
@@ -703,7 +683,8 @@
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#ef4444"
 		}
@@ -888,6 +869,12 @@
 				"color": "#ef4444"
 			}
 		},
-		"markdown": ".principal-views/milestone-management.md"
+		"markdown": ".principal-views/milestone-management.md",
+		"nodeTypes": {
+			"event": {
+				"label": "Event",
+				"color": "#3B82F6"
+			}
+		}
 	}
 }

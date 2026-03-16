@@ -33,14 +33,11 @@
 				"references": [
 					"src/cli.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -73,14 +70,11 @@
 				"references": [
 					"src/cli.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -109,14 +103,11 @@
 				"references": [
 					"src/cli.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -149,14 +140,11 @@
 				"references": [
 					"src/cli.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -189,14 +177,11 @@
 				"references": [
 					"src/mcp/server.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -229,14 +214,11 @@
 				"references": [
 					"src/mcp/server.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -265,14 +247,11 @@
 				"references": [
 					"src/mcp/server.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -305,14 +284,11 @@
 				"references": [
 					"src/mcp/server.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -349,14 +325,11 @@
 				"references": [
 					"src/server/index.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -389,14 +362,11 @@
 				"references": [
 					"src/server/index.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -429,14 +399,11 @@
 				"references": [
 					"src/server/index.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -473,14 +440,11 @@
 				"references": [
 					"src/server/index.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "lifecycle"
-				},
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -521,14 +485,11 @@
 				"references": [
 					"src/core/backlog.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "operation"
-				},
 				"shape": "rectangle",
 				"fill": "#8b5cf6",
 				"stroke": "#6d28d9",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#8b5cf6"
 		},
@@ -575,14 +536,11 @@
 					"src/mcp/server.ts",
 					"src/server/index.ts"
 				],
-				"otel": {
-					"kind": "event",
-					"category": "error"
-				},
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "draft"
+				"status": "draft",
+				"nodeType": "event"
 			},
 			"color": "#ef4444"
 		},
@@ -605,8 +563,6 @@
 					}
 				},
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -617,7 +573,8 @@
 				"status": "implemented",
 				"references": [
 					"src/file-system/operations.ts"
-				]
+				],
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -644,8 +601,6 @@
 					}
 				},
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -656,7 +611,8 @@
 				"status": "implemented",
 				"references": [
 					"src/file-system/operations.ts"
-				]
+				],
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -683,8 +639,6 @@
 					}
 				},
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -695,7 +649,8 @@
 				"status": "implemented",
 				"references": [
 					"src/file-system/operations.ts"
-				]
+				],
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -722,8 +677,6 @@
 					}
 				},
 				"otel": {
-					"kind": "event",
-					"category": "error",
 					"files": [
 						"src/file-system/operations.ts"
 					]
@@ -734,7 +687,8 @@
 				"status": "implemented",
 				"references": [
 					"src/file-system/operations.ts"
-				]
+				],
+				"nodeType": "event"
 			},
 			"color": "#ef4444"
 		}
@@ -955,6 +909,12 @@
 				"color": "#ef4444"
 			}
 		},
-		"markdown": ".principal-views/entry-points/entry-points.md"
+		"markdown": ".principal-views/entry-points/entry-points.md",
+		"nodeTypes": {
+			"event": {
+				"label": "Event",
+				"color": "#3B82F6"
+			}
+		}
 	}
 }

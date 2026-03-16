@@ -22,8 +22,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -31,7 +29,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -65,8 +64,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "io",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -74,7 +71,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -104,8 +102,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -113,7 +109,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -143,8 +140,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -152,7 +147,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -186,8 +182,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -195,7 +189,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -229,8 +224,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -238,7 +231,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -268,8 +262,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -277,7 +269,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -315,8 +308,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -324,7 +315,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -358,8 +350,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -367,7 +357,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -397,8 +388,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -406,7 +395,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -440,8 +430,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -449,7 +437,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -479,8 +468,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "operation",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -488,7 +475,8 @@
 				"shape": "rectangle",
 				"fill": "#3b82f6",
 				"stroke": "#1d4ed8",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#3b82f6"
 		},
@@ -518,8 +506,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "lifecycle",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -527,7 +513,8 @@
 				"shape": "rectangle",
 				"fill": "#22c55e",
 				"stroke": "#16a34a",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#22c55e"
 		},
@@ -565,8 +552,6 @@
 					"src/core/search-service.ts"
 				],
 				"otel": {
-					"kind": "event",
-					"category": "error",
 					"files": [
 						"src/core/search-service.ts"
 					]
@@ -574,7 +559,8 @@
 				"shape": "rectangle",
 				"fill": "#ef4444",
 				"stroke": "#dc2626",
-				"status": "implemented"
+				"status": "implemented",
+				"nodeType": "event"
 			},
 			"color": "#ef4444"
 		}
@@ -729,6 +715,12 @@
 				"color": "#ef4444"
 			}
 		},
-		"markdown": ".principal-views/search-operations.md"
+		"markdown": ".principal-views/search-operations.md",
+		"nodeTypes": {
+			"event": {
+				"label": "Event",
+				"color": "#3B82F6"
+			}
+		}
 	}
 }

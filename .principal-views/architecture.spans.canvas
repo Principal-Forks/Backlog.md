@@ -1,0 +1,394 @@
+{
+  "pv": {
+    "name": "Backlog.md Span Conventions",
+    "version": "1.0.0",
+    "markdown": ".principal-views/architecture.spans.md",
+    "nodeTypes": {
+      "span-convention": {
+        "label": "Span Convention",
+        "color": "#3B82F6"
+      }
+    },
+    "edgeTypes": {
+      "calls": {
+        "label": "Calls",
+        "color": "#94A3B8"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "cli-request",
+      "type": "text",
+      "x": 756,
+      "y": -164,
+      "width": 200,
+      "height": 80,
+      "text": "# CLI Request Handler\n\nCLI command entry point",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "cli.request",
+          "spanKind": "SERVER"
+        }
+      }
+    },
+    {
+      "id": "http-request",
+      "type": "text",
+      "x": -488,
+      "y": -51,
+      "width": 200,
+      "height": 80,
+      "text": "# HTTP Request Handler\n\nHTTP API entry point",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "http.request",
+          "spanKind": "SERVER"
+        }
+      }
+    },
+    {
+      "id": "mcp-tool",
+      "type": "text",
+      "x": -201,
+      "y": -138,
+      "width": 200,
+      "height": 80,
+      "text": "# MCP Tool Handler\n\nMCP tool invocation",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "mcp.tool",
+          "spanKind": "SERVER"
+        }
+      }
+    },
+    {
+      "id": "init",
+      "type": "text",
+      "x": 48,
+      "y": -160,
+      "width": 200,
+      "height": 80,
+      "text": "# Initialization\n\nApplication initialization",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "init",
+          "spanKind": "SERVER"
+        }
+      }
+    },
+    {
+      "id": "task",
+      "type": "text",
+      "x": -368,
+      "y": 164,
+      "width": 200,
+      "height": 100,
+      "text": "# Task Operations\n\nTask management operations\n(create, edit, view, list, archive, complete, demote)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "task.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "milestone",
+      "type": "text",
+      "x": -615,
+      "y": 164,
+      "width": 200,
+      "height": 100,
+      "text": "# Milestone Management\n\nMilestone management\n(create, view, list, archive)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "milestone.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "document",
+      "type": "text",
+      "x": 525,
+      "y": 164,
+      "width": 200,
+      "height": 100,
+      "text": "# Document Management\n\nDocument management\n(create, update, view, list, search)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "document.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "decision",
+      "type": "text",
+      "x": 779,
+      "y": 163,
+      "width": 200,
+      "height": 100,
+      "text": "# Decision Management\n\nDecision management\n(create, update, view, list)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "decision.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "draft",
+      "type": "text",
+      "x": 292,
+      "y": 165,
+      "width": 200,
+      "height": 100,
+      "text": "# Draft Management\n\nDraft management\n(create, archive, promote)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "draft.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "filesystem-draft",
+      "type": "text",
+      "x": 367,
+      "y": 373,
+      "width": 200,
+      "height": 100,
+      "text": "# Filesystem Drafts\n\nFilesystem draft operations\n(list, view)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "filesystem.draft.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "search",
+      "type": "text",
+      "x": -20,
+      "y": 160,
+      "width": 200,
+      "height": 100,
+      "text": "# Search Operations\n\nSearch operations\n(initialize, query, index.update)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "search.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "cleanup",
+      "type": "text",
+      "x": 1252,
+      "y": 155,
+      "width": 200,
+      "height": 100,
+      "text": "# Cleanup Operations\n\nCleanup operations\n(batch, preview)",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "cleanup.*",
+          "spanKind": "INTERNAL"
+        }
+      }
+    },
+    {
+      "id": "completed-tasks",
+      "type": "text",
+      "x": 1017,
+      "y": 157,
+      "width": 200,
+      "height": 104,
+      "text": "# Completed Tasks\n\nList completed tasks",
+      "pv": {
+        "nodeType": "span-convention",
+        "status": "implemented",
+        "otel": {
+          "spanPattern": "completed.tasks",
+          "spanKind": "INTERNAL"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "cli-to-task",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "task",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-milestone",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "milestone",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-document",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "document",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-decision",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "decision",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "http-to-task",
+      "fromNode": "http-request",
+      "fromSide": "bottom",
+      "toNode": "task",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "http-to-milestone",
+      "fromNode": "http-request",
+      "fromSide": "bottom",
+      "toNode": "milestone",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "mcp-to-task",
+      "fromNode": "mcp-tool",
+      "fromSide": "bottom",
+      "toNode": "task",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "mcp-to-milestone",
+      "fromNode": "mcp-tool",
+      "fromSide": "bottom",
+      "toNode": "milestone",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "mcp-to-search",
+      "fromNode": "mcp-tool",
+      "fromSide": "bottom",
+      "toNode": "search",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-draft",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "draft",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-search",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "search",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-cleanup",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "cleanup",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "cli-to-completed",
+      "fromNode": "cli-request",
+      "fromSide": "bottom",
+      "toNode": "completed-tasks",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "init-to-search",
+      "fromNode": "init",
+      "fromSide": "bottom",
+      "toNode": "search",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    },
+    {
+      "id": "edge-draft-filesystem-draft-1773635993554",
+      "fromNode": "draft",
+      "toNode": "filesystem-draft",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "calls"
+      }
+    }
+  ]
+}
