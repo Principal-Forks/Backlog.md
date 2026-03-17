@@ -32,7 +32,8 @@
           "spanPattern": "cli.request",
           "spanKind": "SERVER"
         }
-      }
+      },
+      "color": "#3B82F6"
     },
     {
       "id": "http-request",
@@ -49,7 +50,8 @@
           "spanPattern": "http.request",
           "spanKind": "SERVER"
         }
-      }
+      },
+      "color": "#06B6D4"
     },
     {
       "id": "mcp-tool",
@@ -66,7 +68,8 @@
           "spanPattern": "mcp.tool",
           "spanKind": "SERVER"
         }
-      }
+      },
+      "color": "#8B5CF6"
     },
     {
       "id": "init",
@@ -83,7 +86,8 @@
           "spanPattern": "init",
           "spanKind": "SERVER"
         }
-      }
+      },
+      "color": "#A855F7"
     },
     {
       "id": "task",
@@ -100,7 +104,8 @@
           "spanPattern": "task.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#10B981"
     },
     {
       "id": "milestone",
@@ -117,7 +122,8 @@
           "spanPattern": "milestone.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#F59E0B"
     },
     {
       "id": "document",
@@ -134,7 +140,8 @@
           "spanPattern": "document.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#EC4899"
     },
     {
       "id": "decision",
@@ -151,7 +158,8 @@
           "spanPattern": "decision.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#EF4444"
     },
     {
       "id": "draft",
@@ -168,7 +176,8 @@
           "spanPattern": "draft.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#F97316"
     },
     {
       "id": "filesystem-draft",
@@ -185,7 +194,8 @@
           "spanPattern": "filesystem.draft.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#FB923C"
     },
     {
       "id": "search",
@@ -202,7 +212,8 @@
           "spanPattern": "search.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#14B8A6"
     },
     {
       "id": "cleanup",
@@ -219,7 +230,8 @@
           "spanPattern": "cleanup.*",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#64748B"
     },
     {
       "id": "completed-tasks",
@@ -236,7 +248,8 @@
           "spanPattern": "completed.tasks",
           "spanKind": "INTERNAL"
         }
-      }
+      },
+      "color": "#22C55E"
     }
   ],
   "edges": [
