@@ -1,726 +1,642 @@
 {
-	"nodes": [
-		{
-			"id": "search-initialize-started",
-			"type": "text",
-			"x": 100,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# Initialize Started\n\nSearch service initialization initiated.",
-			"pv": {
-				"event": {
-					"name": "search.initialize.started",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "search-initialize-snapshot",
-			"type": "text",
-			"x": 100,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Initialize Snapshot\n\nContent snapshot loaded from store.",
-			"pv": {
-				"event": {
-					"name": "search.initialize.snapshot",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"documentCount": {
-							"type": "number",
-							"required": true
-						},
-						"decisionCount": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-initialize-indexed",
-			"type": "text",
-			"x": 100,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# Initialize Indexed\n\nSearch index built with Fuse.js.",
-			"pv": {
-				"event": {
-					"name": "search.initialize.indexed",
-					"attributes": {
-						"totalEntities": {
-							"type": "number",
-							"required": true
-						},
-						"taskVariants": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-initialize-complete",
-			"type": "text",
-			"x": 100,
-			"y": 500,
-			"width": 240,
-			"height": 110,
-			"text": "# Initialize Complete\n\nSearch service ready for queries.",
-			"pv": {
-				"event": {
-					"name": "search.initialize.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "search-query-started",
-			"type": "text",
-			"x": 450,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# Query Started\n\nSearch query initiated.",
-			"pv": {
-				"event": {
-					"name": "search.query.started",
-					"attributes": {
-						"query": {
-							"type": "string",
-							"required": true
-						},
-						"types": {
-							"type": "array",
-							"required": false
-						},
-						"limit": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "search-query-normalized",
-			"type": "text",
-			"x": 450,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Query Normalized\n\nQuery and filters normalized.",
-			"pv": {
-				"event": {
-					"name": "search.query.normalized",
-					"attributes": {
-						"trimmedQuery": {
-							"type": "string",
-							"required": true
-						},
-						"types": {
-							"type": "array",
-							"required": true
-						},
-						"filters": {
-							"type": "object",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-query-executed",
-			"type": "text",
-			"x": 450,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# Query Executed\n\nFuse.js search executed on index.",
-			"pv": {
-				"event": {
-					"name": "search.query.executed",
-					"attributes": {
-						"rawResultCount": {
-							"type": "number",
-							"required": true
-						},
-						"searchDuration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-query-filtered",
-			"type": "text",
-			"x": 450,
-			"y": 500,
-			"width": 240,
-			"height": 110,
-			"text": "# Query Filtered\n\nResults filtered by type and criteria.",
-			"pv": {
-				"event": {
-					"name": "search.query.filtered",
-					"attributes": {
-						"filteredCount": {
-							"type": "number",
-							"required": true
-						},
-						"taskCount": {
-							"type": "number",
-							"required": false
-						},
-						"documentCount": {
-							"type": "number",
-							"required": false
-						},
-						"decisionCount": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-query-complete",
-			"type": "text",
-			"x": 450,
-			"y": 650,
-			"width": 240,
-			"height": 110,
-			"text": "# Query Complete\n\nSearch query completed with results.",
-			"pv": {
-				"event": {
-					"name": "search.query.complete",
-					"attributes": {
-						"resultCount": {
-							"type": "number",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "search-index-update-started",
-			"type": "text",
-			"x": 800,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# Update Started\n\nIndex update triggered by content change.",
-			"pv": {
-				"event": {
-					"name": "search.index.update.started",
-					"attributes": {
-						"trigger": {
-							"type": "string",
-							"required": true
-						},
-						"version": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "search-index-snapshot-applied",
-			"type": "text",
-			"x": 800,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Snapshot Applied\n\nNew snapshot applied to search entities.",
-			"pv": {
-				"event": {
-					"name": "search.index.snapshot.applied",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"documentCount": {
-							"type": "number",
-							"required": true
-						},
-						"decisionCount": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-index-rebuilt",
-			"type": "text",
-			"x": 800,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# Index Rebuilt\n\nFuse.js index rebuilt with new data.",
-			"pv": {
-				"event": {
-					"name": "search.index.rebuilt",
-					"attributes": {
-						"totalEntities": {
-							"type": "number",
-							"required": true
-						},
-						"rebuildDuration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "search-index-update-complete",
-			"type": "text",
-			"x": 800,
-			"y": 500,
-			"width": 240,
-			"height": 110,
-			"text": "# Update Complete\n\nIndex update completed successfully.",
-			"pv": {
-				"event": {
-					"name": "search.index.update.complete",
-					"attributes": {
-						"version": {
-							"type": "number",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "search-error",
-			"type": "text",
-			"x": 1100,
-			"y": 300,
-			"width": 240,
-			"height": 130,
-			"text": "# Search Error\n\nSearch operation error occurred.",
-			"pv": {
-				"event": {
-					"name": "search.error",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"error.type": {
-							"type": "string",
-							"required": false
-						},
-						"error.message": {
-							"type": "string",
-							"required": true
-						},
-						"error.stage": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/search-service.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/search-service.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#ef4444"
-		}
-	],
-	"edges": [
-		{
-			"id": "init-start-to-snapshot",
-			"fromNode": "search-initialize-started",
-			"fromSide": "bottom",
-			"toNode": "search-initialize-snapshot",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "init-snapshot-to-indexed",
-			"fromNode": "search-initialize-snapshot",
-			"fromSide": "bottom",
-			"toNode": "search-initialize-indexed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "init-indexed-to-complete",
-			"fromNode": "search-initialize-indexed",
-			"fromSide": "bottom",
-			"toNode": "search-initialize-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "init-to-error",
-			"fromNode": "search-initialize-started",
-			"fromSide": "right",
-			"toNode": "search-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "query-start-to-normalized",
-			"fromNode": "search-query-started",
-			"fromSide": "bottom",
-			"toNode": "search-query-normalized",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "query-normalized-to-executed",
-			"fromNode": "search-query-normalized",
-			"fromSide": "bottom",
-			"toNode": "search-query-executed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "query-executed-to-filtered",
-			"fromNode": "search-query-executed",
-			"fromSide": "bottom",
-			"toNode": "search-query-filtered",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "query-filtered-to-complete",
-			"fromNode": "search-query-filtered",
-			"fromSide": "bottom",
-			"toNode": "search-query-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "query-to-error",
-			"fromNode": "search-query-started",
-			"fromSide": "right",
-			"toNode": "search-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "update-start-to-snapshot",
-			"fromNode": "search-index-update-started",
-			"fromSide": "bottom",
-			"toNode": "search-index-snapshot-applied",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-snapshot-to-rebuilt",
-			"fromNode": "search-index-snapshot-applied",
-			"fromSide": "bottom",
-			"toNode": "search-index-rebuilt",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-rebuilt-to-complete",
-			"fromNode": "search-index-rebuilt",
-			"fromSide": "bottom",
-			"toNode": "search-index-update-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-to-error",
-			"fromNode": "search-index-update-started",
-			"fromSide": "right",
-			"toNode": "search-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		}
-	],
-	"pv": {
-		"name": "Search Operations",
-		"version": "1.0.0",
-		"description": "OpenTelemetry event schema for cross-entity search initialization, querying, and index updates",
-		"edgeTypes": {
-			"flow": {
-				"label": "Flow",
-				"style": "solid",
-				"width": 2,
-				"color": "#64748b"
-			},
-			"error": {
-				"label": "Error Path",
-				"style": "dashed",
-				"width": 2,
-				"color": "#ef4444"
-			}
-		},
-		"markdown": ".principal-views/search-operations.md",
-		"nodeTypes": {
-			"event": {
-				"label": "Event",
-				"color": "#3B82F6"
-			}
-		}
-	}
+  "nodes": [
+    {
+      "id": "search-initialize-started",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Initialize Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.initialize.started",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-initialize-snapshot",
+      "type": "otel-event",
+      "x": 100,
+      "y": 200,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Initialize Snapshot",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.initialize.snapshot",
+        "attributes": {
+          "taskCount": {
+            "type": "number",
+            "required": true
+          },
+          "documentCount": {
+            "type": "number",
+            "required": true
+          },
+          "decisionCount": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-initialize-indexed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 350,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Initialize Indexed",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.initialize.indexed",
+        "attributes": {
+          "totalEntities": {
+            "type": "number",
+            "required": true
+          },
+          "taskVariants": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-initialize-complete",
+      "type": "otel-event",
+      "x": 100,
+      "y": 500,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Initialize Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.initialize.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-query-started",
+      "type": "otel-event",
+      "x": 450,
+      "y": 50,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Query Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.query.started",
+        "attributes": {
+          "query": {
+            "type": "string",
+            "required": true
+          },
+          "types": {
+            "type": "array",
+            "required": false
+          },
+          "limit": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-query-normalized",
+      "type": "otel-event",
+      "x": 450,
+      "y": 200,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Query Normalized",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.query.normalized",
+        "attributes": {
+          "trimmedQuery": {
+            "type": "string",
+            "required": true
+          },
+          "types": {
+            "type": "array",
+            "required": true
+          },
+          "filters": {
+            "type": "object",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-query-executed",
+      "type": "otel-event",
+      "x": 450,
+      "y": 350,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Query Executed",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.query.executed",
+        "attributes": {
+          "rawResultCount": {
+            "type": "number",
+            "required": true
+          },
+          "searchDuration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-query-filtered",
+      "type": "otel-event",
+      "x": 450,
+      "y": 500,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Query Filtered",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.query.filtered",
+        "attributes": {
+          "filteredCount": {
+            "type": "number",
+            "required": true
+          },
+          "taskCount": {
+            "type": "number",
+            "required": false
+          },
+          "documentCount": {
+            "type": "number",
+            "required": false
+          },
+          "decisionCount": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-query-complete",
+      "type": "otel-event",
+      "x": 450,
+      "y": 650,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Query Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.query.complete",
+        "attributes": {
+          "resultCount": {
+            "type": "number",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-index-update-started",
+      "type": "otel-event",
+      "x": 800,
+      "y": 50,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Update Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.index.update.started",
+        "attributes": {
+          "trigger": {
+            "type": "string",
+            "required": true
+          },
+          "version": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-index-snapshot-applied",
+      "type": "otel-event",
+      "x": 800,
+      "y": 200,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Snapshot Applied",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.index.snapshot.applied",
+        "attributes": {
+          "taskCount": {
+            "type": "number",
+            "required": true
+          },
+          "documentCount": {
+            "type": "number",
+            "required": true
+          },
+          "decisionCount": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-index-rebuilt",
+      "type": "otel-event",
+      "x": 800,
+      "y": 350,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Index Rebuilt",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.index.rebuilt",
+        "attributes": {
+          "totalEntities": {
+            "type": "number",
+            "required": true
+          },
+          "rebuildDuration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-index-update-complete",
+      "type": "otel-event",
+      "x": 800,
+      "y": 500,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Update Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.index.update.complete",
+        "attributes": {
+          "version": {
+            "type": "number",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    },
+    {
+      "id": "search-error",
+      "type": "otel-event",
+      "x": 1100,
+      "y": 300,
+      "width": 240,
+      "height": 130,
+      "color": "#ef4444",
+      "label": "Search Error",
+      "fill": "#ef4444",
+      "stroke": "#dc2626",
+      "shape": "rectangle",
+      "event": {
+        "name": "search.error",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "error.type": {
+            "type": "string",
+            "required": false
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/search-service.ts"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "init-start-to-snapshot",
+      "fromNode": "search-initialize-started",
+      "fromSide": "bottom",
+      "toNode": "search-initialize-snapshot",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "init-snapshot-to-indexed",
+      "fromNode": "search-initialize-snapshot",
+      "fromSide": "bottom",
+      "toNode": "search-initialize-indexed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "init-indexed-to-complete",
+      "fromNode": "search-initialize-indexed",
+      "fromSide": "bottom",
+      "toNode": "search-initialize-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "init-to-error",
+      "fromNode": "search-initialize-started",
+      "fromSide": "right",
+      "toNode": "search-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "query-start-to-normalized",
+      "fromNode": "search-query-started",
+      "fromSide": "bottom",
+      "toNode": "search-query-normalized",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "query-normalized-to-executed",
+      "fromNode": "search-query-normalized",
+      "fromSide": "bottom",
+      "toNode": "search-query-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "query-executed-to-filtered",
+      "fromNode": "search-query-executed",
+      "fromSide": "bottom",
+      "toNode": "search-query-filtered",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "query-filtered-to-complete",
+      "fromNode": "search-query-filtered",
+      "fromSide": "bottom",
+      "toNode": "search-query-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "query-to-error",
+      "fromNode": "search-query-started",
+      "fromSide": "right",
+      "toNode": "search-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "update-start-to-snapshot",
+      "fromNode": "search-index-update-started",
+      "fromSide": "bottom",
+      "toNode": "search-index-snapshot-applied",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-snapshot-to-rebuilt",
+      "fromNode": "search-index-snapshot-applied",
+      "fromSide": "bottom",
+      "toNode": "search-index-rebuilt",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-rebuilt-to-complete",
+      "fromNode": "search-index-rebuilt",
+      "fromSide": "bottom",
+      "toNode": "search-index-update-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-to-error",
+      "fromNode": "search-index-update-started",
+      "fromSide": "right",
+      "toNode": "search-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Search Operations",
+    "version": "1.0.0",
+    "description": "OpenTelemetry event schema for cross-entity search initialization, querying, and index updates",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    },
+    "markdown": ".principal-views/search-operations.md",
+    "nodeTypes": {
+      "event": {
+        "label": "Event",
+        "color": "#3B82F6"
+      }
+    }
+  }
 }

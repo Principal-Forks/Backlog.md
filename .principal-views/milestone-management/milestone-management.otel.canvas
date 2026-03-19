@@ -1,880 +1,777 @@
 {
-	"nodes": [
-		{
-			"id": "milestone-create-started",
-			"type": "text",
-			"x": 100,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# Create Started\n\nMilestone creation initiated with title.",
-			"pv": {
-				"event": {
-					"name": "milestone.create.started",
-					"attributes": {
-						"title": {
-							"type": "string",
-							"required": true
-						},
-						"description": {
-							"type": "string",
-							"required": false
-						},
-						"autoCommit": {
-							"type": "boolean",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts",
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-create-validated",
-			"type": "text",
-			"x": 100,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# Create Validated\n\nMilestone data validated and ID generated.",
-			"pv": {
-				"event": {
-					"name": "milestone.create.validated",
-					"attributes": {
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"nextId": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "milestone-create-saved",
-			"type": "text",
-			"x": 100,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# Create Saved\n\nMilestone file written to milestones directory.",
-			"pv": {
-				"event": {
-					"name": "milestone.create.saved",
-					"attributes": {
-						"filepath": {
-							"type": "string",
-							"required": true
-						},
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"filename": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "milestone-create-committed",
-			"type": "text",
-			"x": 100,
-			"y": 500,
-			"width": 200,
-			"height": 100,
-			"text": "# Changes Committed\n\nChanges committed to git (if autoCommit enabled).",
-			"pv": {
-				"event": {
-					"name": "milestone.create.committed",
-					"attributes": {
-						"commitMessage": {
-							"type": "string",
-							"required": true
-						},
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/git/operations.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#f59e0b",
-				"stroke": "#d97706",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#f59e0b"
-		},
-		{
-			"id": "milestone-create-complete",
-			"type": "text",
-			"x": 100,
-			"y": 650,
-			"width": 200,
-			"height": 100,
-			"text": "# Create Complete\n\nMilestone creation completed successfully.",
-			"pv": {
-				"event": {
-					"name": "milestone.create.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-view-started",
-			"type": "text",
-			"x": 400,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# View Started\n\nMilestone view operation initiated.",
-			"pv": {
-				"event": {
-					"name": "milestone.view.started",
-					"attributes": {
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"format": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-view-loaded",
-			"type": "text",
-			"x": 400,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# View Loaded\n\nMilestone data loaded from filesystem.",
-			"pv": {
-				"event": {
-					"name": "milestone.view.loaded",
-					"attributes": {
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"title": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "milestone-view-complete",
-			"type": "text",
-			"x": 400,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# View Complete\n\nMilestone view completed successfully.",
-			"pv": {
-				"event": {
-					"name": "milestone.view.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-list-started",
-			"type": "text",
-			"x": 700,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# List Started\n\nMilestone list operation initiated.",
-			"pv": {
-				"event": {
-					"name": "milestone.list.started",
-					"attributes": {
-						"includeArchived": {
-							"type": "boolean",
-							"required": false
-						},
-						"format": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-list-loaded",
-			"type": "text",
-			"x": 700,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# List Loaded\n\nMilestones loaded from filesystem.",
-			"pv": {
-				"event": {
-					"name": "milestone.list.loaded",
-					"attributes": {
-						"totalCount": {
-							"type": "number",
-							"required": true
-						},
-						"archivedCount": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "milestone-list-complete",
-			"type": "text",
-			"x": 700,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# List Complete\n\nMilestone list operation completed successfully.",
-			"pv": {
-				"event": {
-					"name": "milestone.list.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"resultCount": {
-							"type": "number",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-archive-started",
-			"type": "text",
-			"x": 100,
-			"y": 850,
-			"width": 200,
-			"height": 100,
-			"text": "# Archive Started\n\nMilestone archive command invoked.",
-			"pv": {
-				"event": {
-					"name": "milestone.archive.started",
-					"attributes": {
-						"identifier": {
-							"type": "string",
-							"required": true
-						},
-						"autoCommit": {
-							"type": "boolean",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts",
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-archive-located",
-			"type": "text",
-			"x": 100,
-			"y": 1000,
-			"width": 200,
-			"height": 100,
-			"text": "# Archive Located\n\nMilestone file found and path resolved.",
-			"pv": {
-				"event": {
-					"name": "milestone.archive.located",
-					"attributes": {
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"milestonePath": {
-							"type": "string",
-							"required": true
-						},
-						"milestoneTitle": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "milestone-archive-moved",
-			"type": "text",
-			"x": 100,
-			"y": 1150,
-			"width": 200,
-			"height": 100,
-			"text": "# Archive Moved\n\nMilestone file moved to archive directory.",
-			"pv": {
-				"event": {
-					"name": "milestone.archive.moved",
-					"attributes": {
-						"fromPath": {
-							"type": "string",
-							"required": true
-						},
-						"toPath": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "milestone-archive-committed",
-			"type": "text",
-			"x": 100,
-			"y": 1300,
-			"width": 200,
-			"height": 100,
-			"text": "# Changes Committed\n\nGit commit created for archive operation.",
-			"pv": {
-				"event": {
-					"name": "milestone.archive.committed",
-					"attributes": {
-						"commitMessage": {
-							"type": "string",
-							"required": true
-						},
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/git/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#f59e0b",
-				"stroke": "#d97706",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#f59e0b"
-		},
-		{
-			"id": "milestone-archive-complete",
-			"type": "text",
-			"x": 100,
-			"y": 1450,
-			"width": 200,
-			"height": 100,
-			"text": "# Archive Complete\n\nMilestone archived successfully.",
-			"pv": {
-				"event": {
-					"name": "milestone.archive.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"milestoneId": {
-							"type": "string",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "milestone-error",
-			"type": "text",
-			"x": 1000,
-			"y": 500,
-			"width": 200,
-			"height": 150,
-			"text": "# Milestone Error\n\nMilestone operation failed with an error.",
-			"pv": {
-				"event": {
-					"name": "milestone.error",
-					"attributes": {
-						"error.type": {
-							"type": "string",
-							"required": true
-						},
-						"error.message": {
-							"type": "string",
-							"required": true
-						},
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"identifier": {
-							"type": "string",
-							"required": false
-						},
-						"error.stage": {
-							"type": "string",
-							"required": false
-						},
-						"error.stack": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts",
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#ef4444"
-		}
-	],
-	"edges": [
-		{
-			"id": "create-started-validated",
-			"fromNode": "milestone-create-started",
-			"fromSide": "bottom",
-			"toNode": "milestone-create-validated",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-validated-saved",
-			"fromNode": "milestone-create-validated",
-			"fromSide": "bottom",
-			"toNode": "milestone-create-saved",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-saved-committed",
-			"fromNode": "milestone-create-saved",
-			"fromSide": "bottom",
-			"toNode": "milestone-create-committed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-committed-complete",
-			"fromNode": "milestone-create-committed",
-			"fromSide": "bottom",
-			"toNode": "milestone-create-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "view-started-loaded",
-			"fromNode": "milestone-view-started",
-			"fromSide": "bottom",
-			"toNode": "milestone-view-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "view-loaded-complete",
-			"fromNode": "milestone-view-loaded",
-			"fromSide": "bottom",
-			"toNode": "milestone-view-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "list-started-loaded",
-			"fromNode": "milestone-list-started",
-			"fromSide": "bottom",
-			"toNode": "milestone-list-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "list-loaded-complete",
-			"fromNode": "milestone-list-loaded",
-			"fromSide": "bottom",
-			"toNode": "milestone-list-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "archive-started-located",
-			"fromNode": "milestone-archive-started",
-			"fromSide": "bottom",
-			"toNode": "milestone-archive-located",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "archive-located-moved",
-			"fromNode": "milestone-archive-located",
-			"fromSide": "bottom",
-			"toNode": "milestone-archive-moved",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "archive-moved-committed",
-			"fromNode": "milestone-archive-moved",
-			"fromSide": "bottom",
-			"toNode": "milestone-archive-committed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "archive-committed-complete",
-			"fromNode": "milestone-archive-committed",
-			"fromSide": "bottom",
-			"toNode": "milestone-archive-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-started-error",
-			"fromNode": "milestone-create-started",
-			"fromSide": "right",
-			"toNode": "milestone-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "view-started-error",
-			"fromNode": "milestone-view-started",
-			"fromSide": "right",
-			"toNode": "milestone-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "list-started-error",
-			"fromNode": "milestone-list-started",
-			"fromSide": "right",
-			"toNode": "milestone-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "archive-started-error",
-			"fromNode": "milestone-archive-started",
-			"fromSide": "right",
-			"toNode": "milestone-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		}
-	],
-	"pv": {
-		"name": "Milestone Management",
-		"version": "1.0.0",
-		"description": "Comprehensive milestone management operations including create, view, list, and archive",
-		"edgeTypes": {
-			"flow": {
-				"label": "Flow",
-				"style": "solid",
-				"width": 2,
-				"color": "#64748b"
-			},
-			"error": {
-				"label": "Error Path",
-				"style": "dashed",
-				"width": 2,
-				"color": "#ef4444"
-			}
-		},
-		"markdown": ".principal-views/milestone-management.md",
-		"nodeTypes": {
-			"event": {
-				"label": "Event",
-				"color": "#3B82F6"
-			}
-		}
-	}
+  "nodes": [
+    {
+      "id": "milestone-create-started",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Create Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.create.started",
+        "attributes": {
+          "title": {
+            "type": "string",
+            "required": true
+          },
+          "description": {
+            "type": "string",
+            "required": false
+          },
+          "autoCommit": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-create-validated",
+      "type": "otel-event",
+      "x": 100,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Create Validated",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.create.validated",
+        "attributes": {
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "nextId": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-create-saved",
+      "type": "otel-event",
+      "x": 100,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Create Saved",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.create.saved",
+        "attributes": {
+          "filepath": {
+            "type": "string",
+            "required": true
+          },
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "filename": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-create-committed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "color": "#f59e0b",
+      "label": "Changes Committed",
+      "fill": "#f59e0b",
+      "stroke": "#d97706",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.create.committed",
+        "attributes": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "milestone-create-complete",
+      "type": "otel-event",
+      "x": 100,
+      "y": 650,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Create Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.create.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-view-started",
+      "type": "otel-event",
+      "x": 400,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "View Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.view.started",
+        "attributes": {
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "format": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-view-loaded",
+      "type": "otel-event",
+      "x": 400,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "View Loaded",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.view.loaded",
+        "attributes": {
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "title": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-view-complete",
+      "type": "otel-event",
+      "x": 400,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "View Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.view.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-list-started",
+      "type": "otel-event",
+      "x": 700,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "List Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.list.started",
+        "attributes": {
+          "includeArchived": {
+            "type": "boolean",
+            "required": false
+          },
+          "format": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-list-loaded",
+      "type": "otel-event",
+      "x": 700,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "List Loaded",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.list.loaded",
+        "attributes": {
+          "totalCount": {
+            "type": "number",
+            "required": true
+          },
+          "archivedCount": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-list-complete",
+      "type": "otel-event",
+      "x": 700,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "List Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.list.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "resultCount": {
+            "type": "number",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-archive-started",
+      "type": "otel-event",
+      "x": 100,
+      "y": 850,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Archive Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.archive.started",
+        "attributes": {
+          "identifier": {
+            "type": "string",
+            "required": true
+          },
+          "autoCommit": {
+            "type": "boolean",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-archive-located",
+      "type": "otel-event",
+      "x": 100,
+      "y": 1000,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Archive Located",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.archive.located",
+        "attributes": {
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "milestonePath": {
+            "type": "string",
+            "required": true
+          },
+          "milestoneTitle": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-archive-moved",
+      "type": "otel-event",
+      "x": 100,
+      "y": 1150,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Archive Moved",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.archive.moved",
+        "attributes": {
+          "fromPath": {
+            "type": "string",
+            "required": true
+          },
+          "toPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-archive-committed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 1300,
+      "width": 200,
+      "height": 100,
+      "color": "#f59e0b",
+      "label": "Changes Committed",
+      "fill": "#f59e0b",
+      "stroke": "#d97706",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.archive.committed",
+        "attributes": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-archive-complete",
+      "type": "otel-event",
+      "x": 100,
+      "y": 1450,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Archive Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.archive.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "milestoneId": {
+            "type": "string",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "milestone-error",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 500,
+      "width": 200,
+      "height": 150,
+      "color": "#ef4444",
+      "label": "Milestone Error",
+      "fill": "#ef4444",
+      "stroke": "#dc2626",
+      "shape": "rectangle",
+      "event": {
+        "name": "milestone.error",
+        "attributes": {
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "identifier": {
+            "type": "string",
+            "required": false
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          },
+          "error.stack": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "create-started-validated",
+      "fromNode": "milestone-create-started",
+      "fromSide": "bottom",
+      "toNode": "milestone-create-validated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-validated-saved",
+      "fromNode": "milestone-create-validated",
+      "fromSide": "bottom",
+      "toNode": "milestone-create-saved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-saved-committed",
+      "fromNode": "milestone-create-saved",
+      "fromSide": "bottom",
+      "toNode": "milestone-create-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-committed-complete",
+      "fromNode": "milestone-create-committed",
+      "fromSide": "bottom",
+      "toNode": "milestone-create-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "view-started-loaded",
+      "fromNode": "milestone-view-started",
+      "fromSide": "bottom",
+      "toNode": "milestone-view-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "view-loaded-complete",
+      "fromNode": "milestone-view-loaded",
+      "fromSide": "bottom",
+      "toNode": "milestone-view-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-started-loaded",
+      "fromNode": "milestone-list-started",
+      "fromSide": "bottom",
+      "toNode": "milestone-list-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-loaded-complete",
+      "fromNode": "milestone-list-loaded",
+      "fromSide": "bottom",
+      "toNode": "milestone-list-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-started-located",
+      "fromNode": "milestone-archive-started",
+      "fromSide": "bottom",
+      "toNode": "milestone-archive-located",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-located-moved",
+      "fromNode": "milestone-archive-located",
+      "fromSide": "bottom",
+      "toNode": "milestone-archive-moved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-moved-committed",
+      "fromNode": "milestone-archive-moved",
+      "fromSide": "bottom",
+      "toNode": "milestone-archive-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "archive-committed-complete",
+      "fromNode": "milestone-archive-committed",
+      "fromSide": "bottom",
+      "toNode": "milestone-archive-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-started-error",
+      "fromNode": "milestone-create-started",
+      "fromSide": "right",
+      "toNode": "milestone-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "view-started-error",
+      "fromNode": "milestone-view-started",
+      "fromSide": "right",
+      "toNode": "milestone-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "list-started-error",
+      "fromNode": "milestone-list-started",
+      "fromSide": "right",
+      "toNode": "milestone-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "archive-started-error",
+      "fromNode": "milestone-archive-started",
+      "fromSide": "right",
+      "toNode": "milestone-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Milestone Management",
+    "version": "1.0.0",
+    "description": "Comprehensive milestone management operations including create, view, list, and archive",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    },
+    "markdown": ".principal-views/milestone-management.md",
+    "nodeTypes": {
+      "event": {
+        "label": "Event",
+        "color": "#3B82F6"
+      }
+    }
+  }
 }

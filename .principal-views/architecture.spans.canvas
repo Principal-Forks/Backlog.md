@@ -19,237 +19,198 @@
   "nodes": [
     {
       "id": "cli-request",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 756,
       "y": -164,
       "width": 200,
       "height": 80,
-      "text": "# CLI Request Handler\n\nCLI command entry point",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#3B82F6",
+      "label": "CLI Request Handler",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "cli.request",
-          "spanKind": "SERVER"
-        }
-      },
-      "color": "#3B82F6"
+        "spanPattern": "cli.request",
+        "spanKind": "SERVER"
+      }
     },
     {
       "id": "http-request",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": -488,
       "y": -51,
       "width": 200,
       "height": 80,
-      "text": "# HTTP Request Handler\n\nHTTP API entry point",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#06B6D4",
+      "label": "HTTP Request Handler",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "http.request",
-          "spanKind": "SERVER"
-        }
-      },
-      "color": "#06B6D4"
+        "spanPattern": "http.request",
+        "spanKind": "SERVER"
+      }
     },
     {
       "id": "mcp-tool",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": -201,
       "y": -138,
       "width": 200,
       "height": 80,
-      "text": "# MCP Tool Handler\n\nMCP tool invocation",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#8B5CF6",
+      "label": "MCP Tool Handler",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "mcp.tool",
-          "spanKind": "SERVER"
-        }
-      },
-      "color": "#8B5CF6"
+        "spanPattern": "mcp.tool",
+        "spanKind": "SERVER"
+      }
     },
     {
       "id": "init",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 48,
       "y": -160,
       "width": 200,
       "height": 80,
-      "text": "# Initialization\n\nApplication initialization",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#A855F7",
+      "label": "Initialization",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "init",
-          "spanKind": "SERVER"
-        }
-      },
-      "color": "#A855F7"
+        "spanPattern": "init",
+        "spanKind": "SERVER"
+      }
     },
     {
       "id": "task",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": -368,
       "y": 164,
       "width": 200,
       "height": 100,
-      "text": "# Task Operations\n\nTask management operations\n(create, edit, view, list, archive, complete, demote)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#10B981",
+      "label": "Task Operations",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "task.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#10B981"
+        "spanPattern": "task.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "milestone",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": -615,
       "y": 164,
       "width": 200,
       "height": 100,
-      "text": "# Milestone Management\n\nMilestone management\n(create, view, list, archive)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#F59E0B",
+      "label": "Milestone Management",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "milestone.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#F59E0B"
+        "spanPattern": "milestone.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "document",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 525,
       "y": 164,
       "width": 200,
       "height": 100,
-      "text": "# Document Management\n\nDocument management\n(create, update, view, list, search)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#EC4899",
+      "label": "Document Management",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "document.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#EC4899"
+        "spanPattern": "document.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "decision",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 779,
       "y": 163,
       "width": 200,
       "height": 100,
-      "text": "# Decision Management\n\nDecision management\n(create, update, view, list)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#EF4444",
+      "label": "Decision Management",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "decision.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#EF4444"
+        "spanPattern": "decision.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "draft",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 292,
       "y": 165,
       "width": 200,
       "height": 100,
-      "text": "# Draft Management\n\nDraft management\n(create, archive, promote)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#F97316",
+      "label": "Draft Management",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "draft.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#F97316"
+        "spanPattern": "draft.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "filesystem-draft",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 367,
       "y": 373,
       "width": 200,
       "height": 100,
-      "text": "# Filesystem Drafts\n\nFilesystem draft operations\n(list, view)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#FB923C",
+      "label": "Filesystem Drafts",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "filesystem.draft.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#FB923C"
+        "spanPattern": "filesystem.draft.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "search",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": -20,
       "y": 160,
       "width": 200,
       "height": 100,
-      "text": "# Search Operations\n\nSearch operations\n(initialize, query, index.update)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#14B8A6",
+      "label": "Search Operations",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "search.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#14B8A6"
+        "spanPattern": "search.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "cleanup",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 1252,
       "y": 155,
       "width": 200,
       "height": 100,
-      "text": "# Cleanup Operations\n\nCleanup operations\n(batch, preview)",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#64748B",
+      "label": "Cleanup Operations",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "cleanup.*",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#64748B"
+        "spanPattern": "cleanup.*",
+        "spanKind": "INTERNAL"
+      }
     },
     {
       "id": "completed-tasks",
-      "type": "text",
+      "type": "otel-span-convention",
       "x": 1017,
       "y": 157,
       "width": 200,
       "height": 104,
-      "text": "# Completed Tasks\n\nList completed tasks",
-      "pv": {
-        "nodeType": "span-convention",
+      "color": "#22C55E",
+      "label": "Completed Tasks",
+      "otel": {
         "status": "implemented",
-        "otel": {
-          "spanPattern": "completed.tasks",
-          "spanKind": "INTERNAL"
-        }
-      },
-      "color": "#22C55E"
+        "spanPattern": "completed.tasks",
+        "spanKind": "INTERNAL"
+      }
     }
   ],
   "edges": [

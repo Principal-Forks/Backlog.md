@@ -1,394 +1,350 @@
 {
-	"nodes": [
-		{
-			"id": "cleanup-preview-started",
-			"type": "text",
-			"x": 100,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# Preview Started\n\nCleanup preview initiated to identify old tasks.",
-			"pv": {
-				"event": {
-					"name": "cleanup.preview.started",
-					"attributes": {
-						"olderThanDays": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts",
-					"src/server/index.ts"
-				],
-				"otel": {
-					"files": [
-						"src/server/index.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "cleanup-preview-filtered",
-			"type": "text",
-			"x": 100,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Tasks Filtered\n\nTasks filtered by status and age.",
-			"pv": {
-				"event": {
-					"name": "cleanup.preview.filtered",
-					"attributes": {
-						"totalTasks": {
-							"type": "number",
-							"required": true
-						},
-						"matchedTasks": {
-							"type": "number",
-							"required": true
-						},
-						"cutoffDate": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/server/index.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "cleanup-preview-complete",
-			"type": "text",
-			"x": 100,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# Preview Complete\n\nPreview generation completed.",
-			"pv": {
-				"event": {
-					"name": "cleanup.preview.complete",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"otel": {
-					"files": [
-						"src/server/index.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "cleanup-batch-started",
-			"type": "text",
-			"x": 450,
-			"y": 50,
-			"width": 240,
-			"height": 110,
-			"text": "# Batch Cleanup Started\n\nBatch cleanup execution initiated.",
-			"pv": {
-				"event": {
-					"name": "cleanup.batch.started",
-					"attributes": {
-						"olderThanDays": {
-							"type": "number",
-							"required": true
-						},
-						"taskCount": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"otel": {
-					"files": [
-						"src/server/index.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "cleanup-batch-processing",
-			"type": "text",
-			"x": 450,
-			"y": 200,
-			"width": 240,
-			"height": 110,
-			"text": "# Processing Tasks\n\nProcessing tasks in batch operation.",
-			"pv": {
-				"event": {
-					"name": "cleanup.batch.processing",
-					"attributes": {
-						"currentIndex": {
-							"type": "number",
-							"required": true
-						},
-						"totalCount": {
-							"type": "number",
-							"required": true
-						},
-						"taskId": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"otel": {
-					"files": [
-						"src/server/index.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "cleanup-batch-complete",
-			"type": "text",
-			"x": 450,
-			"y": 350,
-			"width": 240,
-			"height": 110,
-			"text": "# Batch Complete\n\nBatch cleanup completed with results.",
-			"pv": {
-				"event": {
-					"name": "cleanup.batch.complete",
-					"attributes": {
-						"movedCount": {
-							"type": "number",
-							"required": true
-						},
-						"totalCount": {
-							"type": "number",
-							"required": true
-						},
-						"failedCount": {
-							"type": "number",
-							"required": false
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"otel": {
-					"files": [
-						"src/server/index.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "cleanup-error",
-			"type": "text",
-			"x": 1450,
-			"y": 300,
-			"width": 240,
-			"height": 130,
-			"text": "# Cleanup Error\n\nCleanup operation error occurred.",
-			"pv": {
-				"event": {
-					"name": "cleanup.error",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"error.type": {
-							"type": "string",
-							"required": false
-						},
-						"error.message": {
-							"type": "string",
-							"required": true
-						},
-						"error.stage": {
-							"type": "string",
-							"required": false
-						},
-						"taskId": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts",
-					"src/server/index.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#ef4444"
-		}
-	],
-	"edges": [
-		{
-			"id": "preview-start-to-filtered",
-			"fromNode": "cleanup-preview-started",
-			"fromSide": "bottom",
-			"toNode": "cleanup-preview-filtered",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "preview-filtered-to-complete",
-			"fromNode": "cleanup-preview-filtered",
-			"fromSide": "bottom",
-			"toNode": "cleanup-preview-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "preview-to-error",
-			"fromNode": "cleanup-preview-started",
-			"fromSide": "right",
-			"toNode": "cleanup-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "batch-start-to-processing",
-			"fromNode": "cleanup-batch-started",
-			"fromSide": "bottom",
-			"toNode": "cleanup-batch-processing",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "batch-processing-to-complete",
-			"fromNode": "cleanup-batch-processing",
-			"fromSide": "bottom",
-			"toNode": "cleanup-batch-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "batch-to-error",
-			"fromNode": "cleanup-batch-started",
-			"fromSide": "right",
-			"toNode": "cleanup-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		}
-	],
-	"pv": {
-		"name": "Cleanup Operations",
-		"version": "1.0.0",
-		"description": "OpenTelemetry event schema for cleanup operations including preview, batch completion, and completed task management",
-		"markdown": ".principal-views/cleanup-operations.md",
-		"edgeTypes": {
-			"flow": {
-				"label": "Flow",
-				"style": "solid",
-				"width": 2,
-				"color": "#64748b"
-			},
-			"child-span": {
-				"label": "Child Span",
-				"style": "dashed",
-				"width": 2,
-				"color": "#8b5cf6"
-			},
-			"error": {
-				"label": "Error Path",
-				"style": "dashed",
-				"width": 2,
-				"color": "#ef4444"
-			}
-		},
-		"nodeTypes": {
-			"event": {
-				"label": "Event",
-				"color": "#3B82F6"
-			}
-		}
-	}
+  "nodes": [
+    {
+      "id": "cleanup-preview-started",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Preview Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.preview.started",
+        "attributes": {
+          "olderThanDays": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/server/index.ts"
+        ]
+      }
+    },
+    {
+      "id": "cleanup-preview-filtered",
+      "type": "otel-event",
+      "x": 100,
+      "y": 200,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Tasks Filtered",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.preview.filtered",
+        "attributes": {
+          "totalTasks": {
+            "type": "number",
+            "required": true
+          },
+          "matchedTasks": {
+            "type": "number",
+            "required": true
+          },
+          "cutoffDate": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/server/index.ts"
+        ]
+      }
+    },
+    {
+      "id": "cleanup-preview-complete",
+      "type": "otel-event",
+      "x": 100,
+      "y": 350,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Preview Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.preview.complete",
+        "attributes": {
+          "taskCount": {
+            "type": "number",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/server/index.ts"
+        ]
+      }
+    },
+    {
+      "id": "cleanup-batch-started",
+      "type": "otel-event",
+      "x": 450,
+      "y": 50,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Batch Cleanup Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.batch.started",
+        "attributes": {
+          "olderThanDays": {
+            "type": "number",
+            "required": true
+          },
+          "taskCount": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/server/index.ts"
+        ]
+      }
+    },
+    {
+      "id": "cleanup-batch-processing",
+      "type": "otel-event",
+      "x": 450,
+      "y": 200,
+      "width": 240,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Processing Tasks",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.batch.processing",
+        "attributes": {
+          "currentIndex": {
+            "type": "number",
+            "required": true
+          },
+          "totalCount": {
+            "type": "number",
+            "required": true
+          },
+          "taskId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/server/index.ts"
+        ]
+      }
+    },
+    {
+      "id": "cleanup-batch-complete",
+      "type": "otel-event",
+      "x": 450,
+      "y": 350,
+      "width": 240,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Batch Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.batch.complete",
+        "attributes": {
+          "movedCount": {
+            "type": "number",
+            "required": true
+          },
+          "totalCount": {
+            "type": "number",
+            "required": true
+          },
+          "failedCount": {
+            "type": "number",
+            "required": false
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/server/index.ts"
+        ]
+      }
+    },
+    {
+      "id": "cleanup-error",
+      "type": "otel-event",
+      "x": 1450,
+      "y": 300,
+      "width": 240,
+      "height": 130,
+      "color": "#ef4444",
+      "label": "Cleanup Error",
+      "fill": "#ef4444",
+      "stroke": "#dc2626",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.error",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "error.type": {
+            "type": "string",
+            "required": false
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          },
+          "taskId": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "preview-start-to-filtered",
+      "fromNode": "cleanup-preview-started",
+      "fromSide": "bottom",
+      "toNode": "cleanup-preview-filtered",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "preview-filtered-to-complete",
+      "fromNode": "cleanup-preview-filtered",
+      "fromSide": "bottom",
+      "toNode": "cleanup-preview-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "preview-to-error",
+      "fromNode": "cleanup-preview-started",
+      "fromSide": "right",
+      "toNode": "cleanup-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "batch-start-to-processing",
+      "fromNode": "cleanup-batch-started",
+      "fromSide": "bottom",
+      "toNode": "cleanup-batch-processing",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "batch-processing-to-complete",
+      "fromNode": "cleanup-batch-processing",
+      "fromSide": "bottom",
+      "toNode": "cleanup-batch-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "batch-to-error",
+      "fromNode": "cleanup-batch-started",
+      "fromSide": "right",
+      "toNode": "cleanup-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Cleanup Operations",
+    "version": "1.0.0",
+    "description": "OpenTelemetry event schema for cleanup operations including preview, batch completion, and completed task management",
+    "markdown": ".principal-views/cleanup-operations.md",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "child-span": {
+        "label": "Child Span",
+        "style": "dashed",
+        "width": 2,
+        "color": "#8b5cf6"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    },
+    "nodeTypes": {
+      "event": {
+        "label": "Event",
+        "color": "#3B82F6"
+      }
+    }
+  }
 }

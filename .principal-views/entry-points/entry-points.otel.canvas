@@ -1,920 +1,838 @@
 {
-	"nodes": [
-		{
-			"id": "cli-request-received",
-			"type": "text",
-			"x": 100,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# Request Received\n\nCLI command received with arguments.",
-			"pv": {
-				"event": {
-					"name": "cli.request.received",
-					"attributes": {
-						"command": {
-							"type": "string",
-							"required": true
-						},
-						"subcommand": {
-							"type": "string",
-							"required": false
-						},
-						"args": {
-							"type": "object",
-							"required": false
-						},
-						"cwd": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "cli-request-parsed",
-			"type": "text",
-			"x": 100,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# Request Parsed\n\nCommand arguments parsed and validated.",
-			"pv": {
-				"event": {
-					"name": "cli.request.parsed",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"entityType": {
-							"type": "string",
-							"required": false
-						},
-						"validationPassed": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "cli-operation-dispatched",
-			"type": "text",
-			"x": 100,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# Operation Dispatched\n\nRequest routed to core operation handler.",
-			"pv": {
-				"event": {
-					"name": "cli.operation.dispatched",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"handler": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "cli-request-complete",
-			"type": "text",
-			"x": 92,
-			"y": 782,
-			"width": 200,
-			"height": 100,
-			"text": "# Request Complete\n\nCLI command completed successfully.",
-			"pv": {
-				"event": {
-					"name": "cli.request.complete",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						},
-						"exitCode": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "mcp-tool-invoked",
-			"type": "text",
-			"x": 400,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# Tool Invoked\n\nMCP tool called with parameters.",
-			"pv": {
-				"event": {
-					"name": "mcp.tool.invoked",
-					"attributes": {
-						"toolName": {
-							"type": "string",
-							"required": true
-						},
-						"parameters": {
-							"type": "object",
-							"required": false
-						},
-						"clientId": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/mcp/server.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "mcp-tool-validated",
-			"type": "text",
-			"x": 400,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# Tool Validated\n\nTool parameters validated against schema.",
-			"pv": {
-				"event": {
-					"name": "mcp.tool.validated",
-					"attributes": {
-						"toolName": {
-							"type": "string",
-							"required": true
-						},
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"validationPassed": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/mcp/server.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "mcp-operation-dispatched",
-			"type": "text",
-			"x": 400,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# Operation Dispatched\n\nTool request routed to core operation.",
-			"pv": {
-				"event": {
-					"name": "mcp.operation.dispatched",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"handler": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/mcp/server.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "mcp-tool-response",
-			"type": "text",
-			"x": 402,
-			"y": 805,
-			"width": 200,
-			"height": 100,
-			"text": "# Tool Response\n\nMCP tool response sent to client.",
-			"pv": {
-				"event": {
-					"name": "mcp.tool.response",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						},
-						"contentLength": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/mcp/server.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "http-request-received",
-			"type": "text",
-			"x": 700,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# Request Received\n\nHTTP request received from browser client.",
-			"pv": {
-				"event": {
-					"name": "http.request.received",
-					"attributes": {
-						"method": {
-							"type": "string",
-							"required": true
-						},
-						"path": {
-							"type": "string",
-							"required": true
-						},
-						"clientIp": {
-							"type": "string",
-							"required": false
-						},
-						"userAgent": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "http-request-routed",
-			"type": "text",
-			"x": 700,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# Request Routed\n\nRequest routed to API endpoint handler.",
-			"pv": {
-				"event": {
-					"name": "http.request.routed",
-					"attributes": {
-						"route": {
-							"type": "string",
-							"required": true
-						},
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"handler": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "http-operation-dispatched",
-			"type": "text",
-			"x": 700,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# Operation Dispatched\n\nAPI request dispatched to core operation.",
-			"pv": {
-				"event": {
-					"name": "http.operation.dispatched",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"handler": {
-							"type": "string",
-							"required": true
-						},
-						"requestBody": {
-							"type": "object",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "http-response-sent",
-			"type": "text",
-			"x": 714,
-			"y": 785,
-			"width": 200,
-			"height": 100,
-			"text": "# Response Sent\n\nHTTP response sent to client.",
-			"pv": {
-				"event": {
-					"name": "http.response.sent",
-					"attributes": {
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"statusCode": {
-							"type": "number",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						},
-						"responseSize": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/server/index.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "operation-executed",
-			"type": "text",
-			"x": 400,
-			"y": 561,
-			"width": 200,
-			"height": 120,
-			"text": "# Operation Executed\n\nCore operation completed (child span).\n\nLinks to domain canvases:\n- task.*\n- draft.*\n- milestone.*",
-			"pv": {
-				"event": {
-					"name": "operation.executed",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"entityType": {
-							"type": "string",
-							"required": true
-						},
-						"entityId": {
-							"type": "string",
-							"required": false
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#8b5cf6",
-				"stroke": "#6d28d9",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#8b5cf6"
-		},
-		{
-			"id": "entry-error",
-			"type": "text",
-			"x": 1000,
-			"y": 350,
-			"width": 200,
-			"height": 150,
-			"text": "# Entry Error\n\nEntry point request failed with error.",
-			"pv": {
-				"event": {
-					"name": "entry.error",
-					"attributes": {
-						"error.type": {
-							"type": "string",
-							"required": true
-						},
-						"error.message": {
-							"type": "string",
-							"required": true
-						},
-						"entryPoint": {
-							"type": "string",
-							"required": true
-						},
-						"operation": {
-							"type": "string",
-							"required": false
-						},
-						"error.stage": {
-							"type": "string",
-							"required": false
-						},
-						"error.stack": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/cli.ts",
-					"src/mcp/server.ts",
-					"src/server/index.ts"
-				],
-				"shape": "rectangle",
-				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"status": "draft",
-				"nodeType": "event"
-			},
-			"color": "#ef4444"
-		},
-		{
-			"id": "completed-tasks-list-started",
-			"type": "text",
-			"x": 1500,
-			"y": 50,
-			"width": 200,
-			"height": 100,
-			"text": "# List Started\n\nCompleted tasks list initiated.",
-			"pv": {
-				"event": {
-					"name": "completed.tasks.list.started",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "completed-tasks-list-loaded",
-			"type": "text",
-			"x": 1500,
-			"y": 200,
-			"width": 200,
-			"height": 100,
-			"text": "# List Loaded\n\nCompleted tasks loaded.",
-			"pv": {
-				"event": {
-					"name": "completed.tasks.list.loaded",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"completedDir": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "completed-tasks-list-complete",
-			"type": "text",
-			"x": 1500,
-			"y": 350,
-			"width": 200,
-			"height": 100,
-			"text": "# List Complete\n\nCompleted tasks list done.",
-			"pv": {
-				"event": {
-					"name": "completed.tasks.list.complete",
-					"attributes": {
-						"taskCount": {
-							"type": "number",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "completed-tasks-list-error",
-			"type": "text",
-			"x": 1500,
-			"y": 500,
-			"width": 200,
-			"height": 100,
-			"text": "# List Error\n\nError listing completed tasks.",
-			"pv": {
-				"event": {
-					"name": "cleanup.error",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"error.message": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"status": "implemented",
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"nodeType": "event"
-			},
-			"color": "#ef4444"
-		}
-	],
-	"edges": [
-		{
-			"id": "cli-received-parsed",
-			"fromNode": "cli-request-received",
-			"fromSide": "bottom",
-			"toNode": "cli-request-parsed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "cli-parsed-dispatched",
-			"fromNode": "cli-request-parsed",
-			"fromSide": "bottom",
-			"toNode": "cli-operation-dispatched",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "cli-dispatched-operation",
-			"fromNode": "cli-operation-dispatched",
-			"fromSide": "bottom",
-			"toNode": "operation-executed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "child-span"
-			}
-		},
-		{
-			"id": "mcp-invoked-validated",
-			"fromNode": "mcp-tool-invoked",
-			"fromSide": "bottom",
-			"toNode": "mcp-tool-validated",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "mcp-validated-dispatched",
-			"fromNode": "mcp-tool-validated",
-			"fromSide": "bottom",
-			"toNode": "mcp-operation-dispatched",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "mcp-dispatched-operation",
-			"fromNode": "mcp-operation-dispatched",
-			"fromSide": "bottom",
-			"toNode": "operation-executed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "child-span"
-			}
-		},
-		{
-			"id": "http-received-routed",
-			"fromNode": "http-request-received",
-			"fromSide": "bottom",
-			"toNode": "http-request-routed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "http-routed-dispatched",
-			"fromNode": "http-request-routed",
-			"fromSide": "bottom",
-			"toNode": "http-operation-dispatched",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "http-dispatched-operation",
-			"fromNode": "http-operation-dispatched",
-			"fromSide": "bottom",
-			"toNode": "operation-executed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "child-span"
-			}
-		},
-		{
-			"id": "cli-received-error",
-			"fromNode": "cli-request-received",
-			"fromSide": "right",
-			"toNode": "entry-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "mcp-invoked-error",
-			"fromNode": "mcp-tool-invoked",
-			"fromSide": "right",
-			"toNode": "entry-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "http-received-error",
-			"fromNode": "http-request-received",
-			"fromSide": "right",
-			"toNode": "entry-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "edge-operation-executed-http-response-sent-1769318159019",
-			"fromNode": "operation-executed",
-			"toNode": "http-response-sent",
-			"fromSide": "bottom",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "edge-operation-executed-mcp-tool-response-1769318159019",
-			"fromNode": "operation-executed",
-			"toNode": "mcp-tool-response",
-			"fromSide": "bottom",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "edge-operation-executed-cli-request-complete-1769318159019",
-			"fromNode": "operation-executed",
-			"toNode": "cli-request-complete",
-			"fromSide": "bottom",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "completed-list-started-loaded",
-			"fromNode": "completed-tasks-list-started",
-			"fromSide": "bottom",
-			"toNode": "completed-tasks-list-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "completed-list-loaded-complete",
-			"fromNode": "completed-tasks-list-loaded",
-			"fromSide": "bottom",
-			"toNode": "completed-tasks-list-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "completed-list-started-error",
-			"fromNode": "completed-tasks-list-started",
-			"fromSide": "bottom",
-			"toNode": "completed-tasks-list-error",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "operation-completed-list",
-			"fromNode": "operation-executed",
-			"fromSide": "right",
-			"toNode": "completed-tasks-list-started",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "child-span"
-			}
-		}
-	],
-	"pv": {
-		"name": "Entry Points",
-		"version": "1.0.0",
-		"description": "Root span lifecycle for CLI, MCP, and HTTP entry points. Child operations link to domain canvases (task, draft, milestone).",
-		"edgeTypes": {
-			"flow": {
-				"label": "Flow",
-				"style": "solid",
-				"width": 2,
-				"color": "#64748b"
-			},
-			"child-span": {
-				"label": "Creates Child Span",
-				"style": "dashed",
-				"width": 2,
-				"color": "#8b5cf6"
-			},
-			"error": {
-				"label": "Error Path",
-				"style": "dashed",
-				"width": 2,
-				"color": "#ef4444"
-			}
-		},
-		"markdown": ".principal-views/entry-points/entry-points.md",
-		"nodeTypes": {
-			"event": {
-				"label": "Event",
-				"color": "#3B82F6"
-			}
-		}
-	}
+  "nodes": [
+    {
+      "id": "cli-request-received",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Request Received",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.received",
+        "attributes": {
+          "command": {
+            "type": "string",
+            "required": true
+          },
+          "subcommand": {
+            "type": "string",
+            "required": false
+          },
+          "args": {
+            "type": "object",
+            "required": false
+          },
+          "cwd": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "cli-request-parsed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Request Parsed",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.parsed",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "entityType": {
+            "type": "string",
+            "required": false
+          },
+          "validationPassed": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "cli-operation-dispatched",
+      "type": "otel-event",
+      "x": 100,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Operation Dispatched",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.operation.dispatched",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "cli-request-complete",
+      "type": "otel-event",
+      "x": 92,
+      "y": 782,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Request Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "exitCode": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "mcp-tool-invoked",
+      "type": "otel-event",
+      "x": 400,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Tool Invoked",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.invoked",
+        "attributes": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "parameters": {
+            "type": "object",
+            "required": false
+          },
+          "clientId": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "mcp-tool-validated",
+      "type": "otel-event",
+      "x": 400,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Tool Validated",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.validated",
+        "attributes": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "validationPassed": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "mcp-operation-dispatched",
+      "type": "otel-event",
+      "x": 400,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Operation Dispatched",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.operation.dispatched",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "mcp-tool-response",
+      "type": "otel-event",
+      "x": 402,
+      "y": 805,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Tool Response",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.response",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "contentLength": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "http-request-received",
+      "type": "otel-event",
+      "x": 700,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Request Received",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.request.received",
+        "attributes": {
+          "method": {
+            "type": "string",
+            "required": true
+          },
+          "path": {
+            "type": "string",
+            "required": true
+          },
+          "clientIp": {
+            "type": "string",
+            "required": false
+          },
+          "userAgent": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "http-request-routed",
+      "type": "otel-event",
+      "x": 700,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Request Routed",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.request.routed",
+        "attributes": {
+          "route": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "http-operation-dispatched",
+      "type": "otel-event",
+      "x": 700,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Operation Dispatched",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.operation.dispatched",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          },
+          "requestBody": {
+            "type": "object",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "http-response-sent",
+      "type": "otel-event",
+      "x": 714,
+      "y": 785,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Response Sent",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.response.sent",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "statusCode": {
+            "type": "number",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "responseSize": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "operation-executed",
+      "type": "otel-event",
+      "x": 400,
+      "y": 561,
+      "width": 200,
+      "height": 120,
+      "color": "#8b5cf6",
+      "label": "Operation Executed",
+      "fill": "#8b5cf6",
+      "stroke": "#6d28d9",
+      "shape": "rectangle",
+      "event": {
+        "name": "operation.executed",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "entityType": {
+            "type": "string",
+            "required": true
+          },
+          "entityId": {
+            "type": "string",
+            "required": false
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "entry-error",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 350,
+      "width": 200,
+      "height": 150,
+      "color": "#ef4444",
+      "label": "Entry Error",
+      "fill": "#ef4444",
+      "stroke": "#dc2626",
+      "shape": "rectangle",
+      "event": {
+        "name": "entry.error",
+        "attributes": {
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "entryPoint": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": false
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          },
+          "error.stack": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft"
+      }
+    },
+    {
+      "id": "completed-tasks-list-started",
+      "type": "otel-event",
+      "x": 1500,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "List Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "completed.tasks.list.started",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "completed-tasks-list-loaded",
+      "type": "otel-event",
+      "x": 1500,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "List Loaded",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "completed.tasks.list.loaded",
+        "attributes": {
+          "taskCount": {
+            "type": "number",
+            "required": true
+          },
+          "completedDir": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "completed-tasks-list-complete",
+      "type": "otel-event",
+      "x": 1500,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "List Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "completed.tasks.list.complete",
+        "attributes": {
+          "taskCount": {
+            "type": "number",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "completed-tasks-list-error",
+      "type": "otel-event",
+      "x": 1500,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "color": "#ef4444",
+      "label": "List Error",
+      "fill": "#ef4444",
+      "stroke": "#dc2626",
+      "shape": "rectangle",
+      "event": {
+        "name": "cleanup.error",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "cli-received-parsed",
+      "fromNode": "cli-request-received",
+      "fromSide": "bottom",
+      "toNode": "cli-request-parsed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "cli-parsed-dispatched",
+      "fromNode": "cli-request-parsed",
+      "fromSide": "bottom",
+      "toNode": "cli-operation-dispatched",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "cli-dispatched-operation",
+      "fromNode": "cli-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "operation-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    },
+    {
+      "id": "mcp-invoked-validated",
+      "fromNode": "mcp-tool-invoked",
+      "fromSide": "bottom",
+      "toNode": "mcp-tool-validated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "mcp-validated-dispatched",
+      "fromNode": "mcp-tool-validated",
+      "fromSide": "bottom",
+      "toNode": "mcp-operation-dispatched",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "mcp-dispatched-operation",
+      "fromNode": "mcp-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "operation-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    },
+    {
+      "id": "http-received-routed",
+      "fromNode": "http-request-received",
+      "fromSide": "bottom",
+      "toNode": "http-request-routed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "http-routed-dispatched",
+      "fromNode": "http-request-routed",
+      "fromSide": "bottom",
+      "toNode": "http-operation-dispatched",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "http-dispatched-operation",
+      "fromNode": "http-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "operation-executed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    },
+    {
+      "id": "cli-received-error",
+      "fromNode": "cli-request-received",
+      "fromSide": "right",
+      "toNode": "entry-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "mcp-invoked-error",
+      "fromNode": "mcp-tool-invoked",
+      "fromSide": "right",
+      "toNode": "entry-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "http-received-error",
+      "fromNode": "http-request-received",
+      "fromSide": "right",
+      "toNode": "entry-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "edge-operation-executed-http-response-sent-1769318159019",
+      "fromNode": "operation-executed",
+      "toNode": "http-response-sent",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edge-operation-executed-mcp-tool-response-1769318159019",
+      "fromNode": "operation-executed",
+      "toNode": "mcp-tool-response",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edge-operation-executed-cli-request-complete-1769318159019",
+      "fromNode": "operation-executed",
+      "toNode": "cli-request-complete",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "completed-list-started-loaded",
+      "fromNode": "completed-tasks-list-started",
+      "fromSide": "bottom",
+      "toNode": "completed-tasks-list-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "completed-list-loaded-complete",
+      "fromNode": "completed-tasks-list-loaded",
+      "fromSide": "bottom",
+      "toNode": "completed-tasks-list-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "completed-list-started-error",
+      "fromNode": "completed-tasks-list-started",
+      "fromSide": "bottom",
+      "toNode": "completed-tasks-list-error",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "operation-completed-list",
+      "fromNode": "operation-executed",
+      "fromSide": "right",
+      "toNode": "completed-tasks-list-started",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "child-span"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Entry Points",
+    "version": "1.0.0",
+    "description": "Root span lifecycle for CLI, MCP, and HTTP entry points. Child operations link to domain canvases (task, draft, milestone).",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "child-span": {
+        "label": "Creates Child Span",
+        "style": "dashed",
+        "width": 2,
+        "color": "#8b5cf6"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    },
+    "markdown": ".principal-views/entry-points/entry-points.md",
+    "nodeTypes": {
+      "event": {
+        "label": "Event",
+        "color": "#3B82F6"
+      }
+    }
+  }
 }

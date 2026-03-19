@@ -1,899 +1,790 @@
 {
-	"nodes": [
-		{
-			"id": "decision-create-started",
-			"type": "text",
-			"x": 100,
-			"y": 50,
-			"width": 220,
-			"height": 110,
-			"text": "# Create Started\n\nDecision creation initiated with title.",
-			"pv": {
-				"event": {
-					"name": "decision.create.started",
-					"attributes": {
-						"title": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-create-validated",
-			"type": "text",
-			"x": 100,
-			"y": 200,
-			"width": 220,
-			"height": 110,
-			"text": "# Create Validated\n\nDecision ID generated and validated.",
-			"pv": {
-				"event": {
-					"name": "decision.create.validated",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"normalizedId": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-create-saved",
-			"type": "text",
-			"x": 100,
-			"y": 350,
-			"width": 220,
-			"height": 110,
-			"text": "# Create Saved\n\nDecision file saved to disk.",
-			"pv": {
-				"event": {
-					"name": "decision.create.saved",
-					"attributes": {
-						"decisionPath": {
-							"type": "string",
-							"required": true
-						},
-						"filename": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-create-committed",
-			"type": "text",
-			"x": 100,
-			"y": 500,
-			"width": 220,
-			"height": 110,
-			"text": "# Changes Committed\n\nDecision creation committed to git.",
-			"pv": {
-				"event": {
-					"name": "decision.create.committed",
-					"attributes": {
-						"commitMessage": {
-							"type": "string",
-							"required": true
-						},
-						"commitSha": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#8b5cf6",
-				"stroke": "#7c3aed",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#8b5cf6"
-		},
-		{
-			"id": "decision-create-complete",
-			"type": "text",
-			"x": 100,
-			"y": 650,
-			"width": 220,
-			"height": 110,
-			"text": "# Create Complete\n\nDecision creation completed successfully.",
-			"pv": {
-				"event": {
-					"name": "decision.create.complete",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-view-started",
-			"type": "text",
-			"x": 400,
-			"y": 50,
-			"width": 220,
-			"height": 110,
-			"text": "# View Started\n\nDecision view initiated.",
-			"pv": {
-				"event": {
-					"name": "decision.view.started",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-view-loaded",
-			"type": "text",
-			"x": 400,
-			"y": 200,
-			"width": 220,
-			"height": 110,
-			"text": "# View Loaded\n\nDecision loaded from filesystem.",
-			"pv": {
-				"event": {
-					"name": "decision.view.loaded",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"decisionPath": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-view-complete",
-			"type": "text",
-			"x": 400,
-			"y": 350,
-			"width": 220,
-			"height": 110,
-			"text": "# View Complete\n\nDecision view completed.",
-			"pv": {
-				"event": {
-					"name": "decision.view.complete",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-list-started",
-			"type": "text",
-			"x": 700,
-			"y": 50,
-			"width": 220,
-			"height": 110,
-			"text": "# List Started\n\nDecision list operation initiated.",
-			"pv": {
-				"event": {
-					"name": "decision.list.started",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-list-loaded",
-			"type": "text",
-			"x": 700,
-			"y": 200,
-			"width": 220,
-			"height": 110,
-			"text": "# List Loaded\n\nDecisions loaded from filesystem.",
-			"pv": {
-				"event": {
-					"name": "decision.list.loaded",
-					"attributes": {
-						"decisionCount": {
-							"type": "number",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-list-complete",
-			"type": "text",
-			"x": 700,
-			"y": 350,
-			"width": 220,
-			"height": 110,
-			"text": "# List Complete\n\nDecision list operation completed.",
-			"pv": {
-				"event": {
-					"name": "decision.list.complete",
-					"attributes": {
-						"decisionCount": {
-							"type": "number",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/file-system/operations.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-update-started",
-			"type": "text",
-			"x": 1000,
-			"y": 50,
-			"width": 220,
-			"height": 110,
-			"text": "# Update Started\n\nDecision update initiated.",
-			"pv": {
-				"event": {
-					"name": "decision.update.started",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"content": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-update-loaded",
-			"type": "text",
-			"x": 1000,
-			"y": 200,
-			"width": 220,
-			"height": 110,
-			"text": "# Update Loaded\n\nExisting decision loaded for update.",
-			"pv": {
-				"event": {
-					"name": "decision.update.loaded",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"decisionPath": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-update-parsed",
-			"type": "text",
-			"x": 1000,
-			"y": 350,
-			"width": 220,
-			"height": 110,
-			"text": "# Update Parsed\n\nMarkdown content parsed for updates.",
-			"pv": {
-				"event": {
-					"name": "decision.update.parsed",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"fieldsUpdated": {
-							"type": "array",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-update-saved",
-			"type": "text",
-			"x": 1000,
-			"y": 500,
-			"width": 220,
-			"height": 110,
-			"text": "# Update Saved\n\nUpdated decision saved to disk.",
-			"pv": {
-				"event": {
-					"name": "decision.update.saved",
-					"attributes": {
-						"decisionPath": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#3b82f6",
-				"stroke": "#1d4ed8",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#3b82f6"
-		},
-		{
-			"id": "decision-update-committed",
-			"type": "text",
-			"x": 1000,
-			"y": 650,
-			"width": 220,
-			"height": 110,
-			"text": "# Changes Committed\n\nDecision update committed to git.",
-			"pv": {
-				"event": {
-					"name": "decision.update.committed",
-					"attributes": {
-						"commitMessage": {
-							"type": "string",
-							"required": true
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#8b5cf6",
-				"stroke": "#7c3aed",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#8b5cf6"
-		},
-		{
-			"id": "decision-update-complete",
-			"type": "text",
-			"x": 1000,
-			"y": 800,
-			"width": 220,
-			"height": 110,
-			"text": "# Update Complete\n\nDecision update completed successfully.",
-			"pv": {
-				"event": {
-					"name": "decision.update.complete",
-					"attributes": {
-						"decisionId": {
-							"type": "string",
-							"required": true
-						},
-						"success": {
-							"type": "boolean",
-							"required": true
-						},
-						"duration.ms": {
-							"type": "number",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#22c55e",
-				"stroke": "#16a34a",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#22c55e"
-		},
-		{
-			"id": "decision-error",
-			"type": "text",
-			"x": 1300,
-			"y": 400,
-			"width": 220,
-			"height": 130,
-			"text": "# Decision Error\n\nDecision operation error occurred.",
-			"pv": {
-				"event": {
-					"name": "decision.error",
-					"attributes": {
-						"operation": {
-							"type": "string",
-							"required": true
-						},
-						"error.type": {
-							"type": "string",
-							"required": false
-						},
-						"error.message": {
-							"type": "string",
-							"required": true
-						},
-						"error.stage": {
-							"type": "string",
-							"required": false
-						}
-					}
-				},
-				"references": [
-					"src/core/backlog.ts",
-					"src/file-system/operations.ts"
-				],
-				"otel": {
-					"files": [
-						"src/core/backlog.ts"
-					]
-				},
-				"shape": "rectangle",
-				"fill": "#ef4444",
-				"stroke": "#dc2626",
-				"status": "implemented",
-				"nodeType": "event"
-			},
-			"color": "#ef4444"
-		}
-	],
-	"edges": [
-		{
-			"id": "create-start-to-validate",
-			"fromNode": "decision-create-started",
-			"fromSide": "bottom",
-			"toNode": "decision-create-validated",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-validate-to-save",
-			"fromNode": "decision-create-validated",
-			"fromSide": "bottom",
-			"toNode": "decision-create-saved",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-save-to-commit",
-			"fromNode": "decision-create-saved",
-			"fromSide": "bottom",
-			"toNode": "decision-create-committed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-commit-to-complete",
-			"fromNode": "decision-create-committed",
-			"fromSide": "bottom",
-			"toNode": "decision-create-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-save-to-complete",
-			"fromNode": "decision-create-saved",
-			"fromSide": "right",
-			"toNode": "decision-create-complete",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "create-to-error",
-			"fromNode": "decision-create-started",
-			"fromSide": "right",
-			"toNode": "decision-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "view-start-to-load",
-			"fromNode": "decision-view-started",
-			"fromSide": "bottom",
-			"toNode": "decision-view-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "view-load-to-complete",
-			"fromNode": "decision-view-loaded",
-			"fromSide": "bottom",
-			"toNode": "decision-view-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "view-to-error",
-			"fromNode": "decision-view-started",
-			"fromSide": "right",
-			"toNode": "decision-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "list-start-to-load",
-			"fromNode": "decision-list-started",
-			"fromSide": "bottom",
-			"toNode": "decision-list-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "list-load-to-complete",
-			"fromNode": "decision-list-loaded",
-			"fromSide": "bottom",
-			"toNode": "decision-list-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "list-to-error",
-			"fromNode": "decision-list-started",
-			"fromSide": "right",
-			"toNode": "decision-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		},
-		{
-			"id": "update-start-to-load",
-			"fromNode": "decision-update-started",
-			"fromSide": "bottom",
-			"toNode": "decision-update-loaded",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-load-to-parse",
-			"fromNode": "decision-update-loaded",
-			"fromSide": "bottom",
-			"toNode": "decision-update-parsed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-parse-to-save",
-			"fromNode": "decision-update-parsed",
-			"fromSide": "bottom",
-			"toNode": "decision-update-saved",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-save-to-commit",
-			"fromNode": "decision-update-saved",
-			"fromSide": "bottom",
-			"toNode": "decision-update-committed",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-commit-to-complete",
-			"fromNode": "decision-update-committed",
-			"fromSide": "bottom",
-			"toNode": "decision-update-complete",
-			"toSide": "top",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-save-to-complete",
-			"fromNode": "decision-update-saved",
-			"fromSide": "right",
-			"toNode": "decision-update-complete",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "flow"
-			}
-		},
-		{
-			"id": "update-to-error",
-			"fromNode": "decision-update-started",
-			"fromSide": "right",
-			"toNode": "decision-error",
-			"toSide": "left",
-			"pv": {
-				"edgeType": "error"
-			}
-		}
-	],
-	"pv": {
-		"name": "Decision Management",
-		"version": "1.0.0",
-		"description": "OpenTelemetry event schema for decision/ADR lifecycle operations",
-		"edgeTypes": {
-			"flow": {
-				"label": "Flow",
-				"style": "solid",
-				"width": 2,
-				"color": "#64748b"
-			},
-			"error": {
-				"label": "Error Path",
-				"style": "dashed",
-				"width": 2,
-				"color": "#ef4444"
-			}
-		},
-		"markdown": ".principal-views/decision-management.md",
-		"nodeTypes": {
-			"event": {
-				"label": "Event",
-				"color": "#3B82F6"
-			}
-		}
-	}
+  "nodes": [
+    {
+      "id": "decision-create-started",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Create Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.create.started",
+        "attributes": {
+          "title": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-create-validated",
+      "type": "otel-event",
+      "x": 100,
+      "y": 200,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Create Validated",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.create.validated",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "normalizedId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-create-saved",
+      "type": "otel-event",
+      "x": 100,
+      "y": 350,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Create Saved",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.create.saved",
+        "attributes": {
+          "decisionPath": {
+            "type": "string",
+            "required": true
+          },
+          "filename": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-create-committed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 500,
+      "width": 220,
+      "height": 110,
+      "color": "#8b5cf6",
+      "label": "Changes Committed",
+      "fill": "#8b5cf6",
+      "stroke": "#7c3aed",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.create.committed",
+        "attributes": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          },
+          "commitSha": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-create-complete",
+      "type": "otel-event",
+      "x": 100,
+      "y": 650,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Create Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.create.complete",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-view-started",
+      "type": "otel-event",
+      "x": 400,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "View Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.view.started",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-view-loaded",
+      "type": "otel-event",
+      "x": 400,
+      "y": 200,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "View Loaded",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.view.loaded",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "decisionPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-view-complete",
+      "type": "otel-event",
+      "x": 400,
+      "y": 350,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "View Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.view.complete",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-list-started",
+      "type": "otel-event",
+      "x": 700,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "List Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.list.started",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-list-loaded",
+      "type": "otel-event",
+      "x": 700,
+      "y": 200,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "List Loaded",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.list.loaded",
+        "attributes": {
+          "decisionCount": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-list-complete",
+      "type": "otel-event",
+      "x": 700,
+      "y": 350,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "List Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.list.complete",
+        "attributes": {
+          "decisionCount": {
+            "type": "number",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/file-system/operations.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-update-started",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Update Started",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.update.started",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "content": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-update-loaded",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 200,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Update Loaded",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.update.loaded",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "decisionPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-update-parsed",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 350,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Update Parsed",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.update.parsed",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "fieldsUpdated": {
+            "type": "array",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-update-saved",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 500,
+      "width": 220,
+      "height": 110,
+      "color": "#3b82f6",
+      "label": "Update Saved",
+      "fill": "#3b82f6",
+      "stroke": "#1d4ed8",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.update.saved",
+        "attributes": {
+          "decisionPath": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-update-committed",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 650,
+      "width": 220,
+      "height": 110,
+      "color": "#8b5cf6",
+      "label": "Changes Committed",
+      "fill": "#8b5cf6",
+      "stroke": "#7c3aed",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.update.committed",
+        "attributes": {
+          "commitMessage": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-update-complete",
+      "type": "otel-event",
+      "x": 1000,
+      "y": 800,
+      "width": 220,
+      "height": 110,
+      "color": "#22c55e",
+      "label": "Update Complete",
+      "fill": "#22c55e",
+      "stroke": "#16a34a",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.update.complete",
+        "attributes": {
+          "decisionId": {
+            "type": "string",
+            "required": true
+          },
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    },
+    {
+      "id": "decision-error",
+      "type": "otel-event",
+      "x": 1300,
+      "y": 400,
+      "width": 220,
+      "height": 130,
+      "color": "#ef4444",
+      "label": "Decision Error",
+      "fill": "#ef4444",
+      "stroke": "#dc2626",
+      "shape": "rectangle",
+      "event": {
+        "name": "decision.error",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "error.type": {
+            "type": "string",
+            "required": false
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "error.stage": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "implemented",
+        "files": [
+          "src/core/backlog.ts"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "create-start-to-validate",
+      "fromNode": "decision-create-started",
+      "fromSide": "bottom",
+      "toNode": "decision-create-validated",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-validate-to-save",
+      "fromNode": "decision-create-validated",
+      "fromSide": "bottom",
+      "toNode": "decision-create-saved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-save-to-commit",
+      "fromNode": "decision-create-saved",
+      "fromSide": "bottom",
+      "toNode": "decision-create-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-commit-to-complete",
+      "fromNode": "decision-create-committed",
+      "fromSide": "bottom",
+      "toNode": "decision-create-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-save-to-complete",
+      "fromNode": "decision-create-saved",
+      "fromSide": "right",
+      "toNode": "decision-create-complete",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "create-to-error",
+      "fromNode": "decision-create-started",
+      "fromSide": "right",
+      "toNode": "decision-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "view-start-to-load",
+      "fromNode": "decision-view-started",
+      "fromSide": "bottom",
+      "toNode": "decision-view-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "view-load-to-complete",
+      "fromNode": "decision-view-loaded",
+      "fromSide": "bottom",
+      "toNode": "decision-view-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "view-to-error",
+      "fromNode": "decision-view-started",
+      "fromSide": "right",
+      "toNode": "decision-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "list-start-to-load",
+      "fromNode": "decision-list-started",
+      "fromSide": "bottom",
+      "toNode": "decision-list-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-load-to-complete",
+      "fromNode": "decision-list-loaded",
+      "fromSide": "bottom",
+      "toNode": "decision-list-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "list-to-error",
+      "fromNode": "decision-list-started",
+      "fromSide": "right",
+      "toNode": "decision-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    },
+    {
+      "id": "update-start-to-load",
+      "fromNode": "decision-update-started",
+      "fromSide": "bottom",
+      "toNode": "decision-update-loaded",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-load-to-parse",
+      "fromNode": "decision-update-loaded",
+      "fromSide": "bottom",
+      "toNode": "decision-update-parsed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-parse-to-save",
+      "fromNode": "decision-update-parsed",
+      "fromSide": "bottom",
+      "toNode": "decision-update-saved",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-save-to-commit",
+      "fromNode": "decision-update-saved",
+      "fromSide": "bottom",
+      "toNode": "decision-update-committed",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-commit-to-complete",
+      "fromNode": "decision-update-committed",
+      "fromSide": "bottom",
+      "toNode": "decision-update-complete",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-save-to-complete",
+      "fromNode": "decision-update-saved",
+      "fromSide": "right",
+      "toNode": "decision-update-complete",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "update-to-error",
+      "fromNode": "decision-update-started",
+      "fromSide": "right",
+      "toNode": "decision-error",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "error"
+      }
+    }
+  ],
+  "pv": {
+    "name": "Decision Management",
+    "version": "1.0.0",
+    "description": "OpenTelemetry event schema for decision/ADR lifecycle operations",
+    "edgeTypes": {
+      "flow": {
+        "label": "Flow",
+        "style": "solid",
+        "width": 2,
+        "color": "#64748b"
+      },
+      "error": {
+        "label": "Error Path",
+        "style": "dashed",
+        "width": 2,
+        "color": "#ef4444"
+      }
+    },
+    "markdown": ".principal-views/decision-management.md",
+    "nodeTypes": {
+      "event": {
+        "label": "Event",
+        "color": "#3B82F6"
+      }
+    }
+  }
 }
