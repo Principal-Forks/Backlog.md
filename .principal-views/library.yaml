@@ -1,6 +1,26 @@
 version: "1.0.0"
 name: "Backlog.md Component Library"
 
+scopes:
+  backlog.md:
+    color: "#3b82f6"
+    description: "Core library for task management operations"
+  backlog.md.cli:
+    color: "#22c55e"
+    description: "Command-line interface"
+  backlog.md.mcp:
+    color: "#8b5cf6"
+    description: "Model Context Protocol server"
+  backlog.md.http:
+    color: "#f59e0b"
+    description: "HTTP/REST API server"
+  backlog.md.tui:
+    color: "#ec4899"
+    description: "Interactive terminal interface"
+  backlog.md.web:
+    color: "#06b6d4"
+    description: "React-based browser interface"
+
 resources:
   backlog-md:
     service.name: "backlog.md"

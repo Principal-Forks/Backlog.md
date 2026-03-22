@@ -10,7 +10,6 @@
       "color": "#22c55e",
       "label": "Preview Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.preview.started",
@@ -38,7 +37,6 @@
       "color": "#3b82f6",
       "label": "Tasks Filtered",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.preview.filtered",
@@ -74,7 +72,6 @@
       "color": "#22c55e",
       "label": "Preview Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.preview.complete",
@@ -106,7 +103,6 @@
       "color": "#22c55e",
       "label": "Batch Cleanup Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.batch.started",
@@ -138,7 +134,6 @@
       "color": "#3b82f6",
       "label": "Processing Tasks",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.batch.processing",
@@ -174,7 +169,6 @@
       "color": "#22c55e",
       "label": "Batch Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.batch.complete",
@@ -211,14 +205,13 @@
     {
       "id": "cleanup-error",
       "type": "otel-event",
-      "x": 1450,
-      "y": 300,
+      "x": 828,
+      "y": 196,
       "width": 240,
       "height": 130,
       "color": "#ef4444",
       "label": "Cleanup Error",
       "fill": "#ef4444",
-      "stroke": "#dc2626",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.error",

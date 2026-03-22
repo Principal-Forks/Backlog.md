@@ -10,7 +10,6 @@
       "color": "#3b82f6",
       "label": "Backlog.md",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "description": "Core library for task management operations. Handles CRUD for tasks, milestones, drafts, and documents.",
       "otel": {
@@ -27,7 +26,6 @@
       "color": "#22c55e",
       "label": "CLI",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "description": "Command-line interface. Parses args, validates input, dispatches operations.",
       "otel": {
@@ -44,7 +42,6 @@
       "color": "#8b5cf6",
       "label": "MCP Server",
       "fill": "#8b5cf6",
-      "stroke": "#6d28d9",
       "shape": "rectangle",
       "description": "Model Context Protocol server for AI assistant integration.",
       "otel": {
@@ -61,7 +58,6 @@
       "color": "#f59e0b",
       "label": "HTTP Server",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "description": "HTTP/REST API server for web clients.",
       "otel": {
@@ -78,7 +74,6 @@
       "color": "#ec4899",
       "label": "Terminal UI",
       "fill": "#ec4899",
-      "stroke": "#db2777",
       "shape": "rectangle",
       "description": "Interactive terminal interface with boards, views, and search.",
       "otel": {
@@ -95,7 +90,6 @@
       "color": "#06b6d4",
       "label": "Web UI",
       "fill": "#06b6d4",
-      "stroke": "#0891b2",
       "shape": "rectangle",
       "description": "React-based browser interface.",
       "otel": {

@@ -10,7 +10,6 @@
       "color": "#22c55e",
       "label": "Create Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.started",
@@ -42,7 +41,6 @@
       "color": "#3b82f6",
       "label": "Create Validated",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.validated",
@@ -74,7 +72,6 @@
       "color": "#3b82f6",
       "label": "Create Saved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.saved",
@@ -106,7 +103,6 @@
       "color": "#f59e0b",
       "label": "Changes Committed",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.committed",
@@ -138,7 +134,6 @@
       "color": "#94a3b8",
       "label": "Commit Skipped",
       "fill": "#94a3b8",
-      "stroke": "#64748b",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.commit-skipped",
@@ -166,7 +161,6 @@
       "color": "#22c55e",
       "label": "Create Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.complete",
@@ -202,7 +196,6 @@
       "color": "#a855f7",
       "label": "View Started (Filesystem)",
       "fill": "#a855f7",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.view.started",
@@ -230,7 +223,6 @@
       "color": "#a855f7",
       "label": "View Complete (Filesystem)",
       "fill": "#a855f7",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.view.complete",
@@ -270,7 +262,6 @@
       "color": "#f59e0b",
       "label": "View Not Found (Filesystem)",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.view.not-found",
@@ -298,7 +289,6 @@
       "color": "#a855f7",
       "label": "List Started (Filesystem)",
       "fill": "#a855f7",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.list.started"
@@ -320,7 +310,6 @@
       "color": "#a855f7",
       "label": "List Scanned (Filesystem)",
       "fill": "#a855f7",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.list.scanned",
@@ -348,7 +337,6 @@
       "color": "#a855f7",
       "label": "List Complete (Filesystem)",
       "fill": "#a855f7",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.list.complete",
@@ -380,7 +368,6 @@
       "color": "#ef4444",
       "label": "Filesystem Error",
       "fill": "#ef4444",
-      "stroke": "#dc2626",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.error",
@@ -420,7 +407,6 @@
       "color": "#22c55e",
       "label": "Promote Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.started",
@@ -452,7 +438,6 @@
       "color": "#3b82f6",
       "label": "Promote Loaded",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.loaded",
@@ -484,7 +469,6 @@
       "color": "#3b82f6",
       "label": "Promote Moved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.moved",
@@ -516,7 +500,6 @@
       "color": "#f59e0b",
       "label": "Changes Committed",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.committed",
@@ -548,7 +531,6 @@
       "color": "#94a3b8",
       "label": "Commit Skipped",
       "fill": "#94a3b8",
-      "stroke": "#64748b",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.commit-skipped",
@@ -576,7 +558,6 @@
       "color": "#22c55e",
       "label": "Promote Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.complete",
@@ -612,7 +593,6 @@
       "color": "#22c55e",
       "label": "Archive Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.started",
@@ -644,7 +624,6 @@
       "color": "#3b82f6",
       "label": "Archive Located",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.located",
@@ -680,7 +659,6 @@
       "color": "#3b82f6",
       "label": "Archive Moved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.moved",
@@ -712,7 +690,6 @@
       "color": "#f59e0b",
       "label": "Changes Committed",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.committed",
@@ -744,7 +721,6 @@
       "color": "#94a3b8",
       "label": "Commit Skipped",
       "fill": "#94a3b8",
-      "stroke": "#64748b",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.commit-skipped",
@@ -772,7 +748,6 @@
       "color": "#22c55e",
       "label": "Archive Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.complete",
@@ -808,7 +783,6 @@
       "color": "#ef4444",
       "label": "Draft Error",
       "fill": "#ef4444",
-      "stroke": "#dc2626",
       "shape": "rectangle",
       "event": {
         "name": "draft.error",

@@ -10,7 +10,6 @@
       "color": "#22c55e",
       "label": "Create Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.started",
@@ -46,7 +45,6 @@
       "color": "#3b82f6",
       "label": "Create Validated",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.validated",
@@ -78,7 +76,6 @@
       "color": "#3b82f6",
       "label": "Create Saved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.saved",
@@ -114,7 +111,6 @@
       "color": "#f59e0b",
       "label": "Changes Committed",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.committed",
@@ -143,7 +139,6 @@
       "color": "#22c55e",
       "label": "Create Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.complete",
@@ -179,7 +174,6 @@
       "color": "#22c55e",
       "label": "View Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.view.started",
@@ -211,7 +205,6 @@
       "color": "#3b82f6",
       "label": "View Loaded",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "milestone.view.loaded",
@@ -243,7 +236,6 @@
       "color": "#22c55e",
       "label": "View Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.view.complete",
@@ -279,7 +271,6 @@
       "color": "#22c55e",
       "label": "List Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.list.started",
@@ -311,7 +302,6 @@
       "color": "#3b82f6",
       "label": "List Loaded",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "milestone.list.loaded",
@@ -343,7 +333,6 @@
       "color": "#22c55e",
       "label": "List Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.list.complete",
@@ -379,7 +368,6 @@
       "color": "#22c55e",
       "label": "Archive Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.started",
@@ -411,7 +399,6 @@
       "color": "#3b82f6",
       "label": "Archive Located",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.located",
@@ -447,7 +434,6 @@
       "color": "#3b82f6",
       "label": "Archive Moved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.moved",
@@ -479,7 +465,6 @@
       "color": "#f59e0b",
       "label": "Changes Committed",
       "fill": "#f59e0b",
-      "stroke": "#d97706",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.committed",
@@ -511,7 +496,6 @@
       "color": "#22c55e",
       "label": "Archive Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.complete",
@@ -547,7 +531,6 @@
       "color": "#ef4444",
       "label": "Milestone Error",
       "fill": "#ef4444",
-      "stroke": "#dc2626",
       "shape": "rectangle",
       "event": {
         "name": "milestone.error",

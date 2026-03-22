@@ -10,7 +10,6 @@
       "color": "#22c55e",
       "label": "Create Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.started",
@@ -38,7 +37,6 @@
       "color": "#3b82f6",
       "label": "Create Validated",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.validated",
@@ -70,7 +68,6 @@
       "color": "#3b82f6",
       "label": "Create Saved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.saved",
@@ -102,7 +99,6 @@
       "color": "#8b5cf6",
       "label": "Changes Committed",
       "fill": "#8b5cf6",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.committed",
@@ -134,7 +130,6 @@
       "color": "#22c55e",
       "label": "Create Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.complete",
@@ -170,7 +165,6 @@
       "color": "#22c55e",
       "label": "View Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.view.started",
@@ -198,7 +192,6 @@
       "color": "#3b82f6",
       "label": "View Loaded",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.view.loaded",
@@ -230,7 +223,6 @@
       "color": "#22c55e",
       "label": "View Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.view.complete",
@@ -262,7 +254,6 @@
       "color": "#22c55e",
       "label": "List Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.list.started",
@@ -290,7 +281,6 @@
       "color": "#3b82f6",
       "label": "List Loaded",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.list.loaded",
@@ -318,7 +308,6 @@
       "color": "#22c55e",
       "label": "List Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.list.complete",
@@ -350,7 +339,6 @@
       "color": "#22c55e",
       "label": "Update Started",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.started",
@@ -382,7 +370,6 @@
       "color": "#3b82f6",
       "label": "Update Loaded",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.loaded",
@@ -414,7 +401,6 @@
       "color": "#3b82f6",
       "label": "Update Parsed",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.parsed",
@@ -446,7 +432,6 @@
       "color": "#3b82f6",
       "label": "Update Saved",
       "fill": "#3b82f6",
-      "stroke": "#1d4ed8",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.saved",
@@ -474,7 +459,6 @@
       "color": "#8b5cf6",
       "label": "Changes Committed",
       "fill": "#8b5cf6",
-      "stroke": "#7c3aed",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.committed",
@@ -502,7 +486,6 @@
       "color": "#22c55e",
       "label": "Update Complete",
       "fill": "#22c55e",
-      "stroke": "#16a34a",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.complete",
@@ -538,7 +521,6 @@
       "color": "#ef4444",
       "label": "Decision Error",
       "fill": "#ef4444",
-      "stroke": "#dc2626",
       "shape": "rectangle",
       "event": {
         "name": "decision.error",
