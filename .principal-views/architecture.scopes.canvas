@@ -13,7 +13,8 @@
       "shape": "rectangle",
       "description": "Core library for task management operations. Handles CRUD for tasks, milestones, drafts, and documents.",
       "otel": {
-        "scope": "backlog.md"
+        "scope": "backlog.md",
+        "status": "implemented"
       }
     },
     {
@@ -29,7 +30,8 @@
       "shape": "rectangle",
       "description": "Command-line interface. Parses args, validates input, dispatches operations.",
       "otel": {
-        "scope": "backlog.md.cli"
+        "scope": "backlog.md.cli",
+        "status": "implemented"
       }
     },
     {
@@ -45,7 +47,8 @@
       "shape": "rectangle",
       "description": "Model Context Protocol server for AI assistant integration.",
       "otel": {
-        "scope": "backlog.md.mcp"
+        "scope": "backlog.md.mcp",
+        "status": "implemented"
       }
     },
     {
@@ -61,7 +64,8 @@
       "shape": "rectangle",
       "description": "HTTP/REST API server for web clients.",
       "otel": {
-        "scope": "backlog.md.http"
+        "scope": "backlog.md.http",
+        "status": "draft"
       }
     },
     {
@@ -77,7 +81,8 @@
       "shape": "rectangle",
       "description": "Interactive terminal interface with boards, views, and search.",
       "otel": {
-        "scope": "backlog.md.tui"
+        "scope": "backlog.md.tui",
+        "status": "draft"
       }
     },
     {
@@ -93,7 +98,8 @@
       "shape": "rectangle",
       "description": "React-based browser interface.",
       "otel": {
-        "scope": "backlog.md.web"
+        "scope": "backlog.md.web",
+        "status": "draft"
       }
     }
   ],
