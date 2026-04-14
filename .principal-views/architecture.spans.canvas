@@ -1,19 +1,16 @@
 {
-  "pv": {
-    "name": "Backlog.md Span Conventions",
-    "version": "1.0.0",
-    "markdown": ".principal-views/architecture.spans.md",
-    "nodeTypes": {
-      "span-convention": {
-        "label": "Span Convention",
-        "color": "#3B82F6"
-      }
-    },
-    "edgeTypes": {
-      "calls": {
-        "label": "Calls",
-        "color": "#94A3B8"
-      }
+  "name": "Backlog.md Span Conventions",
+  "markdown": ".principal-views/architecture.spans.md",
+  "nodeTypes": {
+    "span-convention": {
+      "label": "Span Convention",
+      "color": "#3B82F6"
+    }
+  },
+  "edgeTypes": {
+    "calls": {
+      "label": "Calls",
+      "color": "#94A3B8"
     }
   },
   "nodes": [
@@ -220,9 +217,7 @@
       "fromSide": "bottom",
       "toNode": "task",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-milestone",
@@ -230,9 +225,7 @@
       "fromSide": "bottom",
       "toNode": "milestone",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-document",
@@ -240,9 +233,7 @@
       "fromSide": "bottom",
       "toNode": "document",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-decision",
@@ -250,9 +241,7 @@
       "fromSide": "bottom",
       "toNode": "decision",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "http-to-task",
@@ -260,9 +249,7 @@
       "fromSide": "bottom",
       "toNode": "task",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "http-to-milestone",
@@ -270,9 +257,7 @@
       "fromSide": "bottom",
       "toNode": "milestone",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "mcp-to-task",
@@ -280,9 +265,7 @@
       "fromSide": "bottom",
       "toNode": "task",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "mcp-to-milestone",
@@ -290,9 +273,7 @@
       "fromSide": "bottom",
       "toNode": "milestone",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "mcp-to-search",
@@ -300,9 +281,7 @@
       "fromSide": "bottom",
       "toNode": "search",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-draft",
@@ -310,9 +289,7 @@
       "fromSide": "bottom",
       "toNode": "draft",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-search",
@@ -320,9 +297,7 @@
       "fromSide": "bottom",
       "toNode": "search",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-cleanup",
@@ -330,9 +305,7 @@
       "fromSide": "bottom",
       "toNode": "cleanup",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-to-completed",
@@ -340,9 +313,7 @@
       "fromSide": "bottom",
       "toNode": "completed-tasks",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "init-to-search",
@@ -350,9 +321,7 @@
       "fromSide": "bottom",
       "toNode": "search",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "edge-draft-filesystem-draft-1773635993554",
@@ -360,9 +329,7 @@
       "toNode": "filesystem-draft",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     }
   ]
 }

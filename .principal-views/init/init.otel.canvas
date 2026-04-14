@@ -1,4 +1,27 @@
 {
+  "name": "Backlog Init",
+  "markdown": ".principal-views/init/init.md",
+  "description": "CLI command for initializing a new Backlog.md workspace",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "init-started",
@@ -40,7 +63,8 @@
         "status": "implemented",
         "files": [
           "src/core/init.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -71,7 +95,8 @@
         "status": "implemented",
         "files": [
           "src/core/init.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -114,7 +139,8 @@
         "status": "implemented",
         "files": [
           "src/core/init.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -153,7 +179,8 @@
         "status": "implemented",
         "files": [
           "src/core/init.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -192,7 +219,8 @@
         "status": "implemented",
         "files": [
           "src/core/init.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -231,7 +259,8 @@
         "status": "implemented",
         "files": [
           "src/core/init.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -242,9 +271,7 @@
       "fromSide": "bottom",
       "toNode": "mcp-configured",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "edge-mcp-configured-init-complete-1769299033035",
@@ -252,9 +279,7 @@
       "toNode": "init-complete",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "edge-structure-created-config-saved-1769299033035",
@@ -262,9 +287,7 @@
       "toNode": "config-saved",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "edge-init-started-structure-created-1769299033035",
@@ -272,9 +295,7 @@
       "toNode": "structure-created",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "edge-init-started-init-error-1769299033035",
@@ -282,35 +303,7 @@
       "toNode": "init-error",
       "fromSide": "right",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     }
-  ],
-  "pv": {
-    "name": "Backlog Init",
-    "version": "1.0.0",
-    "description": "CLI command for initializing a new Backlog.md workspace",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "markdown": ".principal-views/init/init.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

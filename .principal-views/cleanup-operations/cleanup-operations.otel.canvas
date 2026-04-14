@@ -1,4 +1,33 @@
 {
+  "name": "Cleanup Operations",
+  "markdown": ".principal-views/cleanup-operations.md",
+  "description": "OpenTelemetry event schema for cleanup operations including preview, batch completion, and completed task management",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "child-span": {
+      "label": "Child Span",
+      "style": "dashed",
+      "width": 2,
+      "color": "#8b5cf6"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "cleanup-preview-started",
@@ -24,7 +53,8 @@
         "status": "implemented",
         "files": [
           "src/server/index.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -59,7 +89,8 @@
         "status": "implemented",
         "files": [
           "src/server/index.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -90,7 +121,8 @@
         "status": "implemented",
         "files": [
           "src/server/index.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -121,7 +153,8 @@
         "status": "implemented",
         "files": [
           "src/server/index.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -156,7 +189,8 @@
         "status": "implemented",
         "files": [
           "src/server/index.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -199,7 +233,8 @@
         "status": "implemented",
         "files": [
           "src/server/index.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -242,7 +277,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -253,9 +289,7 @@
       "fromSide": "bottom",
       "toNode": "cleanup-preview-filtered",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "preview-filtered-to-complete",
@@ -263,9 +297,7 @@
       "fromSide": "bottom",
       "toNode": "cleanup-preview-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "preview-to-error",
@@ -273,9 +305,7 @@
       "fromSide": "right",
       "toNode": "cleanup-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "batch-start-to-processing",
@@ -283,9 +313,7 @@
       "fromSide": "bottom",
       "toNode": "cleanup-batch-processing",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "batch-processing-to-complete",
@@ -293,9 +321,7 @@
       "fromSide": "bottom",
       "toNode": "cleanup-batch-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "batch-to-error",
@@ -303,41 +329,7 @@
       "fromSide": "right",
       "toNode": "cleanup-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     }
-  ],
-  "pv": {
-    "name": "Cleanup Operations",
-    "version": "1.0.0",
-    "description": "OpenTelemetry event schema for cleanup operations including preview, batch completion, and completed task management",
-    "markdown": ".principal-views/cleanup-operations.md",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "child-span": {
-        "label": "Child Span",
-        "style": "dashed",
-        "width": 2,
-        "color": "#8b5cf6"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

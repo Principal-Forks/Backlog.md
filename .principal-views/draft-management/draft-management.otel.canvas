@@ -1,4 +1,33 @@
 {
+  "name": "Draft Management",
+  "markdown": ".principal-views/draft-management.md",
+  "description": "Comprehensive draft management operations including create, view, list, promote, and archive",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    },
+    "child-span": {
+      "label": "Creates Child Span",
+      "style": "dashed",
+      "width": 2,
+      "color": "#8b5cf6"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "draft-create-started",
@@ -28,7 +57,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -59,7 +89,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -90,7 +121,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -121,7 +153,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -148,7 +181,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -183,7 +217,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -210,7 +245,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -249,7 +285,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -276,7 +313,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -297,7 +335,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -324,7 +363,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -355,7 +395,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -394,7 +435,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -425,7 +467,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -456,7 +499,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -487,7 +531,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -518,7 +563,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -545,7 +591,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -580,7 +627,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -611,7 +659,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -646,7 +695,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -677,7 +727,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -708,7 +759,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -735,7 +787,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -770,7 +823,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -817,7 +871,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -828,9 +883,7 @@
       "fromSide": "bottom",
       "toNode": "draft-create-validated",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-validated-saved",
@@ -838,9 +891,7 @@
       "fromSide": "bottom",
       "toNode": "draft-create-saved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-saved-committed",
@@ -848,9 +899,7 @@
       "fromSide": "bottom",
       "toNode": "draft-create-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-committed-complete",
@@ -858,9 +907,7 @@
       "fromSide": "bottom",
       "toNode": "draft-create-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "fs-view-started-complete",
@@ -868,9 +915,7 @@
       "fromSide": "bottom",
       "toNode": "filesystem-draft-view-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "fs-view-started-not-found",
@@ -878,9 +923,7 @@
       "fromSide": "bottom",
       "toNode": "filesystem-draft-view-not-found",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "fs-list-started-scanned",
@@ -888,9 +931,7 @@
       "fromSide": "bottom",
       "toNode": "filesystem-draft-list-scanned",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "fs-list-scanned-complete",
@@ -898,9 +939,7 @@
       "fromSide": "bottom",
       "toNode": "filesystem-draft-list-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "fs-list-started-error",
@@ -908,9 +947,7 @@
       "fromSide": "right",
       "toNode": "filesystem-draft-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "fs-view-started-error",
@@ -918,9 +955,7 @@
       "fromSide": "right",
       "toNode": "filesystem-draft-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "promote-started-loaded",
@@ -928,9 +963,7 @@
       "fromSide": "bottom",
       "toNode": "draft-promote-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "promote-loaded-moved",
@@ -938,9 +971,7 @@
       "fromSide": "bottom",
       "toNode": "draft-promote-moved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "promote-moved-committed",
@@ -948,9 +979,7 @@
       "fromSide": "bottom",
       "toNode": "draft-promote-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "promote-committed-complete",
@@ -958,9 +987,7 @@
       "fromSide": "bottom",
       "toNode": "draft-promote-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-started-located",
@@ -968,9 +995,7 @@
       "fromSide": "bottom",
       "toNode": "draft-archive-located",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-located-moved",
@@ -978,9 +1003,7 @@
       "fromSide": "bottom",
       "toNode": "draft-archive-moved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-moved-committed",
@@ -988,9 +1011,7 @@
       "fromSide": "bottom",
       "toNode": "draft-archive-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-committed-complete",
@@ -998,9 +1019,7 @@
       "fromSide": "bottom",
       "toNode": "draft-archive-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-started-error",
@@ -1008,9 +1027,7 @@
       "fromSide": "right",
       "toNode": "draft-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "promote-started-error",
@@ -1018,9 +1035,7 @@
       "fromSide": "right",
       "toNode": "draft-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "archive-started-error",
@@ -1028,9 +1043,7 @@
       "fromSide": "right",
       "toNode": "draft-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "create-saved-commit-skipped",
@@ -1038,9 +1051,7 @@
       "fromSide": "right",
       "toNode": "draft-create-commit-skipped",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-commit-skipped-complete",
@@ -1048,9 +1059,7 @@
       "fromSide": "bottom",
       "toNode": "draft-create-complete",
       "toSide": "right",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-moved-commit-skipped",
@@ -1058,9 +1067,7 @@
       "fromSide": "right",
       "toNode": "draft-archive-commit-skipped",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-commit-skipped-complete",
@@ -1068,9 +1075,7 @@
       "fromSide": "bottom",
       "toNode": "draft-archive-complete",
       "toSide": "right",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "promote-moved-commit-skipped",
@@ -1078,9 +1083,7 @@
       "fromSide": "right",
       "toNode": "draft-promote-commit-skipped",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "promote-commit-skipped-complete",
@@ -1088,9 +1091,7 @@
       "fromSide": "bottom",
       "toNode": "draft-promote-complete",
       "toSide": "right",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-saved-fs-view",
@@ -1098,9 +1099,7 @@
       "fromSide": "right",
       "toNode": "filesystem-draft-view-started",
       "toSide": "left",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     },
     {
       "id": "promote-loaded-fs-view",
@@ -1108,9 +1107,7 @@
       "fromSide": "right",
       "toNode": "filesystem-draft-view-started",
       "toSide": "left",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     },
     {
       "id": "archive-located-fs-view",
@@ -1118,9 +1115,7 @@
       "fromSide": "right",
       "toNode": "filesystem-draft-view-started",
       "toSide": "left",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     },
     {
       "id": "fs-view-complete-fs-list",
@@ -1128,41 +1123,7 @@
       "fromSide": "right",
       "toNode": "filesystem-draft-list-started",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     }
-  ],
-  "pv": {
-    "name": "Draft Management",
-    "version": "1.0.0",
-    "description": "Comprehensive draft management operations including create, view, list, promote, and archive",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      },
-      "child-span": {
-        "label": "Creates Child Span",
-        "style": "dashed",
-        "width": 2,
-        "color": "#8b5cf6"
-      }
-    },
-    "markdown": ".principal-views/draft-management.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

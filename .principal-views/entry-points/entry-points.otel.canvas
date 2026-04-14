@@ -1,4 +1,33 @@
 {
+  "name": "Entry Points",
+  "markdown": ".principal-views/entry-points/entry-points.md",
+  "description": "Root span lifecycle for CLI, MCP, and HTTP entry points. Child operations link to domain canvases (task, draft, milestone).",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "child-span": {
+      "label": "Creates Child Span",
+      "style": "dashed",
+      "width": 2,
+      "color": "#8b5cf6"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "cli-request-received",
@@ -33,7 +62,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.cli"
       }
     },
     {
@@ -65,7 +95,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.cli"
       }
     },
     {
@@ -93,7 +124,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.cli"
       }
     },
     {
@@ -125,7 +157,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.cli"
       }
     },
     {
@@ -157,7 +190,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.mcp"
       }
     },
     {
@@ -189,7 +223,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.mcp"
       }
     },
     {
@@ -217,7 +252,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.mcp"
       }
     },
     {
@@ -249,7 +285,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.mcp"
       }
     },
     {
@@ -285,7 +322,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.http"
       }
     },
     {
@@ -317,7 +355,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.http"
       }
     },
     {
@@ -349,7 +388,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.http"
       }
     },
     {
@@ -385,7 +425,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md.http"
       }
     },
     {
@@ -425,7 +466,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md"
       }
     },
     {
@@ -469,7 +511,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md"
       }
     },
     {
@@ -496,7 +539,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -527,7 +571,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -558,7 +603,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -589,7 +635,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -600,9 +647,7 @@
       "fromSide": "bottom",
       "toNode": "cli-request-parsed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "cli-parsed-dispatched",
@@ -610,9 +655,7 @@
       "fromSide": "bottom",
       "toNode": "cli-operation-dispatched",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "cli-dispatched-operation",
@@ -620,9 +663,7 @@
       "fromSide": "bottom",
       "toNode": "operation-executed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     },
     {
       "id": "mcp-invoked-validated",
@@ -630,9 +671,7 @@
       "fromSide": "bottom",
       "toNode": "mcp-tool-validated",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "mcp-validated-dispatched",
@@ -640,9 +679,7 @@
       "fromSide": "bottom",
       "toNode": "mcp-operation-dispatched",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "mcp-dispatched-operation",
@@ -650,9 +687,7 @@
       "fromSide": "bottom",
       "toNode": "operation-executed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     },
     {
       "id": "http-received-routed",
@@ -660,9 +695,7 @@
       "fromSide": "bottom",
       "toNode": "http-request-routed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "http-routed-dispatched",
@@ -670,9 +703,7 @@
       "fromSide": "bottom",
       "toNode": "http-operation-dispatched",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "http-dispatched-operation",
@@ -680,9 +711,7 @@
       "fromSide": "bottom",
       "toNode": "operation-executed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     },
     {
       "id": "cli-received-error",
@@ -690,9 +719,7 @@
       "fromSide": "right",
       "toNode": "entry-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "mcp-invoked-error",
@@ -700,9 +727,7 @@
       "fromSide": "right",
       "toNode": "entry-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "http-received-error",
@@ -710,9 +735,7 @@
       "fromSide": "right",
       "toNode": "entry-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "edge-operation-executed-http-response-sent-1769318159019",
@@ -720,9 +743,7 @@
       "toNode": "http-response-sent",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "edge-operation-executed-mcp-tool-response-1769318159019",
@@ -730,9 +751,7 @@
       "toNode": "mcp-tool-response",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "edge-operation-executed-cli-request-complete-1769318159019",
@@ -740,9 +759,7 @@
       "toNode": "cli-request-complete",
       "fromSide": "bottom",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "completed-list-started-loaded",
@@ -750,9 +767,7 @@
       "fromSide": "bottom",
       "toNode": "completed-tasks-list-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "completed-list-loaded-complete",
@@ -760,9 +775,7 @@
       "fromSide": "bottom",
       "toNode": "completed-tasks-list-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "completed-list-started-error",
@@ -770,9 +783,7 @@
       "fromSide": "bottom",
       "toNode": "completed-tasks-list-error",
       "toSide": "top",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "operation-completed-list",
@@ -780,41 +791,7 @@
       "fromSide": "right",
       "toNode": "completed-tasks-list-started",
       "toSide": "left",
-      "pv": {
-        "edgeType": "child-span"
-      }
+      "edgeType": "child-span"
     }
-  ],
-  "pv": {
-    "name": "Entry Points",
-    "version": "1.0.0",
-    "description": "Root span lifecycle for CLI, MCP, and HTTP entry points. Child operations link to domain canvases (task, draft, milestone).",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "child-span": {
-        "label": "Creates Child Span",
-        "style": "dashed",
-        "width": 2,
-        "color": "#8b5cf6"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "markdown": ".principal-views/entry-points/entry-points.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

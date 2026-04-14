@@ -1,4 +1,27 @@
 {
+  "name": "Search Operations",
+  "markdown": ".principal-views/search-operations.md",
+  "description": "OpenTelemetry event schema for cross-entity search initialization, querying, and index updates",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "search-initialize-started",
@@ -24,7 +47,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -59,7 +83,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -90,7 +115,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -121,7 +147,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -156,7 +183,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -191,7 +219,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -222,7 +251,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -261,7 +291,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -296,7 +327,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -327,7 +359,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -362,7 +395,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -393,7 +427,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -424,7 +459,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -463,7 +499,8 @@
         "status": "implemented",
         "files": [
           "src/core/search-service.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -474,9 +511,7 @@
       "fromSide": "bottom",
       "toNode": "search-initialize-snapshot",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "init-snapshot-to-indexed",
@@ -484,9 +519,7 @@
       "fromSide": "bottom",
       "toNode": "search-initialize-indexed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "init-indexed-to-complete",
@@ -494,9 +527,7 @@
       "fromSide": "bottom",
       "toNode": "search-initialize-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "init-to-error",
@@ -504,9 +535,7 @@
       "fromSide": "right",
       "toNode": "search-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "query-start-to-normalized",
@@ -514,9 +543,7 @@
       "fromSide": "bottom",
       "toNode": "search-query-normalized",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "query-normalized-to-executed",
@@ -524,9 +551,7 @@
       "fromSide": "bottom",
       "toNode": "search-query-executed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "query-executed-to-filtered",
@@ -534,9 +559,7 @@
       "fromSide": "bottom",
       "toNode": "search-query-filtered",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "query-filtered-to-complete",
@@ -544,9 +567,7 @@
       "fromSide": "bottom",
       "toNode": "search-query-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "query-to-error",
@@ -554,9 +575,7 @@
       "fromSide": "right",
       "toNode": "search-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "update-start-to-snapshot",
@@ -564,9 +583,7 @@
       "fromSide": "bottom",
       "toNode": "search-index-snapshot-applied",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-snapshot-to-rebuilt",
@@ -574,9 +591,7 @@
       "fromSide": "bottom",
       "toNode": "search-index-rebuilt",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-rebuilt-to-complete",
@@ -584,9 +599,7 @@
       "fromSide": "bottom",
       "toNode": "search-index-update-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-to-error",
@@ -594,35 +607,7 @@
       "fromSide": "right",
       "toNode": "search-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     }
-  ],
-  "pv": {
-    "name": "Search Operations",
-    "version": "1.0.0",
-    "description": "OpenTelemetry event schema for cross-entity search initialization, querying, and index updates",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "markdown": ".principal-views/search-operations.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

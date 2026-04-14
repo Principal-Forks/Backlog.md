@@ -1,4 +1,27 @@
 {
+  "name": "Decision Management",
+  "markdown": ".principal-views/decision-management.md",
+  "description": "OpenTelemetry event schema for decision/ADR lifecycle operations",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "decision-create-started",
@@ -24,7 +47,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -55,7 +79,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -86,7 +111,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -117,7 +143,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -152,7 +179,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -179,7 +207,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -210,7 +239,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -241,7 +271,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -268,7 +299,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -295,7 +327,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -326,7 +359,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -357,7 +391,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -388,7 +423,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -419,7 +455,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -446,7 +483,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -473,7 +511,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -508,7 +547,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -547,7 +587,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -558,9 +599,7 @@
       "fromSide": "bottom",
       "toNode": "decision-create-validated",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-validate-to-save",
@@ -568,9 +607,7 @@
       "fromSide": "bottom",
       "toNode": "decision-create-saved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-save-to-commit",
@@ -578,9 +615,7 @@
       "fromSide": "bottom",
       "toNode": "decision-create-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-commit-to-complete",
@@ -588,9 +623,7 @@
       "fromSide": "bottom",
       "toNode": "decision-create-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-save-to-complete",
@@ -598,9 +631,7 @@
       "fromSide": "right",
       "toNode": "decision-create-complete",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-to-error",
@@ -608,9 +639,7 @@
       "fromSide": "right",
       "toNode": "decision-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "view-start-to-load",
@@ -618,9 +647,7 @@
       "fromSide": "bottom",
       "toNode": "decision-view-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "view-load-to-complete",
@@ -628,9 +655,7 @@
       "fromSide": "bottom",
       "toNode": "decision-view-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "view-to-error",
@@ -638,9 +663,7 @@
       "fromSide": "right",
       "toNode": "decision-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "list-start-to-load",
@@ -648,9 +671,7 @@
       "fromSide": "bottom",
       "toNode": "decision-list-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-load-to-complete",
@@ -658,9 +679,7 @@
       "fromSide": "bottom",
       "toNode": "decision-list-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-to-error",
@@ -668,9 +687,7 @@
       "fromSide": "right",
       "toNode": "decision-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "update-start-to-load",
@@ -678,9 +695,7 @@
       "fromSide": "bottom",
       "toNode": "decision-update-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-load-to-parse",
@@ -688,9 +703,7 @@
       "fromSide": "bottom",
       "toNode": "decision-update-parsed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-parse-to-save",
@@ -698,9 +711,7 @@
       "fromSide": "bottom",
       "toNode": "decision-update-saved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-save-to-commit",
@@ -708,9 +719,7 @@
       "fromSide": "bottom",
       "toNode": "decision-update-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-commit-to-complete",
@@ -718,9 +727,7 @@
       "fromSide": "bottom",
       "toNode": "decision-update-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-save-to-complete",
@@ -728,9 +735,7 @@
       "fromSide": "right",
       "toNode": "decision-update-complete",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-to-error",
@@ -738,35 +743,7 @@
       "fromSide": "right",
       "toNode": "decision-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     }
-  ],
-  "pv": {
-    "name": "Decision Management",
-    "version": "1.0.0",
-    "description": "OpenTelemetry event schema for decision/ADR lifecycle operations",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "markdown": ".principal-views/decision-management.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

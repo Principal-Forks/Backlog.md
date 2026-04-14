@@ -1,4 +1,21 @@
 {
+  "name": "Architecture Scopes",
+  "markdown": ".principal-views/architecture.md",
+  "description": "Defines the instrumentation scopes for the Backlog.md system.",
+  "edgeTypes": {
+    "calls": {
+      "label": "Calls",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "launches": {
+      "label": "Launches",
+      "style": "dashed",
+      "width": 2,
+      "color": "#22c55e"
+    }
+  },
   "nodes": [
     {
       "id": "backlog-md-scope",
@@ -110,9 +127,7 @@
       "fromSide": "right",
       "toNode": "backlog-md-scope",
       "toSide": "left",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "mcp-core",
@@ -120,9 +135,7 @@
       "fromSide": "right",
       "toNode": "backlog-md-scope",
       "toSide": "left",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "http-core",
@@ -130,9 +143,7 @@
       "fromSide": "right",
       "toNode": "backlog-md-scope",
       "toSide": "left",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "tui-core",
@@ -140,9 +151,7 @@
       "fromSide": "right",
       "toNode": "backlog-md-scope",
       "toSide": "top",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     },
     {
       "id": "cli-tui",
@@ -150,9 +159,7 @@
       "fromSide": "top",
       "toNode": "tui-scope",
       "toSide": "bottom",
-      "pv": {
-        "edgeType": "launches"
-      }
+      "edgeType": "launches"
     },
     {
       "id": "web-http",
@@ -160,29 +167,7 @@
       "fromSide": "right",
       "toNode": "http-scope",
       "toSide": "left",
-      "pv": {
-        "edgeType": "calls"
-      }
+      "edgeType": "calls"
     }
-  ],
-  "pv": {
-    "name": "Architecture Scopes",
-    "version": "1.0.0",
-    "description": "Defines the instrumentation scopes for the Backlog.md system.",
-    "markdown": ".principal-views/architecture.md",
-    "edgeTypes": {
-      "calls": {
-        "label": "Calls",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "launches": {
-        "label": "Launches",
-        "style": "dashed",
-        "width": 2,
-        "color": "#22c55e"
-      }
-    }
-  }
+  ]
 }

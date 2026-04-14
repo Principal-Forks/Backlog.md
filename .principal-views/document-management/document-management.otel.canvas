@@ -1,4 +1,27 @@
 {
+  "name": "Document Management",
+  "markdown": ".principal-views/document-management.md",
+  "description": "OpenTelemetry event schema for document lifecycle operations",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "document-create-started",
@@ -28,7 +51,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -59,7 +83,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -90,7 +115,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -121,7 +147,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -156,7 +183,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -183,7 +211,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -214,7 +243,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -245,7 +275,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -272,7 +303,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -299,7 +331,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -330,7 +363,8 @@
         "status": "implemented",
         "files": [
           "src/mcp/tools/documents/handlers.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -361,7 +395,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -396,7 +431,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -427,7 +463,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -458,7 +495,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -485,7 +523,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -512,7 +551,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -547,7 +587,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -578,7 +619,8 @@
         "status": "implemented",
         "files": [
           "src/mcp/tools/documents/handlers.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -609,7 +651,8 @@
         "status": "implemented",
         "files": [
           "src/mcp/tools/documents/handlers.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -644,7 +687,8 @@
         "status": "implemented",
         "files": [
           "src/mcp/tools/documents/handlers.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -683,7 +727,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -694,9 +739,7 @@
       "fromSide": "bottom",
       "toNode": "document-create-validated",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-validate-to-save",
@@ -704,9 +747,7 @@
       "fromSide": "bottom",
       "toNode": "document-create-saved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-save-to-commit",
@@ -714,9 +755,7 @@
       "fromSide": "bottom",
       "toNode": "document-create-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-commit-to-complete",
@@ -724,9 +763,7 @@
       "fromSide": "bottom",
       "toNode": "document-create-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-save-to-complete",
@@ -734,9 +771,7 @@
       "fromSide": "right",
       "toNode": "document-create-complete",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-to-error",
@@ -744,9 +779,7 @@
       "fromSide": "right",
       "toNode": "document-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "view-start-to-load",
@@ -754,9 +787,7 @@
       "fromSide": "bottom",
       "toNode": "document-view-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "view-load-to-complete",
@@ -764,9 +795,7 @@
       "fromSide": "bottom",
       "toNode": "document-view-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "view-to-error",
@@ -774,9 +803,7 @@
       "fromSide": "right",
       "toNode": "document-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "list-start-to-load",
@@ -784,9 +811,7 @@
       "fromSide": "bottom",
       "toNode": "document-list-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-load-to-filter",
@@ -794,9 +819,7 @@
       "fromSide": "bottom",
       "toNode": "document-list-filtered",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-filter-to-complete",
@@ -804,9 +827,7 @@
       "fromSide": "bottom",
       "toNode": "document-list-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-load-to-complete",
@@ -814,9 +835,7 @@
       "fromSide": "right",
       "toNode": "document-list-complete",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-to-error",
@@ -824,9 +843,7 @@
       "fromSide": "right",
       "toNode": "document-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "update-start-to-load",
@@ -834,9 +851,7 @@
       "fromSide": "bottom",
       "toNode": "document-update-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-load-to-validate",
@@ -844,9 +859,7 @@
       "fromSide": "bottom",
       "toNode": "document-update-validated",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-validate-to-save",
@@ -854,9 +867,7 @@
       "fromSide": "bottom",
       "toNode": "document-update-saved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-save-to-commit",
@@ -864,9 +875,7 @@
       "fromSide": "bottom",
       "toNode": "document-update-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-commit-to-complete",
@@ -874,9 +883,7 @@
       "fromSide": "bottom",
       "toNode": "document-update-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-save-to-complete",
@@ -884,9 +891,7 @@
       "fromSide": "right",
       "toNode": "document-update-complete",
       "toSide": "left",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "update-to-error",
@@ -894,9 +899,7 @@
       "fromSide": "right",
       "toNode": "document-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "search-start-to-execute",
@@ -904,9 +907,7 @@
       "fromSide": "bottom",
       "toNode": "document-search-executed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "search-execute-to-complete",
@@ -914,9 +915,7 @@
       "fromSide": "bottom",
       "toNode": "document-search-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "search-to-error",
@@ -924,35 +923,7 @@
       "fromSide": "right",
       "toNode": "document-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     }
-  ],
-  "pv": {
-    "name": "Document Management",
-    "version": "1.0.0",
-    "description": "OpenTelemetry event schema for document lifecycle operations",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "markdown": ".principal-views/document-management.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }

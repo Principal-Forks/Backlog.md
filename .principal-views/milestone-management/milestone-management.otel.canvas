@@ -1,4 +1,27 @@
 {
+  "name": "Milestone Management",
+  "markdown": ".principal-views/milestone-management.md",
+  "description": "Comprehensive milestone management operations including create, view, list, and archive",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
   "nodes": [
     {
       "id": "milestone-create-started",
@@ -32,7 +55,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -63,7 +87,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -98,7 +123,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -126,7 +152,8 @@
         }
       },
       "otel": {
-        "status": "draft"
+        "status": "draft",
+        "scope": "backlog.md"
       }
     },
     {
@@ -161,7 +188,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -192,7 +220,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -223,7 +252,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -258,7 +288,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -289,7 +320,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -320,7 +352,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -355,7 +388,8 @@
         "status": "implemented",
         "files": [
           "src/file-system/operations.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -386,7 +420,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -421,7 +456,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -452,7 +488,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -483,7 +520,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -518,7 +556,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     },
     {
@@ -565,7 +604,8 @@
         "status": "implemented",
         "files": [
           "src/core/backlog.ts"
-        ]
+        ],
+        "scope": "backlog.md"
       }
     }
   ],
@@ -576,9 +616,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-create-validated",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-validated-saved",
@@ -586,9 +624,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-create-saved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-saved-committed",
@@ -596,9 +632,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-create-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-committed-complete",
@@ -606,9 +640,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-create-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "view-started-loaded",
@@ -616,9 +648,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-view-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "view-loaded-complete",
@@ -626,9 +656,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-view-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-started-loaded",
@@ -636,9 +664,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-list-loaded",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "list-loaded-complete",
@@ -646,9 +672,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-list-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-started-located",
@@ -656,9 +680,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-archive-located",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-located-moved",
@@ -666,9 +688,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-archive-moved",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-moved-committed",
@@ -676,9 +696,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-archive-committed",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "archive-committed-complete",
@@ -686,9 +704,7 @@
       "fromSide": "bottom",
       "toNode": "milestone-archive-complete",
       "toSide": "top",
-      "pv": {
-        "edgeType": "flow"
-      }
+      "edgeType": "flow"
     },
     {
       "id": "create-started-error",
@@ -696,9 +712,7 @@
       "fromSide": "right",
       "toNode": "milestone-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "view-started-error",
@@ -706,9 +720,7 @@
       "fromSide": "right",
       "toNode": "milestone-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "list-started-error",
@@ -716,9 +728,7 @@
       "fromSide": "right",
       "toNode": "milestone-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     },
     {
       "id": "archive-started-error",
@@ -726,35 +736,7 @@
       "fromSide": "right",
       "toNode": "milestone-error",
       "toSide": "left",
-      "pv": {
-        "edgeType": "error"
-      }
+      "edgeType": "error"
     }
-  ],
-  "pv": {
-    "name": "Milestone Management",
-    "version": "1.0.0",
-    "description": "Comprehensive milestone management operations including create, view, list, and archive",
-    "edgeTypes": {
-      "flow": {
-        "label": "Flow",
-        "style": "solid",
-        "width": 2,
-        "color": "#64748b"
-      },
-      "error": {
-        "label": "Error Path",
-        "style": "dashed",
-        "width": 2,
-        "color": "#ef4444"
-      }
-    },
-    "markdown": ".principal-views/milestone-management.md",
-    "nodeTypes": {
-      "event": {
-        "label": "Event",
-        "color": "#3B82F6"
-      }
-    }
-  }
+  ]
 }
