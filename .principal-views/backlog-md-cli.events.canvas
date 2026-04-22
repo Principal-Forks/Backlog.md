@@ -1,0 +1,225 @@
+{
+  "name": "Backlog.md CLI Events",
+  "markdown": ".principal-views/backlog-md.events.md",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#22c55e"
+    }
+  },
+  "nodes": [
+    {
+      "id": "cli-request-received",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "label": "Request Received",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.received",
+        "attributes": {
+          "command": {
+            "type": "string",
+            "required": true
+          },
+          "subcommand": {
+            "type": "string",
+            "required": false
+          },
+          "args": {
+            "type": "object",
+            "required": false
+          },
+          "cwd": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.cli"
+      },
+      "color": "#22c55e"
+    },
+    {
+      "id": "cli-request-parsed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 210,
+      "width": 220,
+      "height": 110,
+      "label": "Request Parsed",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.parsed",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "entityType": {
+            "type": "string",
+            "required": false
+          },
+          "validationPassed": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.cli"
+      },
+      "color": "#22c55e"
+    },
+    {
+      "id": "cli-operation-dispatched",
+      "type": "otel-event",
+      "x": 100,
+      "y": 370,
+      "width": 220,
+      "height": 110,
+      "label": "Operation Dispatched",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.operation.dispatched",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.cli"
+      },
+      "color": "#22c55e"
+    },
+    {
+      "id": "cli-request-complete",
+      "type": "otel-event",
+      "x": 100,
+      "y": 530,
+      "width": 220,
+      "height": 110,
+      "label": "Request Complete",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.complete",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "exitCode": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.cli"
+      },
+      "color": "#22c55e"
+    },
+    {
+      "id": "cli-request-error",
+      "type": "otel-event",
+      "x": 420,
+      "y": 370,
+      "width": 220,
+      "height": 130,
+      "label": "Request Error",
+      "shape": "rectangle",
+      "event": {
+        "name": "cli.request.error",
+        "attributes": {
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.cli"
+      },
+      "color": "#22c55e"
+    }
+  ],
+  "edges": [
+    {
+      "id": "received-parsed",
+      "fromNode": "cli-request-received",
+      "fromSide": "bottom",
+      "toNode": "cli-request-parsed",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "parsed-dispatched",
+      "fromNode": "cli-request-parsed",
+      "fromSide": "bottom",
+      "toNode": "cli-operation-dispatched",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "dispatched-complete",
+      "fromNode": "cli-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "cli-request-complete",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "received-error",
+      "fromNode": "cli-request-received",
+      "fromSide": "right",
+      "toNode": "cli-request-error",
+      "toSide": "top",
+      "edgeType": "error"
+    }
+  ]
+}

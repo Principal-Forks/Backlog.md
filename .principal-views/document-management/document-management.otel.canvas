@@ -30,9 +30,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Create Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.create.started",
@@ -62,9 +60,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Create Validated",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.create.validated",
@@ -94,9 +90,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Create Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.create.saved",
@@ -126,9 +120,7 @@
       "y": 500,
       "width": 220,
       "height": 110,
-      "color": "#8b5cf6",
       "label": "Changes Committed",
-      "fill": "#8b5cf6",
       "shape": "rectangle",
       "event": {
         "name": "document.create.committed",
@@ -158,9 +150,7 @@
       "y": 650,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Create Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.create.complete",
@@ -194,9 +184,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "View Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.view.started",
@@ -222,9 +210,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "View Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.view.loaded",
@@ -254,9 +240,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "View Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.view.complete",
@@ -286,9 +270,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "List Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.list.started",
@@ -314,9 +296,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "List Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.list.loaded",
@@ -342,9 +322,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "List Filtered",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.list.filtered",
@@ -374,9 +352,7 @@
       "y": 500,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "List Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.list.complete",
@@ -406,9 +382,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Update Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.update.started",
@@ -442,9 +416,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Update Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.update.loaded",
@@ -474,9 +446,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Update Validated",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.update.validated",
@@ -506,9 +476,7 @@
       "y": 500,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Update Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.update.saved",
@@ -534,9 +502,7 @@
       "y": 650,
       "width": 220,
       "height": 110,
-      "color": "#8b5cf6",
       "label": "Changes Committed",
-      "fill": "#8b5cf6",
       "shape": "rectangle",
       "event": {
         "name": "document.update.committed",
@@ -562,9 +528,7 @@
       "y": 800,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Update Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.update.complete",
@@ -598,9 +562,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Search Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.search.started",
@@ -630,9 +592,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Search Executed",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "document.search.executed",
@@ -662,9 +622,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Search Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "document.search.complete",
@@ -698,9 +656,7 @@
       "y": 400,
       "width": 220,
       "height": 130,
-      "color": "#ef4444",
       "label": "Document Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "document.error",

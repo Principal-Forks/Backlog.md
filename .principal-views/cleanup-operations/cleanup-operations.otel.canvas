@@ -36,9 +36,7 @@
       "y": 50,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Preview Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.preview.started",
@@ -64,9 +62,7 @@
       "y": 200,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Tasks Filtered",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.preview.filtered",
@@ -100,9 +96,7 @@
       "y": 350,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Preview Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.preview.complete",
@@ -132,9 +126,7 @@
       "y": 50,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Batch Cleanup Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.batch.started",
@@ -164,9 +156,7 @@
       "y": 200,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Processing Tasks",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.batch.processing",
@@ -200,9 +190,7 @@
       "y": 350,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Batch Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.batch.complete",
@@ -244,9 +232,7 @@
       "y": 196,
       "width": 240,
       "height": 130,
-      "color": "#ef4444",
       "label": "Cleanup Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.error",

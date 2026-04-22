@@ -30,9 +30,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Create Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.started",
@@ -58,9 +56,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Create Validated",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.validated",
@@ -90,9 +86,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Create Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.saved",
@@ -122,9 +116,7 @@
       "y": 500,
       "width": 220,
       "height": 110,
-      "color": "#8b5cf6",
       "label": "Changes Committed",
-      "fill": "#8b5cf6",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.committed",
@@ -154,9 +146,7 @@
       "y": 650,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Create Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.create.complete",
@@ -190,9 +180,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "View Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.view.started",
@@ -218,9 +206,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "View Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.view.loaded",
@@ -250,9 +236,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "View Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.view.complete",
@@ -282,9 +266,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "List Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.list.started",
@@ -310,9 +292,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "List Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.list.loaded",
@@ -338,9 +318,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "List Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.list.complete",
@@ -370,9 +348,7 @@
       "y": 50,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Update Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.started",
@@ -402,9 +378,7 @@
       "y": 200,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Update Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.loaded",
@@ -434,9 +408,7 @@
       "y": 350,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Update Parsed",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.parsed",
@@ -466,9 +438,7 @@
       "y": 500,
       "width": 220,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Update Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.saved",
@@ -494,9 +464,7 @@
       "y": 650,
       "width": 220,
       "height": 110,
-      "color": "#8b5cf6",
       "label": "Changes Committed",
-      "fill": "#8b5cf6",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.committed",
@@ -522,9 +490,7 @@
       "y": 800,
       "width": 220,
       "height": 110,
-      "color": "#22c55e",
       "label": "Update Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "decision.update.complete",
@@ -558,9 +524,7 @@
       "y": 400,
       "width": 220,
       "height": 130,
-      "color": "#ef4444",
       "label": "Decision Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "decision.error",

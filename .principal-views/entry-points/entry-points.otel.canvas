@@ -36,9 +36,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Request Received",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "cli.request.received",
@@ -73,9 +71,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Request Parsed",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "cli.request.parsed",
@@ -106,9 +102,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Operation Dispatched",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "cli.operation.dispatched",
@@ -135,9 +129,7 @@
       "y": 782,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Request Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "cli.request.complete",
@@ -168,9 +160,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Tool Invoked",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "mcp.tool.invoked",
@@ -201,9 +191,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Tool Validated",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "mcp.tool.validated",
@@ -234,9 +222,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Operation Dispatched",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "mcp.operation.dispatched",
@@ -263,9 +249,7 @@
       "y": 805,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Tool Response",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "mcp.tool.response",
@@ -296,9 +280,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Request Received",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "http.request.received",
@@ -333,9 +315,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Request Routed",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "http.request.routed",
@@ -366,9 +346,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Operation Dispatched",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "http.operation.dispatched",
@@ -399,9 +377,7 @@
       "y": 785,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Response Sent",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "http.response.sent",
@@ -436,9 +412,7 @@
       "y": 561,
       "width": 200,
       "height": 120,
-      "color": "#8b5cf6",
       "label": "Operation Executed",
-      "fill": "#8b5cf6",
       "shape": "rectangle",
       "event": {
         "name": "operation.executed",
@@ -477,9 +451,7 @@
       "y": 350,
       "width": 200,
       "height": 150,
-      "color": "#ef4444",
       "label": "Entry Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "entry.error",
@@ -522,9 +494,7 @@
       "y": 571,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "List Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "completed.tasks.list.started",
@@ -550,9 +520,7 @@
       "y": 721,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "List Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "completed.tasks.list.loaded",
@@ -582,9 +550,7 @@
       "y": 871,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "List Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "completed.tasks.list.complete",
@@ -614,9 +580,7 @@
       "y": 723,
       "width": 200,
       "height": 100,
-      "color": "#ef4444",
       "label": "List Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "cleanup.error",

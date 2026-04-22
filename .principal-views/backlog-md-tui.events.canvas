@@ -1,0 +1,184 @@
+{
+  "name": "Backlog.md TUI Events",
+  "markdown": ".principal-views/backlog-md.events.md",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#ec4899"
+    }
+  },
+  "nodes": [
+    {
+      "id": "tui-session-started",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "label": "Session Started",
+      "shape": "rectangle",
+      "event": {
+        "name": "tui.session.started",
+        "attributes": {
+          "initialView": {
+            "type": "string",
+            "required": false
+          },
+          "terminalWidth": {
+            "type": "number",
+            "required": false
+          },
+          "terminalHeight": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.tui"
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "tui-view-rendered",
+      "type": "otel-event",
+      "x": 100,
+      "y": 210,
+      "width": 220,
+      "height": 110,
+      "label": "View Rendered",
+      "shape": "rectangle",
+      "event": {
+        "name": "tui.view.rendered",
+        "attributes": {
+          "viewName": {
+            "type": "string",
+            "required": true
+          },
+          "itemCount": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.tui"
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "tui-action-invoked",
+      "type": "otel-event",
+      "x": 100,
+      "y": 370,
+      "width": 220,
+      "height": 110,
+      "label": "Action Invoked",
+      "shape": "rectangle",
+      "event": {
+        "name": "tui.action.invoked",
+        "attributes": {
+          "action": {
+            "type": "string",
+            "required": true
+          },
+          "keybinding": {
+            "type": "string",
+            "required": false
+          },
+          "context": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.tui"
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "tui-session-ended",
+      "type": "otel-event",
+      "x": 100,
+      "y": 530,
+      "width": 220,
+      "height": 110,
+      "label": "Session Ended",
+      "shape": "rectangle",
+      "event": {
+        "name": "tui.session.ended",
+        "attributes": {
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "actionsPerformed": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.tui"
+      },
+      "color": "#ec4899"
+    }
+  ],
+  "edges": [
+    {
+      "id": "started-rendered",
+      "fromNode": "tui-session-started",
+      "fromSide": "bottom",
+      "toNode": "tui-view-rendered",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "rendered-action",
+      "fromNode": "tui-view-rendered",
+      "fromSide": "bottom",
+      "toNode": "tui-action-invoked",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "action-rendered",
+      "fromNode": "tui-action-invoked",
+      "fromSide": "top",
+      "toNode": "tui-view-rendered",
+      "toSide": "bottom",
+      "edgeType": "flow"
+    },
+    {
+      "id": "action-ended",
+      "fromNode": "tui-action-invoked",
+      "fromSide": "bottom",
+      "toNode": "tui-session-ended",
+      "toSide": "top",
+      "edgeType": "flow"
+    }
+  ]
+}

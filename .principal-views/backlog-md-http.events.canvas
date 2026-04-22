@@ -1,0 +1,237 @@
+{
+  "name": "Backlog.md HTTP Events",
+  "markdown": ".principal-views/backlog-md.events.md",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#f59e0b"
+    }
+  },
+  "nodes": [
+    {
+      "id": "http-request-received",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "label": "Request Received",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.request.received",
+        "attributes": {
+          "method": {
+            "type": "string",
+            "required": true
+          },
+          "path": {
+            "type": "string",
+            "required": true
+          },
+          "clientIp": {
+            "type": "string",
+            "required": false
+          },
+          "userAgent": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.http"
+      },
+      "color": "#f59e0b"
+    },
+    {
+      "id": "http-request-routed",
+      "type": "otel-event",
+      "x": 100,
+      "y": 210,
+      "width": 220,
+      "height": 110,
+      "label": "Request Routed",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.request.routed",
+        "attributes": {
+          "route": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.http"
+      },
+      "color": "#f59e0b"
+    },
+    {
+      "id": "http-operation-dispatched",
+      "type": "otel-event",
+      "x": 100,
+      "y": 370,
+      "width": 220,
+      "height": 110,
+      "label": "Operation Dispatched",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.operation.dispatched",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          },
+          "requestBody": {
+            "type": "object",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.http"
+      },
+      "color": "#f59e0b"
+    },
+    {
+      "id": "http-response-sent",
+      "type": "otel-event",
+      "x": 100,
+      "y": 530,
+      "width": 220,
+      "height": 110,
+      "label": "Response Sent",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.response.sent",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "statusCode": {
+            "type": "number",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "responseSize": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.http"
+      },
+      "color": "#f59e0b"
+    },
+    {
+      "id": "http-request-error",
+      "type": "otel-event",
+      "x": 420,
+      "y": 370,
+      "width": 220,
+      "height": 130,
+      "label": "Request Error",
+      "shape": "rectangle",
+      "event": {
+        "name": "http.request.error",
+        "attributes": {
+          "statusCode": {
+            "type": "number",
+            "required": true
+          },
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "path": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.http"
+      },
+      "color": "#f59e0b"
+    }
+  ],
+  "edges": [
+    {
+      "id": "received-routed",
+      "fromNode": "http-request-received",
+      "fromSide": "bottom",
+      "toNode": "http-request-routed",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "routed-dispatched",
+      "fromNode": "http-request-routed",
+      "fromSide": "bottom",
+      "toNode": "http-operation-dispatched",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "dispatched-response",
+      "fromNode": "http-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "http-response-sent",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "received-error",
+      "fromNode": "http-request-received",
+      "fromSide": "right",
+      "toNode": "http-request-error",
+      "toSide": "top",
+      "edgeType": "error"
+    }
+  ]
+}

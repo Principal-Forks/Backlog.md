@@ -1,0 +1,190 @@
+{
+  "name": "Backlog.md Core Events",
+  "markdown": ".principal-views/backlog-md.events.md",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#3B82F6"
+    }
+  },
+  "nodes": [
+    {
+      "id": "task-created",
+      "type": "otel-event",
+      "x": 100,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Task Created",
+      "event": {
+        "name": "task.created",
+        "attributes": {
+          "task.id": {
+            "type": "string",
+            "required": true
+          },
+          "task.title": {
+            "type": "string",
+            "required": true
+          },
+          "task.priority": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md"
+      }
+    },
+    {
+      "id": "task-updated",
+      "type": "otel-event",
+      "x": 400,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "label": "Task Updated",
+      "event": {
+        "name": "task.updated",
+        "attributes": {
+          "task.id": {
+            "type": "string",
+            "required": true
+          },
+          "fields.changed": {
+            "type": "array",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md"
+      }
+    },
+    {
+      "id": "task-completed",
+      "type": "otel-event",
+      "x": 700,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "label": "Task Completed",
+      "event": {
+        "name": "task.completed",
+        "attributes": {
+          "task.id": {
+            "type": "string",
+            "required": true
+          },
+          "completion.timestamp": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md"
+      }
+    },
+    {
+      "id": "document-created",
+      "type": "otel-event",
+      "x": 100,
+      "y": 300,
+      "width": 200,
+      "height": 100,
+      "color": "#8b5cf6",
+      "label": "Document Created",
+      "event": {
+        "name": "document.created",
+        "attributes": {
+          "document.id": {
+            "type": "string",
+            "required": true
+          },
+          "document.type": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md"
+      }
+    },
+    {
+      "id": "search-executed",
+      "type": "otel-event",
+      "x": 400,
+      "y": 300,
+      "width": 200,
+      "height": 100,
+      "color": "#f59e0b",
+      "label": "Search Executed",
+      "event": {
+        "name": "search.executed",
+        "attributes": {
+          "search.query": {
+            "type": "string",
+            "required": true
+          },
+          "results.count": {
+            "type": "integer",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "fromNode": "task-created",
+      "fromSide": "right",
+      "toNode": "task-updated",
+      "toSide": "left",
+      "edgeType": "flow"
+    },
+    {
+      "id": "edge-2",
+      "fromNode": "task-updated",
+      "fromSide": "right",
+      "toNode": "task-completed",
+      "toSide": "left",
+      "edgeType": "flow"
+    },
+    {
+      "id": "edge-3",
+      "fromNode": "task-created",
+      "fromSide": "bottom",
+      "toNode": "document-created",
+      "toSide": "top",
+      "edgeType": "flow"
+    }
+  ]
+}

@@ -30,9 +30,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Init Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "init.started",
@@ -74,9 +72,7 @@
       "y": 250,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Structure Created",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "init.structure.created",
@@ -106,9 +102,7 @@
       "y": 450,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Config Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "init.config.saved",
@@ -150,9 +144,7 @@
       "y": 650,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "Mcp Configured",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "init.mcp.configured",
@@ -190,9 +182,7 @@
       "y": 850,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Init Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "init.complete",
@@ -230,9 +220,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#ef4444",
       "label": "Init Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "init.error",

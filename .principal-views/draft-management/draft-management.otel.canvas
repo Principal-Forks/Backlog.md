@@ -36,9 +36,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Create Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.started",
@@ -68,9 +66,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Create Validated",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.validated",
@@ -100,9 +96,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Create Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.saved",
@@ -132,9 +126,7 @@
       "y": 500,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "Changes Committed",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.committed",
@@ -164,9 +156,7 @@
       "y": 500,
       "width": 200,
       "height": 100,
-      "color": "#94a3b8",
       "label": "Commit Skipped",
-      "fill": "#94a3b8",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.commit-skipped",
@@ -192,9 +182,7 @@
       "y": 650,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Create Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "draft.create.complete",
@@ -228,9 +216,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#a855f7",
       "label": "View Started (Filesystem)",
-      "fill": "#a855f7",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.view.started",
@@ -256,9 +242,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#a855f7",
       "label": "View Complete (Filesystem)",
-      "fill": "#a855f7",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.view.complete",
@@ -296,9 +280,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "View Not Found (Filesystem)",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.view.not-found",
@@ -324,9 +306,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#a855f7",
       "label": "List Started (Filesystem)",
-      "fill": "#a855f7",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.list.started"
@@ -346,9 +326,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#a855f7",
       "label": "List Scanned (Filesystem)",
-      "fill": "#a855f7",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.list.scanned",
@@ -374,9 +352,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#a855f7",
       "label": "List Complete (Filesystem)",
-      "fill": "#a855f7",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.list.complete",
@@ -406,9 +382,7 @@
       "y": 500,
       "width": 200,
       "height": 100,
-      "color": "#ef4444",
       "label": "Filesystem Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "filesystem.draft.error",
@@ -446,9 +420,7 @@
       "y": 850,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Promote Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.started",
@@ -478,9 +450,7 @@
       "y": 1000,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Promote Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.loaded",
@@ -510,9 +480,7 @@
       "y": 1150,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Promote Moved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.moved",
@@ -542,9 +510,7 @@
       "y": 1300,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "Changes Committed",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.committed",
@@ -574,9 +540,7 @@
       "y": 1300,
       "width": 200,
       "height": 100,
-      "color": "#94a3b8",
       "label": "Commit Skipped",
-      "fill": "#94a3b8",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.commit-skipped",
@@ -602,9 +566,7 @@
       "y": 1450,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Promote Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "draft.promote.complete",
@@ -638,9 +600,7 @@
       "y": 850,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Archive Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.started",
@@ -670,9 +630,7 @@
       "y": 1000,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Archive Located",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.located",
@@ -706,9 +664,7 @@
       "y": 1150,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Archive Moved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.moved",
@@ -738,9 +694,7 @@
       "y": 1300,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "Changes Committed",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.committed",
@@ -770,9 +724,7 @@
       "y": 1300,
       "width": 200,
       "height": 100,
-      "color": "#94a3b8",
       "label": "Commit Skipped",
-      "fill": "#94a3b8",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.commit-skipped",
@@ -798,9 +750,7 @@
       "y": 1450,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Archive Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "draft.archive.complete",
@@ -834,9 +784,7 @@
       "y": 500,
       "width": 200,
       "height": 150,
-      "color": "#ef4444",
       "label": "Draft Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "draft.error",

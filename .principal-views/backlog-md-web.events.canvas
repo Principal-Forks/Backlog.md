@@ -1,0 +1,225 @@
+{
+  "name": "Backlog.md Web Events",
+  "markdown": ".principal-views/backlog-md.events.md",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#06b6d4"
+    }
+  },
+  "nodes": [
+    {
+      "id": "web-page-loaded",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "label": "Page Loaded",
+      "shape": "rectangle",
+      "event": {
+        "name": "web.page.loaded",
+        "attributes": {
+          "route": {
+            "type": "string",
+            "required": true
+          },
+          "loadTime.ms": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.web"
+      },
+      "color": "#06b6d4"
+    },
+    {
+      "id": "web-action-triggered",
+      "type": "otel-event",
+      "x": 100,
+      "y": 210,
+      "width": 220,
+      "height": 110,
+      "label": "Action Triggered",
+      "shape": "rectangle",
+      "event": {
+        "name": "web.action.triggered",
+        "attributes": {
+          "action": {
+            "type": "string",
+            "required": true
+          },
+          "component": {
+            "type": "string",
+            "required": false
+          },
+          "entityType": {
+            "type": "string",
+            "required": false
+          },
+          "entityId": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.web"
+      },
+      "color": "#06b6d4"
+    },
+    {
+      "id": "web-api-request",
+      "type": "otel-event",
+      "x": 100,
+      "y": 370,
+      "width": 220,
+      "height": 110,
+      "label": "API Request",
+      "shape": "rectangle",
+      "event": {
+        "name": "web.api.request",
+        "attributes": {
+          "method": {
+            "type": "string",
+            "required": true
+          },
+          "endpoint": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.web"
+      },
+      "color": "#06b6d4"
+    },
+    {
+      "id": "web-api-response",
+      "type": "otel-event",
+      "x": 100,
+      "y": 530,
+      "width": 220,
+      "height": 110,
+      "label": "API Response",
+      "shape": "rectangle",
+      "event": {
+        "name": "web.api.response",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "statusCode": {
+            "type": "number",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.web"
+      },
+      "color": "#06b6d4"
+    },
+    {
+      "id": "web-api-error",
+      "type": "otel-event",
+      "x": 420,
+      "y": 370,
+      "width": 220,
+      "height": 130,
+      "label": "API Error",
+      "shape": "rectangle",
+      "event": {
+        "name": "web.api.error",
+        "attributes": {
+          "statusCode": {
+            "type": "number",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          },
+          "endpoint": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.web"
+      },
+      "color": "#06b6d4"
+    }
+  ],
+  "edges": [
+    {
+      "id": "loaded-action",
+      "fromNode": "web-page-loaded",
+      "fromSide": "bottom",
+      "toNode": "web-action-triggered",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "action-request",
+      "fromNode": "web-action-triggered",
+      "fromSide": "bottom",
+      "toNode": "web-api-request",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "request-response",
+      "fromNode": "web-api-request",
+      "fromSide": "bottom",
+      "toNode": "web-api-response",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "request-error",
+      "fromNode": "web-api-request",
+      "fromSide": "right",
+      "toNode": "web-api-error",
+      "toSide": "top",
+      "edgeType": "error"
+    }
+  ]
+}

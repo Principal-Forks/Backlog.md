@@ -30,9 +30,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Create Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.started",
@@ -66,9 +64,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Create Validated",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.validated",
@@ -98,9 +94,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Create Saved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.saved",
@@ -134,9 +128,7 @@
       "y": 500,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "Changes Committed",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.committed",
@@ -163,9 +155,7 @@
       "y": 650,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Create Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.create.complete",
@@ -199,9 +189,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "View Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.view.started",
@@ -231,9 +219,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "View Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "milestone.view.loaded",
@@ -263,9 +249,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "View Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.view.complete",
@@ -299,9 +283,7 @@
       "y": 50,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "List Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.list.started",
@@ -331,9 +313,7 @@
       "y": 200,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "List Loaded",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "milestone.list.loaded",
@@ -363,9 +343,7 @@
       "y": 350,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "List Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.list.complete",
@@ -399,9 +377,7 @@
       "y": 850,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Archive Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.started",
@@ -431,9 +407,7 @@
       "y": 1000,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Archive Located",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.located",
@@ -467,9 +441,7 @@
       "y": 1150,
       "width": 200,
       "height": 100,
-      "color": "#3b82f6",
       "label": "Archive Moved",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.moved",
@@ -499,9 +471,7 @@
       "y": 1300,
       "width": 200,
       "height": 100,
-      "color": "#f59e0b",
       "label": "Changes Committed",
-      "fill": "#f59e0b",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.committed",
@@ -531,9 +501,7 @@
       "y": 1450,
       "width": 200,
       "height": 100,
-      "color": "#22c55e",
       "label": "Archive Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "milestone.archive.complete",
@@ -567,9 +535,7 @@
       "y": 500,
       "width": 200,
       "height": 150,
-      "color": "#ef4444",
       "label": "Milestone Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "milestone.error",

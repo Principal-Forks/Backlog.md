@@ -30,9 +30,7 @@
       "y": 50,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Initialize Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "search.initialize.started",
@@ -58,9 +56,7 @@
       "y": 200,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Initialize Snapshot",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.initialize.snapshot",
@@ -94,9 +90,7 @@
       "y": 350,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Initialize Indexed",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.initialize.indexed",
@@ -126,9 +120,7 @@
       "y": 500,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Initialize Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "search.initialize.complete",
@@ -158,9 +150,7 @@
       "y": 50,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Query Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "search.query.started",
@@ -194,9 +184,7 @@
       "y": 200,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Query Normalized",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.query.normalized",
@@ -230,9 +218,7 @@
       "y": 350,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Query Executed",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.query.executed",
@@ -262,9 +248,7 @@
       "y": 500,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Query Filtered",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.query.filtered",
@@ -302,9 +286,7 @@
       "y": 650,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Query Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "search.query.complete",
@@ -338,9 +320,7 @@
       "y": 50,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Update Started",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "search.index.update.started",
@@ -370,9 +350,7 @@
       "y": 200,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Snapshot Applied",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.index.snapshot.applied",
@@ -406,9 +384,7 @@
       "y": 350,
       "width": 240,
       "height": 110,
-      "color": "#3b82f6",
       "label": "Index Rebuilt",
-      "fill": "#3b82f6",
       "shape": "rectangle",
       "event": {
         "name": "search.index.rebuilt",
@@ -438,9 +414,7 @@
       "y": 500,
       "width": 240,
       "height": 110,
-      "color": "#22c55e",
       "label": "Update Complete",
-      "fill": "#22c55e",
       "shape": "rectangle",
       "event": {
         "name": "search.index.update.complete",
@@ -470,9 +444,7 @@
       "y": 300,
       "width": 240,
       "height": 130,
-      "color": "#ef4444",
       "label": "Search Error",
-      "fill": "#ef4444",
       "shape": "rectangle",
       "event": {
         "name": "search.error",

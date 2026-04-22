@@ -1,0 +1,221 @@
+{
+  "name": "Backlog.md MCP Events",
+  "markdown": ".principal-views/backlog-md.events.md",
+  "edgeTypes": {
+    "flow": {
+      "label": "Flow",
+      "style": "solid",
+      "width": 2,
+      "color": "#64748b"
+    },
+    "error": {
+      "label": "Error Path",
+      "style": "dashed",
+      "width": 2,
+      "color": "#ef4444"
+    }
+  },
+  "nodeTypes": {
+    "event": {
+      "label": "Event",
+      "color": "#8b5cf6"
+    }
+  },
+  "nodes": [
+    {
+      "id": "mcp-tool-invoked",
+      "type": "otel-event",
+      "x": 100,
+      "y": 50,
+      "width": 220,
+      "height": 110,
+      "label": "Tool Invoked",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.invoked",
+        "attributes": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "parameters": {
+            "type": "object",
+            "required": false
+          },
+          "clientId": {
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.mcp"
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "mcp-tool-validated",
+      "type": "otel-event",
+      "x": 100,
+      "y": 210,
+      "width": 220,
+      "height": 110,
+      "label": "Tool Validated",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.validated",
+        "attributes": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "validationPassed": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.mcp"
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "mcp-operation-dispatched",
+      "type": "otel-event",
+      "x": 100,
+      "y": 370,
+      "width": 220,
+      "height": 110,
+      "label": "Operation Dispatched",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.operation.dispatched",
+        "attributes": {
+          "operation": {
+            "type": "string",
+            "required": true
+          },
+          "handler": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.mcp"
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "mcp-tool-response",
+      "type": "otel-event",
+      "x": 100,
+      "y": 530,
+      "width": 220,
+      "height": 110,
+      "label": "Tool Response",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.response",
+        "attributes": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "duration.ms": {
+            "type": "number",
+            "required": true
+          },
+          "contentLength": {
+            "type": "number",
+            "required": false
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.mcp"
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "mcp-tool-error",
+      "type": "otel-event",
+      "x": 420,
+      "y": 370,
+      "width": 220,
+      "height": 130,
+      "label": "Tool Error",
+      "shape": "rectangle",
+      "event": {
+        "name": "mcp.tool.error",
+        "attributes": {
+          "toolName": {
+            "type": "string",
+            "required": true
+          },
+          "error.type": {
+            "type": "string",
+            "required": true
+          },
+          "error.message": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "otel": {
+        "status": "draft",
+        "files": [],
+        "scope": "backlog.md.mcp"
+      },
+      "color": "#8b5cf6"
+    }
+  ],
+  "edges": [
+    {
+      "id": "invoked-validated",
+      "fromNode": "mcp-tool-invoked",
+      "fromSide": "bottom",
+      "toNode": "mcp-tool-validated",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "validated-dispatched",
+      "fromNode": "mcp-tool-validated",
+      "fromSide": "bottom",
+      "toNode": "mcp-operation-dispatched",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "dispatched-response",
+      "fromNode": "mcp-operation-dispatched",
+      "fromSide": "bottom",
+      "toNode": "mcp-tool-response",
+      "toSide": "top",
+      "edgeType": "flow"
+    },
+    {
+      "id": "invoked-error",
+      "fromNode": "mcp-tool-invoked",
+      "fromSide": "right",
+      "toNode": "mcp-tool-error",
+      "toSide": "top",
+      "edgeType": "error"
+    }
+  ]
+}
