@@ -7,14 +7,89 @@ import type { ContentStore } from "../core/content-store.ts";
 import { initializeProject } from "../core/init.ts";
 import type { SearchService } from "../core/search-service.ts";
 import { getTaskStatistics } from "../core/statistics.ts";
+import { isCreateLockError } from "../file-system/operations.ts";
+import { BacklogToolError } from "../mcp/errors/mcp-errors.ts";
+import { MilestoneHandlers } from "../mcp/tools/milestones/handlers.ts";
 import { getTracer } from "../telemetry";
-import type { SearchPriorityFilter, SearchResultType, Task, TaskUpdateInput } from "../types/index.ts";
+import {
+	DOCUMENT_TYPE_VALUES,
+	type Document,
+	type SearchPriorityFilter,
+	type SearchResultType,
+	type Task,
+	type TaskUpdateInput,
+} from "../types/index.ts";
 import { watchConfig } from "../utils/config-watcher.ts";
+import { resolveMilestoneInputForStorage } from "../utils/milestone-storage.ts";
 import { getVersion } from "../utils/version.ts";
 
 // Regex pattern to match any prefix (letters followed by dash)
 const PREFIX_PATTERN = /^[a-zA-Z]+-/i;
 const DEFAULT_PREFIX = "task-";
+const DOCUMENT_TYPES = new Set<Document["type"]>(DOCUMENT_TYPE_VALUES);
+
+class DocumentPayloadValidationError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "DocumentPayloadValidationError";
+	}
+}
+
+function parseDocumentType(value: unknown): Document["type"] | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+	if (typeof value !== "string") {
+		throw new DocumentPayloadValidationError("Document type must be a string.");
+	}
+	if (!DOCUMENT_TYPES.has(value as Document["type"])) {
+		throw new DocumentPayloadValidationError(`Document type must be one of: ${DOCUMENT_TYPE_VALUES.join(", ")}.`);
+	}
+	return value as Document["type"];
+}
+
+function parseDocumentTags(value: unknown): string[] | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+	if (!Array.isArray(value)) {
+		throw new DocumentPayloadValidationError("Document tags must be an array of strings.");
+	}
+	if (value.some((tag) => typeof tag !== "string")) {
+		throw new DocumentPayloadValidationError("Document tags must be an array of strings.");
+	}
+	return Array.from(new Set(value.map((tag) => tag.trim()).filter((tag) => tag.length > 0)));
+}
+
+function parseCreateDocumentPath(value: unknown): string | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+	if (typeof value !== "string") {
+		throw new DocumentPayloadValidationError("Document path must be a string.");
+	}
+	return value;
+}
+
+function parseUpdateDocumentPath(value: unknown): string | null | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+	if (value === null || typeof value === "string") {
+		return value;
+	}
+	throw new DocumentPayloadValidationError("Document path must be a string or null.");
+}
+
+function isDocumentValidationError(error: Error): boolean {
+	return (
+		error instanceof DocumentPayloadValidationError ||
+		error.message.startsWith("Document type ") ||
+		error.message.startsWith("Document path ") ||
+		error.message === "Title is required to create a document." ||
+		error.message === "Document title cannot be empty."
+	);
+}
 
 /**
  * Strip any prefix from an ID (e.g., "task-123" -> "123", "JIRA-456" -> "456")
@@ -70,9 +145,49 @@ function findTaskByLooseId(tasks: Task[], inputId: string): Task | undefined {
 	});
 }
 
+function parseOptionalBoolean(value: unknown): boolean | undefined {
+	if (typeof value === "boolean") {
+		return value;
+	}
+	if (typeof value === "string") {
+		const normalized = value.trim().toLowerCase();
+		if (normalized === "true") return true;
+		if (normalized === "false") return false;
+	}
+	return undefined;
+}
+
 // @ts-expect-error
 import favicon from "../web/favicon.png" with { type: "file" };
 import indexHtml from "../web/index.html";
+
+const NO_STORE_HEADERS = {
+	"Cache-Control": "no-store, max-age=0, must-revalidate",
+	Pragma: "no-cache",
+	Expires: "0",
+} as const;
+
+function applyNoStoreHeaders(headers: Headers): void {
+	for (const [name, value] of Object.entries(NO_STORE_HEADERS)) {
+		headers.set(name, value);
+	}
+}
+
+export function markHtmlBundleNoStore(bundle: Bun.HTMLBundle): Bun.HTMLBundle {
+	if (!bundle.files) {
+		return bundle;
+	}
+
+	for (const file of bundle.files) {
+		if (file.loader === "html" && file.isEntry) {
+			Object.assign(file.headers, NO_STORE_HEADERS);
+		}
+	}
+
+	return bundle;
+}
+
+const spaIndexHtml = markHtmlBundleNoStore(indexHtml);
 
 export class BacklogServer {
 	private core: Core;
@@ -90,125 +205,11 @@ export class BacklogServer {
 	}
 
 	private async resolveMilestoneInput(milestone: string): Promise<string> {
-		const normalized = milestone.trim();
-		if (!normalized) {
-			return normalized;
-		}
-
-		const key = normalized.toLowerCase();
-		const aliasKeys = new Set<string>([key]);
-		const looksLikeMilestoneId = /^\d+$/.test(normalized) || /^m-\d+$/i.test(normalized);
-		const canonicalInputId =
-			/^\d+$/.test(normalized) || /^m-\d+$/i.test(normalized)
-				? `m-${String(Number.parseInt(normalized.replace(/^m-/i, ""), 10))}`
-				: null;
-		if (/^\d+$/.test(normalized)) {
-			const numeric = String(Number.parseInt(normalized, 10));
-			aliasKeys.add(numeric);
-			aliasKeys.add(`m-${numeric}`);
-		} else {
-			const match = normalized.match(/^m-(\d+)$/i);
-			if (match?.[1]) {
-				const numeric = String(Number.parseInt(match[1], 10));
-				aliasKeys.add(numeric);
-				aliasKeys.add(`m-${numeric}`);
-			}
-		}
 		const [activeMilestones, archivedMilestones] = await Promise.all([
 			this.core.filesystem.listMilestones(),
 			this.core.filesystem.listArchivedMilestones(),
 		]);
-		const idMatchesAlias = (milestoneId: string): boolean => {
-			const idKey = milestoneId.trim().toLowerCase();
-			if (aliasKeys.has(idKey)) {
-				return true;
-			}
-			if (/^\d+$/.test(milestoneId.trim())) {
-				const numeric = String(Number.parseInt(milestoneId.trim(), 10));
-				return aliasKeys.has(numeric) || aliasKeys.has(`m-${numeric}`);
-			}
-			const idMatch = milestoneId.trim().match(/^m-(\d+)$/i);
-			if (!idMatch?.[1]) {
-				return false;
-			}
-			const numeric = String(Number.parseInt(idMatch[1], 10));
-			return aliasKeys.has(numeric) || aliasKeys.has(`m-${numeric}`);
-		};
-		const findIdMatch = (
-			milestones: Array<{ id: string; title: string }>,
-		): { id: string; title: string } | undefined => {
-			const rawExactMatch = milestones.find((item) => item.id.trim().toLowerCase() === key);
-			if (rawExactMatch) {
-				return rawExactMatch;
-			}
-			if (canonicalInputId) {
-				const canonicalRawMatch = milestones.find((item) => item.id.trim().toLowerCase() === canonicalInputId);
-				if (canonicalRawMatch) {
-					return canonicalRawMatch;
-				}
-			}
-			return milestones.find((item) => idMatchesAlias(item.id));
-		};
-		const findUniqueTitleMatch = (
-			milestones: Array<{ id: string; title: string }>,
-		): { id: string; title: string } | null => {
-			const titleMatches = milestones.filter((item) => item.title.trim().toLowerCase() === key);
-			if (titleMatches.length === 1) {
-				return titleMatches[0] ?? null;
-			}
-			return null;
-		};
-
-		const matchByAlias = (milestones: Array<{ id: string; title: string }>): string | null => {
-			const idMatch = findIdMatch(milestones);
-			const titleMatch = findUniqueTitleMatch(milestones);
-			if (looksLikeMilestoneId) {
-				return idMatch?.id ?? null;
-			}
-			if (titleMatch) {
-				return titleMatch.id;
-			}
-			if (idMatch) {
-				return idMatch.id;
-			}
-			return null;
-		};
-
-		const activeTitleMatches = activeMilestones.filter((item) => item.title.trim().toLowerCase() === key);
-		const hasAmbiguousActiveTitle = activeTitleMatches.length > 1;
-		if (looksLikeMilestoneId) {
-			const activeIdMatch = findIdMatch(activeMilestones);
-			if (activeIdMatch) {
-				return activeIdMatch.id;
-			}
-			const archivedIdMatch = findIdMatch(archivedMilestones);
-			if (archivedIdMatch) {
-				return archivedIdMatch.id;
-			}
-			if (activeTitleMatches.length === 1) {
-				return activeTitleMatches[0]?.id ?? normalized;
-			}
-			if (hasAmbiguousActiveTitle) {
-				return normalized;
-			}
-			const archivedTitleMatch = findUniqueTitleMatch(archivedMilestones);
-			return archivedTitleMatch?.id ?? normalized;
-		}
-
-		const activeMatch = matchByAlias(activeMilestones);
-		if (activeMatch) {
-			return activeMatch;
-		}
-		if (hasAmbiguousActiveTitle) {
-			return normalized;
-		}
-
-		const archivedMatch = matchByAlias(archivedMilestones);
-		if (archivedMatch) {
-			return archivedMatch;
-		}
-
-		return normalized;
+		return resolveMilestoneInputForStorage(milestone, activeMilestones, archivedMilestones);
 	}
 
 	private async ensureServicesReady(): Promise<void> {
@@ -302,16 +303,16 @@ export class BacklogServer {
 				port: finalPort,
 				development: process.env.NODE_ENV === "development",
 				routes: {
-					"/": indexHtml,
-					"/tasks": indexHtml,
-					"/milestones": indexHtml,
-					"/drafts": indexHtml,
-					"/documentation": indexHtml,
-					"/documentation/*": indexHtml,
-					"/decisions": indexHtml,
-					"/decisions/*": indexHtml,
-					"/statistics": indexHtml,
-					"/settings": indexHtml,
+					"/": spaIndexHtml,
+					"/tasks": spaIndexHtml,
+					"/milestones": spaIndexHtml,
+					"/drafts": spaIndexHtml,
+					"/documentation": spaIndexHtml,
+					"/documentation/*": spaIndexHtml,
+					"/decisions": spaIndexHtml,
+					"/decisions/*": spaIndexHtml,
+					"/statistics": spaIndexHtml,
+					"/settings": spaIndexHtml,
 
 					// API Routes using Bun's native route syntax
 					"/api/tasks": {
@@ -374,6 +375,10 @@ export class BacklogServer {
 					},
 					"/api/milestones/:id": {
 						GET: async (req: Request & { params: { id: string } }) => await this.handleGetMilestone(req.params.id),
+						PUT: async (req: Request & { params: { id: string } }) =>
+							await this.handleUpdateMilestone(req, req.params.id),
+						DELETE: async (req: Request & { params: { id: string } }) =>
+							await this.handleRemoveMilestone(req, req.params.id),
 					},
 					"/api/milestones/:id/archive": {
 						POST: async (req: Request & { params: { id: string } }) => await this.handleArchiveMilestone(req.params.id),
@@ -424,9 +429,7 @@ export class BacklogServer {
 
 					// Disable caching for GET/HEAD so browser always fetches latest content
 					if (req.method === "GET" || req.method === "HEAD") {
-						res.headers.set("Cache-Control", "no-store, max-age=0, must-revalidate");
-						res.headers.set("Pragma", "no-cache");
-						res.headers.set("Expires", "0");
+						applyNoStoreHeaders(res.headers);
 					}
 
 					return res;
@@ -692,10 +695,23 @@ export class BacklogServer {
 			const typeParams = [...url.searchParams.getAll("type"), ...url.searchParams.getAll("types")];
 			const statusParams = url.searchParams.getAll("status");
 			const priorityParamsRaw = url.searchParams.getAll("priority");
+			const assigneeParamsRaw = [...url.searchParams.getAll("assignee"), ...url.searchParams.getAll("assignees")];
 			const labelParamsRaw = [...url.searchParams.getAll("label"), ...url.searchParams.getAll("labels")];
+			const modifiedFileParamsRaw = [
+				...url.searchParams.getAll("modifiedFile"),
+				...url.searchParams.getAll("modifiedFiles"),
+			];
+			const assigneesCsv = url.searchParams.get("assignees");
+			if (assigneesCsv) {
+				assigneeParamsRaw.push(...assigneesCsv.split(","));
+			}
 			const labelsCsv = url.searchParams.get("labels");
 			if (labelsCsv) {
 				labelParamsRaw.push(...labelsCsv.split(","));
+			}
+			const modifiedFilesCsv = url.searchParams.get("modifiedFiles");
+			if (modifiedFilesCsv) {
+				modifiedFileParamsRaw.push(...modifiedFilesCsv.split(","));
 			}
 
 			let limit: number | undefined;
@@ -724,7 +740,9 @@ export class BacklogServer {
 			const filters: {
 				status?: string | string[];
 				priority?: SearchPriorityFilter | SearchPriorityFilter[];
+				assignee?: string | string[];
 				labels?: string | string[];
+				modifiedFiles?: string | string[];
 			} = {};
 
 			if (statusParams.length === 1) {
@@ -749,10 +767,27 @@ export class BacklogServer {
 				filters.priority = casted.length === 1 ? casted[0] : casted;
 			}
 
+			if (assigneeParamsRaw.length > 0) {
+				const normalizedAssignees = assigneeParamsRaw.map((value) => value.trim()).filter((value) => value.length > 0);
+				if (normalizedAssignees.length > 0) {
+					filters.assignee = normalizedAssignees.length === 1 ? normalizedAssignees[0] : normalizedAssignees;
+				}
+			}
+
 			if (labelParamsRaw.length > 0) {
 				const normalizedLabels = labelParamsRaw.map((value) => value.trim()).filter((value) => value.length > 0);
 				if (normalizedLabels.length > 0) {
 					filters.labels = normalizedLabels.length === 1 ? normalizedLabels[0] : normalizedLabels;
+				}
+			}
+
+			if (modifiedFileParamsRaw.length > 0) {
+				const normalizedModifiedFiles = modifiedFileParamsRaw
+					.map((value) => value.trim())
+					.filter((value) => value.length > 0);
+				if (normalizedModifiedFiles.length > 0) {
+					filters.modifiedFiles =
+						normalizedModifiedFiles.length === 1 ? normalizedModifiedFiles[0] : normalizedModifiedFiles;
 				}
 			}
 
@@ -800,6 +835,7 @@ export class BacklogServer {
 				assignee: payload.assignee,
 				dependencies: payload.dependencies,
 				references: payload.references,
+				modifiedFiles: payload.modifiedFiles,
 				parentTaskId: payload.parentTaskId,
 				implementationPlan: payload.implementationPlan,
 				implementationNotes: payload.implementationNotes,
@@ -810,6 +846,10 @@ export class BacklogServer {
 			});
 			return Response.json(createdTask, { status: 201 });
 		} catch (error) {
+			if (isCreateLockError(error)) {
+				const message = error instanceof Error ? error.message : "Failed to create task";
+				return Response.json({ error: message }, { status: 409 });
+			}
 			const message = error instanceof Error ? error.message : "Failed to create task";
 			return Response.json({ error: message }, { status: 400 });
 		}
@@ -817,18 +857,19 @@ export class BacklogServer {
 
 	private async handleGetTask(taskId: string): Promise<Response> {
 		const store = await this.getContentStoreInstance();
-		const tasks = store.getTasks();
-		const task = findTaskByLooseId(tasks, taskId);
-		if (!task) {
-			const fallbackId = ensurePrefix(taskId);
-			const fallback = await this.core.filesystem.loadTask(fallbackId);
-			if (fallback) {
-				store.upsertTask(fallback);
-				return Response.json(fallback);
-			}
-			return Response.json({ error: "Task not found" }, { status: 404 });
+
+		const localTask = await this.core.filesystem.loadTask(taskId);
+		if (localTask) {
+			store.upsertTask(localTask);
+			return Response.json(localTask);
 		}
-		return Response.json(task);
+
+		const task = findTaskByLooseId(store.getTasks(), taskId);
+		if (task) {
+			return Response.json(task);
+		}
+
+		return Response.json({ error: "Task not found" }, { status: 404 });
 	}
 
 	private async handleUpdateTask(req: Request, taskId: string): Promise<Response> {
@@ -878,6 +919,10 @@ export class BacklogServer {
 
 		if ("references" in updates && Array.isArray(updates.references)) {
 			updateInput.references = updates.references;
+		}
+
+		if ("modifiedFiles" in updates && Array.isArray(updates.modifiedFiles)) {
+			updateInput.modifiedFiles = updates.modifiedFiles;
 		}
 
 		if ("implementationPlan" in updates && typeof updates.implementationPlan === "string") {
@@ -976,10 +1021,11 @@ export class BacklogServer {
 			const store = await this.getContentStoreInstance();
 			const docs = store.getDocuments();
 			const docFiles = docs.map((doc) => ({
-				name: `${doc.title}.md`,
+				name: doc.path?.split(/[\\/]+/).pop() ?? `${doc.title}.md`,
 				id: doc.id,
 				title: doc.title,
 				type: doc.type,
+				path: doc.path,
 				createdDate: doc.createdDate,
 				updatedDate: doc.updatedDate,
 				lastModified: doc.updatedDate || doc.createdDate,
@@ -1006,13 +1052,32 @@ export class BacklogServer {
 	}
 
 	private async handleCreateDoc(req: Request): Promise<Response> {
-		const { filename, content } = await req.json();
-
 		try {
-			const title = filename.replace(".md", "");
-			const document = await this.core.createDocumentWithId(title, content);
-			return Response.json({ success: true, id: document.id }, { status: 201 });
+			const body = await req.json();
+			const filename = typeof body?.filename === "string" ? body.filename : undefined;
+			const title = typeof body?.title === "string" ? body.title : filename?.replace(/\.md$/i, "");
+			if (!title || title.trim().length === 0) {
+				return Response.json({ error: "Document title is required" }, { status: 400 });
+			}
+			const type = parseDocumentType(body?.type);
+			const path = parseCreateDocumentPath(body?.path);
+			const tags = parseDocumentTags(body?.tags);
+
+			const document = await this.core.createDocumentFromInput({
+				title,
+				content: typeof body?.content === "string" ? body.content : "",
+				type,
+				path,
+				tags,
+			});
+			return Response.json({ success: true, ...document }, { status: 201 });
 		} catch (error) {
+			if (error instanceof SyntaxError) {
+				return Response.json({ error: "Invalid request payload" }, { status: 400 });
+			}
+			if (error instanceof Error && isDocumentValidationError(error)) {
+				return Response.json({ error: error.message }, { status: 400 });
+			}
 			console.error("Error creating document:", error);
 			return Response.json({ error: "Failed to create document" }, { status: 500 });
 		}
@@ -1023,6 +1088,9 @@ export class BacklogServer {
 			const body = await req.json();
 			const content = typeof body?.content === "string" ? body.content : undefined;
 			const title = typeof body?.title === "string" ? body.title : undefined;
+			const path = parseUpdateDocumentPath(body?.path);
+			const type = parseDocumentType(body?.type);
+			const tags = parseDocumentTags(body?.tags);
 
 			if (typeof content !== "string") {
 				return Response.json({ error: "Document content is required" }, { status: 400 });
@@ -1037,20 +1105,28 @@ export class BacklogServer {
 				}
 			}
 
-			const existingDoc = await this.core.getDocument(docId);
-			if (!existingDoc) {
-				return Response.json({ error: "Document not found" }, { status: 404 });
-			}
-
-			const nextDoc = normalizedTitle ? { ...existingDoc, title: normalizedTitle } : { ...existingDoc };
-
-			await this.core.updateDocument(nextDoc, content);
-			return Response.json({ success: true });
+			const document = await this.core.updateDocumentFromInput({
+				id: docId,
+				content,
+				...(normalizedTitle && { title: normalizedTitle }),
+				...(path !== undefined && { path }),
+				...(type !== undefined && { type }),
+				...(tags !== undefined && { tags }),
+			});
+			return Response.json({ success: true, ...document });
 		} catch (error) {
-			console.error("Error updating document:", error);
 			if (error instanceof SyntaxError) {
 				return Response.json({ error: "Invalid request payload" }, { status: 400 });
 			}
+			if (error instanceof Error) {
+				if (error.message.startsWith("Document not found")) {
+					return Response.json({ error: error.message }, { status: 404 });
+				}
+				if (isDocumentValidationError(error)) {
+					return Response.json({ error: error.message }, { status: 400 });
+				}
+			}
+			console.error("Error updating document:", error);
 			return Response.json({ error: "Failed to update document" }, { status: 500 });
 		}
 	}
@@ -1190,11 +1266,60 @@ export class BacklogServer {
 			return Response.json({ success: true });
 		} catch (error) {
 			console.error("Error promoting draft:", error);
+			if (isCreateLockError(error)) {
+				return Response.json({ error: error.message }, { status: 409 });
+			}
 			return Response.json({ error: "Failed to promote draft" }, { status: 500 });
 		}
 	}
 
 	// Milestone handlers
+	private async readOptionalJsonBody(req: Request): Promise<Record<string, unknown>> {
+		const text = await req.text();
+		if (!text.trim()) {
+			return {};
+		}
+
+		let body: unknown;
+		try {
+			body = JSON.parse(text);
+		} catch {
+			throw new BacklogToolError("Request body must be valid JSON.", "VALIDATION_ERROR");
+		}
+
+		if (!body || typeof body !== "object" || Array.isArray(body)) {
+			throw new BacklogToolError("Request body must be a JSON object.", "VALIDATION_ERROR");
+		}
+
+		return body as Record<string, unknown>;
+	}
+
+	private getMilestoneMutationMessage(result: { content: Array<{ type: string; text?: string }> }): string {
+		return result.content
+			.filter((item) => item.type === "text" && typeof item.text === "string")
+			.map((item) => item.text)
+			.join("\n");
+	}
+
+	private milestoneMutationErrorResponse(error: unknown, context: string): Response {
+		const status =
+			error instanceof BacklogToolError
+				? error.code === "NOT_FOUND"
+					? 404
+					: error.code === "VALIDATION_ERROR"
+						? 400
+						: 500
+				: 500;
+		const message = error instanceof Error ? error.message : context;
+		if (status === 500) {
+			console.error(context, error);
+		}
+		return Response.json(
+			{ error: message, code: error instanceof BacklogToolError ? error.code : "INTERNAL_ERROR" },
+			{ status },
+		);
+	}
+
 	private async handleListMilestones(): Promise<Response> {
 		try {
 			const milestones = await this.core.filesystem.listMilestones();
@@ -1279,6 +1404,67 @@ export class BacklogServer {
 		} catch (error) {
 			console.error("Error creating milestone:", error);
 			return Response.json({ error: "Failed to create milestone" }, { status: 500 });
+		}
+	}
+
+	private async handleUpdateMilestone(req: Request, milestoneId: string): Promise<Response> {
+		try {
+			const body = await this.readOptionalJsonBody(req);
+			const title = typeof body.title === "string" ? body.title.trim() : "";
+			const updateTasks = typeof body.updateTasks === "boolean" ? body.updateTasks : true;
+
+			if (!title) {
+				return Response.json({ error: "Milestone title is required" }, { status: 400 });
+			}
+
+			const sourceMilestone = await this.core.filesystem.loadMilestone(milestoneId);
+			const result = await new MilestoneHandlers(this.core).renameMilestone({
+				from: milestoneId,
+				to: title,
+				updateTasks,
+			});
+			const milestone =
+				(await this.core.filesystem.loadMilestone(sourceMilestone?.id ?? milestoneId)) ??
+				(await this.core.filesystem.loadMilestone(title));
+			this.broadcastTasksUpdated();
+			return Response.json({
+				success: true,
+				milestone: milestone ?? null,
+				message: this.getMilestoneMutationMessage(result),
+			});
+		} catch (error) {
+			return this.milestoneMutationErrorResponse(error, "Error updating milestone");
+		}
+	}
+
+	private async handleRemoveMilestone(req: Request, milestoneId: string): Promise<Response> {
+		try {
+			const body = await this.readOptionalJsonBody(req);
+			const rawTaskHandling = body.taskHandling;
+			const taskHandling =
+				rawTaskHandling === undefined
+					? "clear"
+					: rawTaskHandling === "clear" || rawTaskHandling === "keep" || rawTaskHandling === "reassign"
+						? rawTaskHandling
+						: null;
+			const reassignTo = typeof body.reassignTo === "string" ? body.reassignTo : undefined;
+
+			if (!taskHandling) {
+				return Response.json({ error: "taskHandling must be clear, keep, or reassign" }, { status: 400 });
+			}
+
+			const result = await new MilestoneHandlers(this.core).removeMilestone({
+				name: milestoneId,
+				taskHandling,
+				reassignTo,
+			});
+			this.broadcastTasksUpdated();
+			return Response.json({
+				success: true,
+				message: this.getMilestoneMutationMessage(result),
+			});
+		} catch (error) {
+			return this.milestoneMutationErrorResponse(error, "Error removing milestone");
 		}
 	}
 
@@ -1384,8 +1570,7 @@ export class BacklogServer {
 				olderThanDays: age,
 			});
 
-			// Get Done tasks older than specified days
-			const tasksToCleanup = await this.core.getDoneTasksByAge(age);
+			const tasksToCleanup = await this.core.getTerminalStatusTasksByAge(age);
 
 			const cutoffDate = new Date();
 			cutoffDate.setDate(cutoffDate.getDate() - age);
@@ -1463,8 +1648,7 @@ export class BacklogServer {
 				return Response.json({ error: "Invalid age parameter" }, { status: 400 });
 			}
 
-			// Get Done tasks older than specified days
-			const tasksToCleanup = await this.core.getDoneTasksByAge(ageInDays);
+			const tasksToCleanup = await this.core.getTerminalStatusTasksByAge(ageInDays);
 
 			span.addEvent("cleanup.batch.started", {
 				olderThanDays: ageInDays,
@@ -1603,15 +1787,24 @@ export class BacklogServer {
 	private async handleGetStatus(): Promise<Response> {
 		try {
 			const config = await this.core.filesystem.loadConfig();
+			const backlogResolution = this.core.filesystem.resolveBacklogDirectoryInfo();
 			return Response.json({
 				initialized: !!config,
 				projectPath: this.core.filesystem.rootDir,
+				backlogDirectory: backlogResolution.backlogDir,
+				backlogDirectorySource: backlogResolution.source,
+				configLocation: backlogResolution.configSource,
+				rootConfigPath: backlogResolution.rootConfigPath,
 			});
 		} catch (error) {
 			console.error("Error getting status:", error);
 			return Response.json({
 				initialized: false,
 				projectPath: this.core.filesystem.rootDir,
+				backlogDirectory: null,
+				backlogDirectorySource: null,
+				configLocation: null,
+				rootConfigPath: null,
 			});
 		}
 	}
@@ -1620,10 +1813,20 @@ export class BacklogServer {
 		try {
 			const body = await req.json();
 			const projectName = typeof body.projectName === "string" ? body.projectName.trim() : "";
+			const backlogDirectory = typeof body.backlogDirectory === "string" ? body.backlogDirectory.trim() : undefined;
+			const backlogDirectorySource =
+				body.backlogDirectorySource === "backlog" ||
+				body.backlogDirectorySource === ".backlog" ||
+				body.backlogDirectorySource === "custom"
+					? body.backlogDirectorySource
+					: undefined;
+			const configLocation =
+				body.configLocation === "folder" || body.configLocation === "root" ? body.configLocation : undefined;
 			const integrationMode = body.integrationMode as "mcp" | "cli" | "none" | undefined;
 			const mcpClients = Array.isArray(body.mcpClients) ? body.mcpClients : [];
 			const agentInstructions = Array.isArray(body.agentInstructions) ? body.agentInstructions : [];
-			const installClaudeAgentFlag = Boolean(body.installClaudeAgent);
+			const installClaudeAgentFlag = parseOptionalBoolean(body.installClaudeAgent) ?? false;
+			const filesystemOnly = parseOptionalBoolean(body.filesystemOnly) ?? false;
 			const advancedConfig = body.advancedConfig || {};
 
 			// Input validation (browser layer responsibility)
@@ -1640,10 +1843,14 @@ export class BacklogServer {
 			// Call shared core init function
 			const result = await initializeProject(this.core, {
 				projectName,
+				backlogDirectory,
+				backlogDirectorySource,
+				configLocation,
 				integrationMode: integrationMode || "none",
 				mcpClients,
 				agentInstructions,
 				installClaudeAgent: installClaudeAgentFlag,
+				filesystemOnly,
 				advancedConfig,
 				existingConfig: null,
 			});

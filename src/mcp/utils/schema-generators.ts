@@ -45,6 +45,12 @@ export function generateTaskCreateSchema(config: BacklogConfig): JsonSchema {
 				type: "string",
 				enum: ["high", "medium", "low"],
 			},
+			ordinal: {
+				type: "number",
+				minimum: 0,
+				description:
+					"Optional non-negative ordering value for manual task ordering. Lower values sort earlier. Prefer spaced integers such as 1000, 2000, 3000 to leave room for inserts.",
+			},
 			milestone: {
 				type: "string",
 				minLength: 1,
@@ -87,6 +93,14 @@ export function generateTaskCreateSchema(config: BacklogConfig): JsonSchema {
 					maxLength: 500,
 				},
 				description: "Documentation URLs or file paths for understanding this task",
+			},
+			modifiedFiles: {
+				type: "array",
+				items: {
+					type: "string",
+					maxLength: 500,
+				},
+				description: "Project-root-relative file paths modified by this task",
 			},
 			finalSummary: {
 				type: "string",
@@ -148,6 +162,12 @@ export function generateTaskEditSchema(config: BacklogConfig): JsonSchema {
 			priority: {
 				type: "string",
 				enum: ["high", "medium", "low"],
+			},
+			ordinal: {
+				type: "number",
+				minimum: 0,
+				description:
+					"Set task ordinal for manual ordering. Lower values sort earlier. Prefer spaced integers such as 1000, 2000, 3000 to leave room for inserts.",
 			},
 			milestone: {
 				type: "string",
@@ -223,6 +243,14 @@ export function generateTaskEditSchema(config: BacklogConfig): JsonSchema {
 					maxLength: 500,
 				},
 				description: "Remove documentation URLs or file paths",
+			},
+			modifiedFiles: {
+				type: "array",
+				items: {
+					type: "string",
+					maxLength: 500,
+				},
+				description: "Set project-root-relative modified file paths (replaces existing)",
 			},
 			implementationNotes: {
 				type: "string",

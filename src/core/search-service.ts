@@ -12,6 +12,7 @@ import type {
 	SearchResultType,
 	Task,
 } from "../types/index.ts";
+import { matchesModifiedFileFilters, normalizeModifiedFileFilters } from "../utils/modified-files.ts";
 import type { ContentStore, ContentStoreEvent } from "./content-store.ts";
 
 interface BaseSearchEntity {
@@ -26,9 +27,11 @@ interface TaskSearchEntity extends BaseSearchEntity {
 	readonly task: Task;
 	readonly statusLower: string;
 	readonly priorityLower?: SearchPriorityFilter;
+	readonly assigneesLower: string[];
 	readonly labelsLower: string[];
 	readonly idVariants: string[];
 	readonly dependencyIds: string[];
+	readonly modifiedFiles: string[];
 }
 
 interface DocumentSearchEntity extends BaseSearchEntity {
@@ -46,7 +49,9 @@ type SearchEntity = TaskSearchEntity | DocumentSearchEntity | DecisionSearchEnti
 type NormalizedFilters = {
 	statuses?: string[];
 	priorities?: SearchPriorityFilter[];
+	assignees?: string[];
 	labels?: string[];
+	modifiedFiles?: string[];
 };
 
 // Regex pattern to match any prefix (letters followed by dash)
@@ -384,9 +389,11 @@ export class SearchService {
 			task,
 			statusLower: task.status.toLowerCase(),
 			priorityLower: task.priority ? (task.priority.toLowerCase() as SearchPriorityFilter) : undefined,
+			assigneesLower: (task.assignee ?? []).map((assignee) => assignee.toLowerCase()),
 			labelsLower: (task.labels || []).map((label) => label.toLowerCase()),
 			idVariants: createTaskIdVariants(task.id),
 			dependencyIds: (task.dependencies ?? []).flatMap((dependency) => createTaskIdVariants(dependency)),
+			modifiedFiles: task.modifiedFiles ?? [],
 		}));
 
 		this.documents = documents.map((document) => ({
@@ -427,6 +434,7 @@ export class SearchService {
 				{ name: "id", weight: 0.2 },
 				{ name: "idVariants", weight: 0.1 },
 				{ name: "dependencyIds", weight: 0.05 },
+				{ name: "modifiedFiles", weight: 0.15 },
 			],
 		});
 	}
@@ -484,6 +492,15 @@ export class SearchService {
 				return allowedPriorities.has(task.priorityLower);
 			});
 		}
+		if (filters.assignees && filters.assignees.length > 0) {
+			const requiredAssignees = new Set(filters.assignees);
+			filtered = filtered.filter((task) => {
+				if (!task.assigneesLower || task.assigneesLower.length === 0) {
+					return false;
+				}
+				return task.assigneesLower.some((assignee) => requiredAssignees.has(assignee));
+			});
+		}
 		if (filters.labels && filters.labels.length > 0) {
 			const requiredLabels = new Set(filters.labels);
 			filtered = filtered.filter((task) => {
@@ -492,6 +509,9 @@ export class SearchService {
 				}
 				return task.labelsLower.some((label) => requiredLabels.has(label));
 			});
+		}
+		if (filters.modifiedFiles && filters.modifiedFiles.length > 0) {
+			filtered = filtered.filter((task) => matchesModifiedFileFilters(task.modifiedFiles, filters.modifiedFiles));
 		}
 		return filtered;
 	}
@@ -509,6 +529,17 @@ export class SearchService {
 			}
 		}
 
+		if (filters.assignees && filters.assignees.length > 0) {
+			if (!task.assigneesLower || task.assigneesLower.length === 0) {
+				return false;
+			}
+			const assigneeSet = new Set(task.assigneesLower);
+			const anyMatch = filters.assignees.some((assignee) => assigneeSet.has(assignee));
+			if (!anyMatch) {
+				return false;
+			}
+		}
+
 		if (filters.labels && filters.labels.length > 0) {
 			if (!task.labelsLower || task.labelsLower.length === 0) {
 				return false;
@@ -518,6 +549,10 @@ export class SearchService {
 			if (!anyMatch) {
 				return false;
 			}
+		}
+
+		if (filters.modifiedFiles && !matchesModifiedFileFilters(task.modifiedFiles, filters.modifiedFiles)) {
+			return false;
 		}
 
 		return true;
@@ -530,12 +565,16 @@ export class SearchService {
 
 		const statuses = this.normalizeStringArray(filters.status);
 		const priorities = this.normalizePriorityArray(filters.priority);
+		const assignees = this.normalizeStringArray(filters.assignee);
 		const labels = this.normalizeLabelsArray(filters.labels);
+		const modifiedFiles = normalizeModifiedFileFilters(filters.modifiedFiles);
 
 		return {
 			statuses,
 			priorities,
+			assignees,
 			labels,
+			modifiedFiles,
 		};
 	}
 
@@ -640,6 +679,10 @@ function buildTaskBodyText(task: Task): string {
 
 	if (task.implementationNotes) {
 		parts.push(task.implementationNotes);
+	}
+
+	if (task.modifiedFiles?.length) {
+		parts.push(task.modifiedFiles.join("\n"));
 	}
 
 	return parts.join("\n\n");

@@ -1,15 +1,18 @@
 import { rename as moveFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { context, SpanStatusCode, trace } from "@opentelemetry/api";
-import { DEFAULT_DIRECTORIES, DEFAULT_STATUSES, FALLBACK_STATUS } from "../constants/index.ts";
+import { DEFAULT_STATUSES, FALLBACK_STATUS } from "../constants/index.ts";
 import { FileSystem } from "../file-system/operations.ts";
 import { GitOperations } from "../git/operations.ts";
 import { getTracer } from "../telemetry";
 import {
 	type AcceptanceCriterion,
-	type BacklogConfig,
 	type Decision,
+	DOCUMENT_TYPE_VALUES,
 	type Document,
+	type DocumentCreateInput,
+	type DocumentType,
+	type DocumentUpdateInput,
 	EntityType,
 	isLocalEditableTask,
 	type Milestone,
@@ -21,8 +24,14 @@ import {
 	type TaskUpdateInput,
 } from "../types/index.ts";
 import { normalizeAssignee } from "../utils/assignee.ts";
-import { documentIdsEqual } from "../utils/document-id.ts";
+import { documentIdsEqual, normalizeDocumentId } from "../utils/document-id.ts";
+import {
+	getDocumentSubPathFromRelativePath,
+	normalizeDocumentRelativePath,
+	normalizeDocumentSubPath,
+} from "../utils/document-path.ts";
 import { openInEditor } from "../utils/editor.ts";
+import { generateNextDocId } from "../utils/id-generators.ts";
 import {
 	createMilestoneFilterValueResolver,
 	normalizeMilestoneFilterValue,
@@ -44,6 +53,7 @@ import {
 import { getTaskFilename, getTaskPath, normalizeTaskId, taskIdsEqual } from "../utils/task-path.ts";
 import { attachSubtaskSummaries } from "../utils/task-subtasks.ts";
 import { upsertTaskUpdatedDate } from "../utils/task-updated-date.ts";
+import { isTerminalStatus } from "../utils/terminal-status.ts";
 import { migrateConfig, needsMigration } from "./config-migration.ts";
 import { ContentStore } from "./content-store.ts";
 import { migrateDraftPrefixes, needsDraftPrefixMigration } from "./prefix-migration.ts";
@@ -138,6 +148,16 @@ function filterTasksByStateSnapshots(tasks: Task[], latestState: Map<string, Bra
 	});
 }
 
+function normalizeDocumentTypeInput(type: unknown): DocumentType | undefined {
+	if (type === undefined) {
+		return undefined;
+	}
+	if (typeof type === "string" && (DOCUMENT_TYPE_VALUES as readonly string[]).includes(type)) {
+		return type as DocumentType;
+	}
+	throw new Error(`Document type must be one of: ${DOCUMENT_TYPE_VALUES.join(", ")}.`);
+}
+
 /**
  * Extract IDs from state map where latest state is "task" or "completed" (not "archived" or "draft")
  * Used for ID generation to determine which IDs are in use.
@@ -161,11 +181,35 @@ export class Core {
 
 	constructor(projectRoot: string, options?: { enableWatchers?: boolean }) {
 		this.fs = new FileSystem(projectRoot);
-		this.git = new GitOperations(projectRoot);
+		this.git = new GitOperations(projectRoot, null, () => this.fs.loadConfig());
 		// Disable watchers by default for CLI commands (non-interactive)
 		// Interactive modes (TUI, browser, MCP) should explicitly pass enableWatchers: true
 		this.enableWatchers = options?.enableWatchers ?? false;
 		// Note: Config is loaded lazily when needed since constructor can't be async
+	}
+
+	async withCreateLock<T>(fn: () => Promise<T>): Promise<T> {
+		return await this.fs.withCreateLock(fn);
+	}
+
+	private async resolveCreateOrdinal(inputOrdinal: number | undefined, isDraft: boolean): Promise<number | undefined> {
+		if (typeof inputOrdinal === "number") {
+			return inputOrdinal;
+		}
+		if (isDraft) {
+			return undefined;
+		}
+
+		const tasks = await this.fs.listTasks();
+		const ordinals = tasks
+			.map((task) => task.ordinal)
+			.filter((ordinal): ordinal is number => typeof ordinal === "number" && Number.isFinite(ordinal));
+
+		if (ordinals.length === 0) {
+			return tasks.length === 0 ? DEFAULT_ORDINAL_STEP : undefined;
+		}
+
+		return Math.max(...ordinals) + DEFAULT_ORDINAL_STEP;
 	}
 
 	async getContentStore(): Promise<ContentStore> {
@@ -448,6 +492,8 @@ export class Core {
 
 		// Check config for remote operations
 		const config = await this.fs.loadConfig();
+		if (config?.checkActiveBranches === false) return null;
+
 		const sinceDays = config?.activeBranchDays ?? 30;
 		const taskPrefix = config?.prefixes?.task ?? "task";
 
@@ -458,7 +504,7 @@ export class Core {
 		const localBranchTask = await findTaskInLocalBranches(
 			this.git,
 			canonicalId,
-			DEFAULT_DIRECTORIES.BACKLOG,
+			await this.getBacklogDirectoryName(),
 			sinceDays,
 			taskPrefix,
 		);
@@ -468,7 +514,13 @@ export class Core {
 		if (config?.remoteOperations === false) return null;
 
 		// Try remote branches
-		return await findTaskInRemoteBranches(this.git, canonicalId, DEFAULT_DIRECTORIES.BACKLOG, sinceDays, taskPrefix);
+		return await findTaskInRemoteBranches(
+			this.git,
+			canonicalId,
+			await this.getBacklogDirectoryName(),
+			sinceDays,
+			taskPrefix,
+		);
 	}
 
 	async getTaskContent(taskId: string): Promise<string | null> {
@@ -487,13 +539,24 @@ export class Core {
 		const document = await this.getDocument(documentId);
 		if (!document) return null;
 
-		const relativePath = document.path ?? `${document.id}.md`;
-		const filePath = join(this.fs.docsDir, relativePath);
+		const relativePath = normalizeDocumentRelativePath(document.path ?? `${document.id}.md`);
+		const filePath = join(this.fs.docsDir, ...relativePath.split("/"));
 		try {
 			return await Bun.file(filePath).text();
 		} catch {
 			return null;
 		}
+	}
+
+	/**
+	 * Re-point this Core instance to a different project root.
+	 * Disposes caches and re-creates FileSystem / GitOperations.
+	 */
+	reinitializeProjectRoot(projectRoot: string): void {
+		this.disposeSearchService();
+		this.disposeContentStore();
+		this.fs = new FileSystem(projectRoot);
+		this.git = new GitOperations(projectRoot, null, () => this.fs.loadConfig());
 	}
 
 	disposeSearchService(): void {
@@ -532,17 +595,20 @@ export class Core {
 	}
 
 	private async getBacklogDirectoryName(): Promise<string> {
-		// Always use "backlog" as the directory name
-		return DEFAULT_DIRECTORIES.BACKLOG;
+		return this.fs.backlogDirName;
 	}
 
 	async shouldAutoCommit(overrideValue?: boolean): Promise<boolean> {
+		const config = await this.fs.loadConfig();
+		this.git.setConfig(config);
+		if (config?.filesystemOnly) {
+			return false;
+		}
 		// If override is explicitly provided, use it
 		if (overrideValue !== undefined) {
 			return overrideValue;
 		}
 		// Otherwise, check config (default to false for safety)
-		const config = await this.fs.loadConfig();
 		return config?.autoCommit ?? false;
 	}
 
@@ -627,7 +693,7 @@ export class Core {
 
 	private async extractLegacyConfigMilestones(): Promise<string[]> {
 		try {
-			const configPath = join(this.fs.rootDir, DEFAULT_DIRECTORIES.BACKLOG, "config.yml");
+			const configPath = this.fs.configFilePath;
 			const content = await Bun.file(configPath).text();
 			const lines = content.split("\n");
 			for (let i = 0; i < lines.length; i += 1) {
@@ -863,11 +929,12 @@ export class Core {
 		// If cross-branch checking is enabled, scan other branches for task states
 		if (config?.checkActiveBranches !== false) {
 			const branchStateEntries: BranchTaskStateEntry[] = [];
+			const backlogDir = await this.getBacklogDirectoryName();
 
 			// Load states from remote and local branches in parallel
 			await Promise.all([
-				loadRemoteTasks(this.git, config, undefined, localTasks, branchStateEntries),
-				loadLocalBranchTasks(this.git, config, undefined, localTasks, branchStateEntries),
+				loadRemoteTasks(this.git, config, undefined, localTasks, branchStateEntries, false, backlogDir),
+				loadLocalBranchTasks(this.git, config, undefined, localTasks, branchStateEntries, false, backlogDir),
 			]);
 
 			// Add branch state entries
@@ -910,64 +977,39 @@ export class Core {
 		}
 	}
 
-	// High-level operations that combine filesystem and git
-	async createTaskFromData(
-		taskData: {
-			title: string;
-			status?: string;
-			assignee?: string[];
-			labels?: string[];
-			dependencies?: string[];
-			parentTaskId?: string;
-			priority?: "high" | "medium" | "low";
-			// First-party structured fields from Web UI / CLI
-			description?: string;
-			acceptanceCriteriaItems?: import("../types/index.ts").AcceptanceCriterion[];
-			implementationPlan?: string;
-			implementationNotes?: string;
-			finalSummary?: string;
-			milestone?: string;
-		},
-		autoCommit?: boolean,
-	): Promise<Task> {
-		// Determine entity type before generating ID - drafts get DRAFT-X, tasks get TASK-X
-		const isDraft = taskData.status?.toLowerCase() === "draft";
-		const entityType = isDraft ? EntityType.Draft : EntityType.Task;
-		const id = await this.generateNextId(entityType, isDraft ? undefined : taskData.parentTaskId);
-
-		const task: Task = {
-			id,
-			title: taskData.title,
-			status: taskData.status || "",
-			assignee: taskData.assignee || [],
-			labels: taskData.labels || [],
-			dependencies: taskData.dependencies || [],
-			rawContent: "",
-			createdDate: new Date().toISOString().slice(0, 16).replace("T", " "),
-			...(taskData.parentTaskId && { parentTaskId: taskData.parentTaskId }),
-			...(taskData.priority && { priority: taskData.priority }),
-			...(typeof taskData.milestone === "string" &&
-				taskData.milestone.trim().length > 0 && {
-					milestone: taskData.milestone.trim(),
-				}),
-			...(typeof taskData.description === "string" && { description: taskData.description }),
-			...(Array.isArray(taskData.acceptanceCriteriaItems) &&
-				taskData.acceptanceCriteriaItems.length > 0 && {
-					acceptanceCriteriaItems: taskData.acceptanceCriteriaItems,
-				}),
-			...(typeof taskData.implementationPlan === "string" && { implementationPlan: taskData.implementationPlan }),
-			...(typeof taskData.implementationNotes === "string" && { implementationNotes: taskData.implementationNotes }),
-			...(typeof taskData.finalSummary === "string" && { finalSummary: taskData.finalSummary }),
-		};
-
-		// Save as draft or task based on status
+	private async writePreparedTask(task: Task, isDraft: boolean): Promise<string> {
 		if (isDraft) {
-			await this.createDraft(task, autoCommit);
-		} else {
-			await this.createTask(task, autoCommit);
+			task.status = "Draft";
+			normalizeAssignee(task);
+			return await this.fs.saveDraft(task);
 		}
 
-		return task;
+		normalizeAssignee(task);
+		return await this.fs.saveTask(task);
+	}
+
+	private async finalizeCreatedTask(
+		task: Task,
+		filepath: string,
+		isDraft: boolean,
+		autoCommit?: boolean,
+	): Promise<Task | null> {
+		const savedTask = isDraft ? await this.fs.loadDraft(task.id) : await this.fs.loadTask(task.id);
+
+		if (!isDraft && this.contentStore && savedTask) {
+			this.contentStore.upsertTask(savedTask);
+		}
+
+		if (await this.shouldAutoCommit(autoCommit)) {
+			if (isDraft) {
+				await this.git.addFile(filepath);
+				await this.git.commitTaskChange(task.id, `Create draft ${task.id}`, filepath);
+			} else {
+				await this.git.addAndCommitTaskFile(task.id, filepath, "create");
+			}
+		}
+
+		return savedTask;
 	}
 
 	async createTaskFromInput(input: TaskCreateInput, autoCommit?: boolean): Promise<{ task: Task; filePath?: string }> {
@@ -981,13 +1023,13 @@ export class Core {
 
 		// Generate ID with appropriate entity type - drafts get DRAFT-X, tasks get TASK-X
 		const entityType = isDraft ? EntityType.Draft : EntityType.Task;
-		const id = await this.generateNextId(entityType, isDraft ? undefined : input.parentTaskId);
 
 		const normalizedLabels = normalizeStringList(input.labels) ?? [];
 		const normalizedAssignees = normalizeStringList(input.assignee) ?? [];
 		const normalizedDependencies = normalizeDependencies(input.dependencies);
 		const normalizedReferences = normalizeStringList(input.references) ?? [];
 		const normalizedDocumentation = normalizeStringList(input.documentation) ?? [];
+		const normalizedModifiedFiles = normalizeStringList(input.modifiedFiles) ?? [];
 
 		const { valid: validDependencies, invalid: invalidDependencies } = await validateDependencies(
 			normalizedDependencies,
@@ -1010,6 +1052,12 @@ export class Core {
 
 		const priority = this.normalizePriority(input.priority);
 		const createdDate = new Date().toISOString().slice(0, 16).replace("T", " ");
+		if (
+			input.ordinal !== undefined &&
+			(typeof input.ordinal !== "number" || !Number.isFinite(input.ordinal) || input.ordinal < 0)
+		) {
+			throw new Error("Ordinal must be a non-negative number.");
+		}
 
 		const acceptanceCriteriaItems = Array.isArray(input.acceptanceCriteria)
 			? input.acceptanceCriteria
@@ -1026,36 +1074,43 @@ export class Core {
 			add: input.definitionOfDoneAdd,
 			disableDefaults: input.disableDefinitionOfDoneDefaults,
 		});
+		const resolvedStatus = isDraft ? "Draft" : status || config?.defaultStatus || FALLBACK_STATUS;
 
-		const task: Task = {
-			id,
-			title: input.title.trim(),
-			status,
-			assignee: normalizedAssignees,
-			labels: normalizedLabels,
-			dependencies: validDependencies,
-			references: normalizedReferences,
-			documentation: normalizedDocumentation,
-			rawContent: input.rawContent ?? "",
-			createdDate,
-			...(input.parentTaskId && { parentTaskId: input.parentTaskId }),
-			...(priority && { priority }),
-			...(typeof input.milestone === "string" &&
-				input.milestone.trim().length > 0 && {
-					milestone: input.milestone.trim(),
-				}),
-			...(typeof input.description === "string" && { description: input.description }),
-			...(typeof input.implementationPlan === "string" && { implementationPlan: input.implementationPlan }),
-			...(typeof input.implementationNotes === "string" && { implementationNotes: input.implementationNotes }),
-			...(typeof input.finalSummary === "string" && { finalSummary: input.finalSummary }),
-			...(acceptanceCriteriaItems.length > 0 && { acceptanceCriteriaItems }),
-			...(definitionOfDoneItems && definitionOfDoneItems.length > 0 && { definitionOfDoneItems }),
-		};
+		const { task, filePath } = await this.withCreateLock(async () => {
+			const id = await this.generateNextId(entityType, isDraft ? undefined : input.parentTaskId);
+			const ordinal = await this.resolveCreateOrdinal(input.ordinal, isDraft);
+			const task: Task = {
+				id,
+				title: input.title.trim(),
+				status: resolvedStatus,
+				assignee: normalizedAssignees,
+				labels: normalizedLabels,
+				dependencies: validDependencies,
+				references: normalizedReferences,
+				documentation: normalizedDocumentation,
+				modifiedFiles: normalizedModifiedFiles,
+				rawContent: input.rawContent ?? "",
+				createdDate,
+				...(input.parentTaskId && { parentTaskId: input.parentTaskId }),
+				...(priority && { priority }),
+				...(typeof ordinal === "number" && { ordinal }),
+				...(typeof input.milestone === "string" &&
+					input.milestone.trim().length > 0 && {
+						milestone: input.milestone.trim(),
+					}),
+				...(typeof input.description === "string" && { description: input.description }),
+				...(typeof input.implementationPlan === "string" && { implementationPlan: input.implementationPlan }),
+				...(typeof input.implementationNotes === "string" && { implementationNotes: input.implementationNotes }),
+				...(typeof input.finalSummary === "string" && { finalSummary: input.finalSummary }),
+				...(acceptanceCriteriaItems.length > 0 && { acceptanceCriteriaItems }),
+				...(definitionOfDoneItems && definitionOfDoneItems.length > 0 && { definitionOfDoneItems }),
+			};
 
-		const filePath = isDraft ? await this.createDraft(task, autoCommit) : await this.createTask(task, autoCommit);
+			const filePath = await this.writePreparedTask(task, isDraft);
+			return { task, filePath };
+		});
 
-		// Load the saved task/draft to return updated data
-		const savedTask = isDraft ? await this.fs.loadDraft(id) : await this.fs.loadTask(id);
+		const savedTask = await this.finalizeCreatedTask(task, filePath, isDraft, autoCommit);
 		return { task: savedTask ?? task, filePath };
 	}
 
@@ -1075,30 +1130,21 @@ export class Core {
 				task.status = config?.defaultStatus || FALLBACK_STATUS;
 			}
 
-			normalizeAssignee(task);
-
 			span.addEvent("task.create.validated", {
 				taskId: task.id,
 				status: task.status,
 			});
 
-			const filepath = await this.fs.saveTask(task);
+			const filepath = await this.writePreparedTask(task, false);
 
 			span.addEvent("task.create.saved", {
 				taskId: task.id,
 				filepath,
 			});
 
-			// Keep any in-process ContentStore in sync for immediate UI/search freshness.
-			if (this.contentStore) {
-				const savedTask = await this.fs.loadTask(task.id);
-				if (savedTask) {
-					this.contentStore.upsertTask(savedTask);
-				}
-			}
+			await this.finalizeCreatedTask(task, filepath, false, autoCommit);
 
 			if (await this.shouldAutoCommit(autoCommit)) {
-				await this.git.addAndCommitTaskFile(task.id, filepath, "create");
 				span.addEvent("task.create.committed", {
 					taskId: task.id,
 				});
@@ -1118,75 +1164,6 @@ export class Core {
 				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
 				"error.message": error instanceof Error ? error.message : String(error),
 				taskId: task.id,
-			});
-			span.setStatus({
-				code: SpanStatusCode.ERROR,
-				message: error instanceof Error ? error.message : String(error),
-			});
-			span.end();
-			throw error;
-		}
-	}
-
-	async createDraft(task: Task, autoCommit?: boolean): Promise<string> {
-		const tracer = getTracer();
-		const span = tracer.startSpan("draft.create");
-		const startTime = Date.now();
-
-		try {
-			span.addEvent("draft.create.started", {
-				draftId: task.id,
-				title: task.title,
-				autoCommit: autoCommit ?? false,
-			});
-
-			// Drafts always have status "Draft", regardless of config default
-			task.status = "Draft";
-			normalizeAssignee(task);
-
-			span.addEvent("draft.create.validated", {
-				draftId: task.id,
-				status: task.status,
-			});
-
-			const filepath = await this.fs.saveDraft(task);
-
-			span.addEvent("draft.create.saved", {
-				draftId: task.id,
-				filepath,
-			});
-
-			if (await this.shouldAutoCommit(autoCommit)) {
-				await this.git.addFile(filepath);
-				await this.git.commitTaskChange(task.id, `Create draft ${task.id}`, filepath);
-
-				span.addEvent("draft.create.committed", {
-					draftId: task.id,
-					commitMessage: `Create draft ${task.id}`,
-				});
-			} else {
-				span.addEvent("draft.create.commit-skipped", {
-					draftId: task.id,
-				});
-			}
-
-			const duration = Date.now() - startTime;
-			span.addEvent("draft.create.complete", {
-				draftId: task.id,
-				filepath,
-				"duration.ms": duration,
-			});
-
-			span.setStatus({ code: SpanStatusCode.OK });
-			span.end();
-
-			return filepath;
-		} catch (error) {
-			span.addEvent("draft.error", {
-				"error.type": error instanceof Error ? error.constructor.name : "UnknownError",
-				"error.message": error instanceof Error ? error.message : String(error),
-				operation: "create",
-				draftId: task.id,
 			});
 			span.setStatus({
 				code: SpanStatusCode.ERROR,
@@ -1297,7 +1274,7 @@ export class Core {
 		}
 
 		if (input.ordinal !== undefined) {
-			if (Number.isNaN(input.ordinal) || input.ordinal < 0) {
+			if (typeof input.ordinal !== "number" || !Number.isFinite(input.ordinal) || input.ordinal < 0) {
 				throw new Error("Ordinal must be a non-negative number.");
 			}
 			if (task.ordinal !== input.ordinal) {
@@ -1473,6 +1450,19 @@ export class Core {
 		};
 
 		resolveDocumentation();
+
+		const resolveModifiedFiles = (): void => {
+			if (input.modifiedFiles === undefined) {
+				return;
+			}
+			const sanitizedModifiedFiles = normalizeStringList(input.modifiedFiles) ?? [];
+			if (!stringArraysEqual(sanitizedModifiedFiles, task.modifiedFiles ?? [])) {
+				task.modifiedFiles = sanitizedModifiedFiles;
+				mutated = true;
+			}
+		};
+
+		resolveModifiedFiles();
 
 		const sanitizeAppendInput = (values: string[] | undefined): string[] => {
 			if (!values) return [];
@@ -1872,31 +1862,34 @@ export class Core {
 		});
 
 		const canonicalStatus = await this.requireCanonicalStatus(targetStatus);
-		const newTaskId = await this.generateNextId(EntityType.Task, draft.parentTaskId);
-		const draftPath = draft.filePath;
 
-		const promotedTask: Task = {
-			...draft,
-			id: newTaskId,
-			status: canonicalStatus,
-			filePath: undefined,
-			...(mutated || draft.status !== canonicalStatus
-				? { updatedDate: new Date().toISOString().slice(0, 16).replace("T", " ") }
-				: {}),
-		};
+		const { promotedTask, savedPath } = await this.withCreateLock(async () => {
+			const newTaskId = await this.generateNextId(EntityType.Task, draft.parentTaskId);
+			const draftPath = draft.filePath;
 
-		normalizeAssignee(promotedTask);
-		const savedPath = await this.fs.saveTask(promotedTask);
+			const promotedTask: Task = {
+				...draft,
+				id: newTaskId,
+				status: canonicalStatus,
+				filePath: undefined,
+				...(mutated || draft.status !== canonicalStatus
+					? { updatedDate: new Date().toISOString().slice(0, 16).replace("T", " ") }
+					: {}),
+			};
 
-		if (draftPath) {
-			await unlink(draftPath);
-		}
+			normalizeAssignee(promotedTask);
+			const savedPath = await this.fs.saveTask(promotedTask);
 
-		if (this.contentStore) {
-			const savedTask = await this.fs.loadTask(promotedTask.id);
-			if (savedTask) {
-				this.contentStore.upsertTask(savedTask);
+			if (draftPath) {
+				await unlink(draftPath);
 			}
+
+			return { promotedTask, savedPath };
+		});
+
+		const savedTask = await this.fs.loadTask(promotedTask.id);
+		if (this.contentStore && savedTask) {
+			this.contentStore.upsertTask(savedTask);
 		}
 
 		if (await this.shouldAutoCommit(autoCommit)) {
@@ -1905,7 +1898,7 @@ export class Core {
 			await this.git.commitChanges(`backlog: Promote draft ${normalizeId(draft.id, "draft")}`, repoRoot);
 		}
 
-		return (await this.fs.loadTask(promotedTask.id)) ?? { ...promotedTask, filePath: savedPath };
+		return savedTask ?? { ...promotedTask, filePath: savedPath };
 	}
 
 	private async demoteTaskWithUpdates(task: Task, input: TaskUpdateInput, autoCommit?: boolean): Promise<Task> {
@@ -1916,25 +1909,29 @@ export class Core {
 			return this.requireCanonicalStatus(status);
 		});
 
-		const newDraftId = await this.generateNextId(EntityType.Draft);
-		const taskPath = task.filePath;
+		const { demotedDraft, savedPath } = await this.withCreateLock(async () => {
+			const newDraftId = await this.generateNextId(EntityType.Draft);
+			const taskPath = task.filePath;
 
-		const demotedDraft: Task = {
-			...task,
-			id: newDraftId,
-			status: "Draft",
-			filePath: undefined,
-			...(mutated || task.status !== "Draft"
-				? { updatedDate: new Date().toISOString().slice(0, 16).replace("T", " ") }
-				: {}),
-		};
+			const demotedDraft: Task = {
+				...task,
+				id: newDraftId,
+				status: "Draft",
+				filePath: undefined,
+				...(mutated || task.status !== "Draft"
+					? { updatedDate: new Date().toISOString().slice(0, 16).replace("T", " ") }
+					: {}),
+			};
 
-		normalizeAssignee(demotedDraft);
-		const savedPath = await this.fs.saveDraft(demotedDraft);
+			normalizeAssignee(demotedDraft);
+			const savedPath = await this.fs.saveDraft(demotedDraft);
 
-		if (taskPath) {
-			await unlink(taskPath);
-		}
+			if (taskPath) {
+				await unlink(taskPath);
+			}
+
+			return { demotedDraft, savedPath };
+		});
 
 		if (await this.shouldAutoCommit(autoCommit)) {
 			const backlogDir = await this.getBacklogDirectoryName();
@@ -2398,7 +2395,11 @@ export class Core {
 			} catch (error) {
 				await this.git.resetPaths(commitPaths, repoRoot);
 				const rollbackTitle = result.previousTitle ?? title;
-				await this.fs.renameMilestone(result.milestone?.id ?? identifier, rollbackTitle);
+				try {
+					await this.fs.renameMilestone(result.milestone?.id ?? identifier, rollbackTitle);
+				} catch {
+					// Ignore rollback failure and propagate original commit error.
+				}
 				throw error;
 			}
 		}
@@ -2500,13 +2501,15 @@ export class Core {
 		}
 	}
 
-	async getDoneTasksByAge(olderThanDays: number): Promise<Task[]> {
+	async getTerminalStatusTasksByAge(olderThanDays: number): Promise<Task[]> {
 		const tasks = await this.fs.listTasks();
+		const config = await this.fs.loadConfig();
+		const statuses = config?.statuses ?? [...DEFAULT_STATUSES];
 		const cutoffDate = new Date();
 		cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
 
 		return tasks.filter((task) => {
-			if (task.status !== "Done") return false;
+			if (!isTerminalStatus(task.status, statuses)) return false;
 
 			// Check updatedDate first, then createdDate as fallback
 			const taskDate = task.updatedDate || task.createdDate;
@@ -3102,7 +3105,7 @@ export class Core {
 				type: doc.type,
 			});
 
-			const relativePath = await this.fs.saveDocument(doc, subPath);
+			const relativePath = await this.fs.saveDocument(doc, normalizeDocumentSubPath(subPath));
 			doc.path = relativePath;
 
 			span.addEvent("document.create.saved", {
@@ -3155,52 +3158,20 @@ export class Core {
 				autoCommit: autoCommit ?? false,
 			});
 
-			span.addEvent("document.update.loaded", {
-				documentId: existingDoc.id,
-				title: existingDoc.title,
-			});
-
-			const updatedDoc = {
-				...existingDoc,
-				rawContent: content,
-				updatedDate: new Date().toISOString().slice(0, 16).replace("T", " "),
-			};
-
-			span.addEvent("document.update.validated", {
-				documentId: updatedDoc.id,
-				updatedDate: updatedDoc.updatedDate,
-			});
-
-			let normalizedSubPath = "";
-			if (existingDoc.path) {
-				const segments = existingDoc.path.split(/[\\/]/).slice(0, -1);
-				if (segments.length > 0) {
-					normalizedSubPath = segments.join("/");
-				}
-			}
-
-			// Save the document directly instead of delegating to createDocument
-			const relativePath = await this.fs.saveDocument(updatedDoc, normalizedSubPath);
-			updatedDoc.path = relativePath;
-
-			span.addEvent("document.update.saved", {
-				documentPath: relativePath,
-			});
-
-			// Handle git commit if autoCommit is enabled
-			if (await this.shouldAutoCommit(autoCommit)) {
-				const backlogDir = await this.getBacklogDirectoryName();
-				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-				const commitMessage = `backlog: Update document ${updatedDoc.id}`;
-				await this.git.commitChanges(commitMessage, repoRoot);
-
-				span.addEvent("document.update.committed", {
-					commitMessage,
-				});
-			}
+			await this.updateDocumentFromInput(
+				{
+					id: existingDoc.id,
+					title: existingDoc.title,
+					type: existingDoc.type,
+					tags: existingDoc.tags,
+					content,
+					...(existingDoc.path !== undefined && { path: getDocumentSubPathFromRelativePath(existingDoc.path) }),
+				},
+				autoCommit,
+			);
 
 			span.addEvent("document.update.complete", {
-				documentId: updatedDoc.id,
+				documentId: existingDoc.id,
 				success: true,
 			});
 
@@ -3223,47 +3194,65 @@ export class Core {
 	}
 
 	async createDocumentWithId(title: string, content: string, autoCommit?: boolean): Promise<Document> {
-		// Import the generateNextDocId function from CLI
-		const { generateNextDocId } = await import("../cli.js");
-		const id = await generateNextDocId(this);
-
-		const document: Document = {
-			id,
-			title,
-			type: "other" as const,
-			createdDate: new Date().toISOString().slice(0, 16).replace("T", " "),
-			rawContent: content,
-		};
-
-		await this.createDocument(document, autoCommit);
-		return document;
+		return await this.createDocumentFromInput({ title, content }, autoCommit);
 	}
 
-	async initializeProject(projectName: string, autoCommit = false): Promise<void> {
-		await this.fs.ensureBacklogStructure();
+	async createDocumentFromInput(input: DocumentCreateInput, autoCommit?: boolean): Promise<Document> {
+		const title = input.title.trim();
+		if (!title) {
+			throw new Error("Title is required to create a document.");
+		}
 
-		const config: BacklogConfig = {
-			projectName: projectName,
-			statuses: [...DEFAULT_STATUSES],
-			labels: [],
-			defaultStatus: DEFAULT_STATUSES[0], // Use first status as default
-			dateFormat: "yyyy-mm-dd",
-			maxColumnWidth: 20, // Default for terminal display
-			autoCommit: false, // Default to false for user control
-			prefixes: {
-				task: "task",
-			},
+		const subPath = normalizeDocumentSubPath(input.path);
+		const tags = normalizeStringList(input.tags);
+		const type = normalizeDocumentTypeInput(input.type) ?? "other";
+		const document = await this.withCreateLock(async () => {
+			const id = normalizeDocumentId(await generateNextDocId(this));
+			const document: Document = {
+				id,
+				title,
+				type,
+				createdDate: new Date().toISOString().slice(0, 16).replace("T", " "),
+				rawContent: input.content ?? "",
+				...(tags && tags.length > 0 && { tags }),
+			};
+
+			await this.createDocument(document, autoCommit, subPath);
+			return document;
+		});
+
+		return (await this.getDocument(document.id)) ?? document;
+	}
+
+	async updateDocumentFromInput(input: DocumentUpdateInput, autoCommit?: boolean): Promise<Document> {
+		const existingDoc = await this.getDocument(input.id);
+		if (!existingDoc) {
+			throw new Error(`Document not found: ${input.id}`);
+		}
+
+		const normalizedTitle = input.title?.trim();
+		if (input.title !== undefined && !normalizedTitle) {
+			throw new Error("Document title cannot be empty.");
+		}
+
+		const tags = input.tags !== undefined ? normalizeStringList(input.tags) : existingDoc.tags;
+		const type = normalizeDocumentTypeInput(input.type) ?? existingDoc.type;
+		const subPath =
+			input.path === undefined
+				? getDocumentSubPathFromRelativePath(existingDoc.path)
+				: normalizeDocumentSubPath(input.path);
+		const updatedDoc: Document = {
+			...existingDoc,
+			id: normalizeDocumentId(existingDoc.id),
+			title: normalizedTitle ?? existingDoc.title,
+			type,
+			rawContent: input.content,
+			updatedDate: new Date().toISOString().slice(0, 16).replace("T", " "),
+			tags: tags && tags.length > 0 ? tags : undefined,
 		};
 
-		await this.fs.saveConfig(config);
-		// Update git operations with the new config
-		await this.ensureConfigLoaded();
-
-		if (autoCommit) {
-			const backlogDir = await this.getBacklogDirectoryName();
-			const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
-			await this.git.commitChanges(`backlog: Initialize backlog project: ${projectName}`, repoRoot);
-		}
+		await this.createDocument(updatedDoc, autoCommit, subPath);
+		return (await this.getDocument(existingDoc.id)) ?? updatedDoc;
 	}
 
 	async listTasksWithMetadata(
@@ -3429,12 +3418,19 @@ export class Core {
 		]);
 
 		// Load remote tasks and local branch tasks in parallel
-		const branchStateEntries: BranchTaskStateEntry[] | undefined =
-			config?.checkActiveBranches === false ? undefined : [];
-		const [remoteTasks, localBranchTasks] = await Promise.all([
-			loadRemoteTasks(this.git, config, progressCallback, localTasks, branchStateEntries),
-			loadLocalBranchTasks(this.git, config, progressCallback, localTasks, branchStateEntries),
-		]);
+		// Skip entirely when cross-branch scanning is disabled
+		let remoteTasks: Task[] = [];
+		let localBranchTasks: Task[] = [];
+		let branchStateEntries: BranchTaskStateEntry[] | undefined;
+
+		if (config?.checkActiveBranches !== false) {
+			const backlogDir = await this.getBacklogDirectoryName();
+			branchStateEntries = [];
+			[remoteTasks, localBranchTasks] = await Promise.all([
+				loadRemoteTasks(this.git, config, progressCallback, localTasks, branchStateEntries, false, backlogDir),
+				loadLocalBranchTasks(this.git, config, progressCallback, localTasks, branchStateEntries, false, backlogDir),
+			]);
+		}
 		progressCallback?.("Loaded tasks");
 
 		// Create map with local tasks
@@ -3519,14 +3515,36 @@ export class Core {
 		}
 
 		// Load tasks from remote branches and other local branches in parallel
-		progressCallback?.(getTaskLoadingMessage(config));
+		// Skip entirely when cross-branch scanning is disabled
+		let remoteTasks: Task[] = [];
+		let localBranchTasks: Task[] = [];
+		let branchStateEntries: BranchTaskStateEntry[] | undefined;
 
-		const branchStateEntries: BranchTaskStateEntry[] | undefined =
-			config?.checkActiveBranches === false ? undefined : [];
-		const [remoteTasks, localBranchTasks] = await Promise.all([
-			loadRemoteTasks(this.git, config, progressCallback, localTasks, branchStateEntries, includeCompleted),
-			loadLocalBranchTasks(this.git, config, progressCallback, localTasks, branchStateEntries, includeCompleted),
-		]);
+		if (config?.checkActiveBranches !== false) {
+			progressCallback?.(getTaskLoadingMessage(config));
+			branchStateEntries = [];
+			const backlogDir = await this.getBacklogDirectoryName();
+			[remoteTasks, localBranchTasks] = await Promise.all([
+				loadRemoteTasks(
+					this.git,
+					config,
+					progressCallback,
+					localTasks,
+					branchStateEntries,
+					includeCompleted,
+					backlogDir,
+				),
+				loadLocalBranchTasks(
+					this.git,
+					config,
+					progressCallback,
+					localTasks,
+					branchStateEntries,
+					includeCompleted,
+					backlogDir,
+				),
+			]);
+		}
 
 		// Check for cancellation after loading
 		if (abortSignal?.aborted) {

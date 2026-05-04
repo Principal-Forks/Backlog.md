@@ -66,6 +66,8 @@ remains fully synchronized and up-to-date.
 - **All task operations MUST use the Backlog.md CLI tool**
 - This ensures metadata is correctly updated and the project stays in sync
 - **Always use `--plain` flag** when listing or viewing tasks for AI-friendly text output
+- Create and update project docs through Backlog.md APIs so frontmatter and paths stay valid. For CLI users, run `backlog doc create "Title" -p guides/setup` or `backlog doc update doc-1 --content "Updated markdown"`; MCP users should use `document_create` / `document_update`.
+- Document paths are relative to `backlog/docs/`; absolute paths and `..` traversal are rejected.
 
 ---
 
@@ -108,6 +110,9 @@ title: Add GraphQL resolver
 status: To Do
 assignee: [@sara]
 labels: [backend, api]
+modified_files:
+  - src/server/api.ts
+  - src/web/components/TaskList.tsx
 ---
 
 ## Description
@@ -234,7 +239,7 @@ backlog task edit 42 --remove-ac 2 --remove-ac 4    # Remove multiple ACs (proce
 
 ### Definition of Done checklist (per-task)
 
-Definition of Done items are a second checklist in each task. Defaults come from `definition_of_done` in `backlog/config.yml` (or Web UI Settings) and can be disabled per task.
+Definition of Done items are a second checklist in each task. Defaults come from `definition_of_done` in the project config file (`backlog/config.yml`, `.backlog/config.yml`, or `backlog.config.yml`) or from Web UI Settings, and can be disabled per task.
 
 **Managing Definition of Done via CLI:**
 
@@ -451,11 +456,15 @@ backlog search "login" --type task --plain
 # Search with filters
 backlog search "api" --status "In Progress" --plain
 backlog search "bug" --priority high --plain
+
+# Find tasks that modified a project file path
+backlog search --modified-file src/server/api.ts --plain
 ```
 
 **Key points:**
 - Uses fuzzy matching - finds "authentication" when searching "auth"
 - Searches task titles, descriptions, and content
+- Also searches `modified_files`; `--modified-file` applies a case-insensitive path substring filter
 - Also searches documents and decisions unless filtered with `--type task`
 - Always use `--plain` flag for AI-readable output
 
@@ -496,7 +505,8 @@ backlog search "bug" --priority high --plain
 | With final summary | `backlog task create "Title" --final-summary "PR-style summary"`                 |
 | With references  | `backlog task create "Title" --ref src/api.ts --ref https://github.com/issue/123`   |
 | With documentation | `backlog task create "Title" --doc https://design-docs.example.com`               |
-| With all options | `backlog task create "Title" -d "Desc" -a @sara -s "To Do" -l auth --priority high --ref src/api.ts --doc docs/spec.md` |
+| With modified files | `backlog task create "Title" --modified-file src/api.ts --modified-file src/ui.ts` |
+| With all options | `backlog task create "Title" -d "Desc" -a @sara -s "To Do" -l auth --priority high --ref src/api.ts --doc docs/spec.md --modified-file src/api.ts` |
 | Create draft     | `backlog task create "Title" --draft`                                               |
 | Create subtask   | `backlog task create "Title" -p 42`                                                 |
 
@@ -535,26 +545,54 @@ backlog search "bug" --priority high --plain
 | Add dependencies | `backlog task edit 42 --dep task-1 --dep task-2`         |
 | Add references   | `backlog task edit 42 --ref src/api.ts --ref https://github.com/issue/123` |
 | Add documentation | `backlog task edit 42 --doc https://design-docs.example.com --doc docs/spec.md` |
+| Set modified files | `backlog task edit 42 --modified-file src/api.ts --modified-file src/ui.ts` |
 
 ### Multi‑line Input (Description/Plan/Notes/Final Summary)
 
-The CLI preserves input literally. Shells do not convert `\n` inside normal quotes. Use one of the following to insert real newlines:
+The CLI preserves input literally — shells do not convert `\n` inside normal quotes. Use one of the following forms, listed in order of preference for AI agents:
+
+**1. Repeat `--append-*` for each line (works in every shell, including sandboxes that block other forms):**
+
+```bash
+backlog task edit 42 --notes "First line"
+backlog task edit 42 --append-notes "Second line"
+backlog task edit 42 --append-notes "Third line"
+```
+
+**2. Real newlines inside double quotes (single command — pass an actual line break inside the string):**
+
+```bash
+backlog task edit 42 --notes "First line
+Second line
+
+Final paragraph"
+```
+
+The same shape works for `--desc`, `--plan`, `--final-summary`, and the `--append-*` variants.
+
+**3. Shell-specific shorthand (interactive shells only — some AI agent sandboxes reject these):**
 
 - Bash/Zsh (ANSI‑C quoting):
-  - Description: `backlog task edit 42 --desc $'Line1\nLine2\n\nFinal'`
-  - Plan: `backlog task edit 42 --plan $'1. A\n2. B'`
-  - Notes: `backlog task edit 42 --notes $'Done A\nDoing B'`
-  - Append notes: `backlog task edit 42 --append-notes $'Progress update line 1\nLine 2'`
-  - Final summary: `backlog task edit 42 --final-summary $'Shipped A\nAdded B'`
-  - Append final summary: `backlog task edit 42 --append-final-summary $'Added X\nAdded Y'`
-- POSIX portable (printf):
-  - `backlog task edit 42 --notes "$(printf 'Line1\nLine2')"`
-- PowerShell (backtick n):
-  - `backlog task edit 42 --notes "Line1`nLine2"`
 
-Do not expect `"...\n..."` to become a newline. That passes the literal backslash + n to the CLI by design.
+  ```bash
+  backlog task edit 42 --notes $'Line1\nLine2'
+  ```
 
-Descriptions support literal newlines; shell examples may show escaped `\\n`, but enter a single `\n` to create a newline.
+- POSIX sh (command substitution + printf):
+
+  ```bash
+  backlog task edit 42 --notes "$(printf 'Line1\nLine2')"
+  ```
+
+- PowerShell (backtick‑n):
+
+  ```powershell
+  backlog task edit 42 --notes "Line1`nLine2"
+  ```
+
+Prefer forms **1** and **2** when running under Claude Code, Codex, or any agent harness that screens commands through a tree‑sitter AST walker — those harnesses reject ANSI‑C strings, command substitutions, and heredoc forms (see issue [#595](https://github.com/MrLesk/Backlog.md/issues/595)).
+
+Do not expect the literal sequence `\n` inside double quotes to become a newline. The CLI stores the backslash and `n` as written.
 
 ### Implementation Notes Formatting
 
@@ -562,10 +600,20 @@ Descriptions support literal newlines; shell examples may show escaped `\\n`, bu
 - Use short paragraphs or bullet lists instead of a single long line.
 - Use Markdown bullets (`-` for unordered, `1.` for ordered) for readability.
 - When using CLI flags like `--append-notes`, remember to include explicit
-  newlines. Example:
+  newlines. Either repeat the flag once per line:
 
   ```bash
-  backlog task edit 42 --append-notes $'- Added new API endpoint\n- Updated tests\n- TODO: monitor staging deploy'
+  backlog task edit 42 --append-notes "- Added new API endpoint" \
+    --append-notes "- Updated tests" \
+    --append-notes "- TODO: monitor staging deploy"
+  ```
+
+  Or pass real newlines inside the quoted argument:
+
+  ```bash
+  backlog task edit 42 --append-notes "- Added new API endpoint
+  - Updated tests
+  - TODO: monitor staging deploy"
   ```
 
 ### Final Summary Formatting
@@ -589,6 +637,76 @@ Tests:
 - bun test src/test/cli-final-summary.test.ts
 ```
 
+### Task Images (Local Assets)
+
+Tasks may include images for screenshots, diagrams, or visual references. Local images are served automatically when using `backlog browser`.
+
+**Storage location:**
+- Place image files under the `assets/` folder inside your backlog directory (e.g., `backlog/assets/images/screenshot.png`)
+
+**Supported formats:**
+- png, jpg, jpeg, gif, svg, webp, avif (served with correct Content-Type)
+
+**Markdown syntax in tasks:**
+```markdown
+![example](assets/images/screenshot.png)
+```
+
+**Workflow when adding images to tasks:**
+1. Move or copy the image file into the `assets/` folder inside your backlog directory (e.g., `backlog/assets/images/screenshot.png`)
+2. Then add or edit the task content via CLI, referencing the image using the `assets/<relative-path>` path
+
+**Key points:**
+- The path in Markdown starts with `assets/` and maps to the backlog directory's `assets/` folder; do **not** include the backlog directory name itself
+- When `backlog browser` is running, these files are automatically available at `assets/<relative-path>`
+- You can add images to descriptions, implementation notes, or final summaries using the standard CLI commands
+
+### Document Management
+
+> Docs are used for long-term project reference information, such as development standards, configuration guides, architecture documentation, etc. They differ from `tasks/` (specific tasks), `decisions/` (decision records), and `drafts/` (drafts).
+
+Use Backlog.md public interfaces for document creation and updates so IDs, frontmatter, paths, and search metadata stay consistent.
+
+#### CLI Usage
+
+The CLI supports creating, updating, listing, and viewing documents.
+
+```bash
+# Create a new doc (saved under backlog/docs/ by default)
+backlog doc create "API Guidelines"
+
+# Create in a subdirectory (nested paths supported)
+backlog doc create "Setup Guide" -p guides/setup
+
+# Specify type at creation time
+backlog doc create "Architecture" -t guide
+
+# Update content while preserving omitted metadata
+backlog doc update doc-1 --content "Updated markdown"
+
+# Update metadata or move a doc within backlog/docs/
+backlog doc update doc-1 --title "Setup Handbook" -t guide --tags setup,runbook -p guides
+
+# List all docs (searched globally across subdirectories)
+backlog doc list
+
+# View a specific doc
+backlog doc view doc-1
+```
+
+#### MCP / API Usage
+
+- Use `document_create` to create documents with title, content, optional type/tags, and optional docs-directory-relative path.
+- Use `document_update` to update document content, title, type, tags, or path while preserving document metadata.
+- Document responses include the persisted docs-relative file path so agents can reference the created file without scanning source internals.
+
+#### Key Rules
+
+- Document paths are relative to `backlog/docs/`; absolute paths and `..` traversal are rejected.
+- Supported document types are `readme`, `guide`, `specification`, and `other`.
+- Document IDs are global across the entire docs tree, including nested subfolders.
+- Prefer CLI, MCP, or Web document APIs over ad-hoc file writes so frontmatter and metadata remain valid.
+
 ### Task Operations
 
 | Action             | Command                                      |
@@ -597,6 +715,7 @@ Tests:
 | List tasks         | `backlog task list --plain`                  |
 | Search tasks       | `backlog search "topic" --plain`              |
 | Search with filter | `backlog search "api" --status "To Do" --plain` |
+| Search by modified file | `backlog search --modified-file src/api.ts --plain` |
 | Filter by status   | `backlog task list -s "In Progress" --plain` |
 | Filter by assignee | `backlog task list -a @sara --plain`         |
 | Archive task       | `backlog task archive 42`                    |

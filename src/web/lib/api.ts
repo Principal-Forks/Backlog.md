@@ -20,6 +20,15 @@ export interface ReorderTaskPayload {
 	targetMilestone?: string | null;
 }
 
+export interface InitializationStatus {
+	initialized: boolean;
+	projectPath: string;
+	backlogDirectory?: string | null;
+	backlogDirectorySource?: "backlog" | ".backlog" | "custom" | null;
+	configLocation?: "folder" | "root" | null;
+	rootConfigPath?: string | null;
+}
+
 // Enhanced error types for better error handling
 export class ApiError extends Error {
 	constructor(
@@ -159,7 +168,9 @@ export class ApiClient {
 			types?: SearchResultType[];
 			status?: string | string[];
 			priority?: SearchPriorityFilter | SearchPriorityFilter[];
+			assignee?: string | string[];
 			labels?: string[];
+			modifiedFiles?: string[];
 			limit?: number;
 		} = {},
 	): Promise<SearchResult[]> {
@@ -184,10 +195,25 @@ export class ApiClient {
 				params.append("priority", priority);
 			}
 		}
+		if (options.assignee) {
+			const assignees = Array.isArray(options.assignee) ? options.assignee : [options.assignee];
+			for (const assignee of assignees) {
+				if (assignee && assignee.trim().length > 0) {
+					params.append("assignee", assignee.trim());
+				}
+			}
+		}
 		if (options.labels) {
 			for (const label of options.labels) {
 				if (label && label.trim().length > 0) {
 					params.append("label", label.trim());
+				}
+			}
+		}
+		if (options.modifiedFiles) {
+			for (const file of options.modifiedFiles) {
+				if (file && file.trim().length > 0) {
+					params.append("modifiedFile", file.trim());
 				}
 			}
 		}
@@ -322,10 +348,13 @@ export class ApiClient {
 		return response.json();
 	}
 
-	async updateDoc(filename: string, content: string, title?: string): Promise<void> {
+	async updateDoc(filename: string, content: string, title?: string, path?: string | null): Promise<Document> {
 		const payload: Record<string, unknown> = { content };
 		if (typeof title === "string") {
 			payload.title = title;
+		}
+		if (path !== undefined) {
+			payload.path = path;
 		}
 
 		const response = await fetch(`${API_BASE}/docs/${encodeURIComponent(filename)}`, {
@@ -338,15 +367,16 @@ export class ApiClient {
 		if (!response.ok) {
 			throw new Error("Failed to update document");
 		}
+		return response.json();
 	}
 
-	async createDoc(filename: string, content: string): Promise<{ id: string }> {
+	async createDoc(filename: string, content: string, path?: string): Promise<Document & { success?: boolean }> {
 		const response = await fetch(`${API_BASE}/docs`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ filename, content }),
+			body: JSON.stringify({ filename, content, path }),
 		});
 		if (!response.ok) {
 			throw new Error("Failed to create document");
@@ -444,6 +474,42 @@ export class ApiClient {
 		return response.json();
 	}
 
+	async updateMilestone(
+		id: string,
+		title: string,
+	): Promise<{ success: boolean; milestone?: Milestone | null; message?: string }> {
+		const response = await fetch(`${API_BASE}/milestones/${encodeURIComponent(id)}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ title }),
+		});
+		if (!response.ok) {
+			const data = await response.json().catch(() => ({}));
+			throw new Error(data.error || "Failed to update milestone");
+		}
+		return response.json();
+	}
+
+	async removeMilestone(
+		id: string,
+		options: { taskHandling?: "clear" | "keep" | "reassign"; reassignTo?: string } = {},
+	): Promise<{ success: boolean; message?: string }> {
+		const response = await fetch(`${API_BASE}/milestones/${encodeURIComponent(id)}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(options),
+		});
+		if (!response.ok) {
+			const data = await response.json().catch(() => ({}));
+			throw new Error(data.error || "Failed to remove milestone");
+		}
+		return response.json();
+	}
+
 	async archiveMilestone(id: string): Promise<{ success: boolean; milestone?: Milestone | null }> {
 		const response = await fetch(`${API_BASE}/milestones/${encodeURIComponent(id)}/archive`, {
 			method: "POST",
@@ -463,16 +529,20 @@ export class ApiClient {
 		>(`${API_BASE}/statistics`);
 	}
 
-	async checkStatus(): Promise<{ initialized: boolean; projectPath: string }> {
-		return this.fetchJson<{ initialized: boolean; projectPath: string }>(`${API_BASE}/status`);
+	async checkStatus(): Promise<InitializationStatus> {
+		return this.fetchJson<InitializationStatus>(`${API_BASE}/status`);
 	}
 
 	async initializeProject(options: {
 		projectName: string;
+		backlogDirectory?: string;
+		backlogDirectorySource?: "backlog" | ".backlog" | "custom";
+		configLocation?: "folder" | "root";
 		integrationMode: "mcp" | "cli" | "none";
 		mcpClients?: ("claude" | "codex" | "gemini" | "kiro" | "guide")[];
 		agentInstructions?: ("CLAUDE.md" | "AGENTS.md" | "GEMINI.md" | ".github/copilot-instructions.md")[];
 		installClaudeAgent?: boolean;
+		filesystemOnly?: boolean;
 		advancedConfig?: {
 			checkActiveBranches?: boolean;
 			remoteOperations?: boolean;

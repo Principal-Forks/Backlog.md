@@ -77,6 +77,9 @@ export function formatTaskPlainText(task: Task, options: TaskPlainTextOptions = 
 	if (priorityLabel) {
 		lines.push(`Priority: ${priorityLabel}`);
 	}
+	if (task.ordinal !== undefined) {
+		lines.push(`Ordinal: ${task.ordinal}`);
+	}
 
 	const assigneeText = formatAssignees(task.assignee);
 	if (assigneeText) {
@@ -128,6 +131,10 @@ export function formatTaskPlainText(task: Task, options: TaskPlainTextOptions = 
 
 	if (task.documentation?.length) {
 		lines.push(`Documentation: ${task.documentation.join(", ")}`);
+	}
+
+	if (task.modifiedFiles?.length) {
+		lines.push(`Modified files: ${task.modifiedFiles.join(", ")}`);
 	}
 
 	lines.push("");

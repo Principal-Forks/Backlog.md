@@ -1,13 +1,17 @@
 import { mkdir, rename, unlink } from "node:fs/promises";
-import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { SpanStatusCode, trace } from "@opentelemetry/api";
-import { DEFAULT_DIRECTORIES, DEFAULT_FILES, DEFAULT_STATUSES } from "../constants/index.ts";
+import matter from "gray-matter";
+import lockfile from "proper-lockfile";
+import { DEFAULT_DIRECTORIES, DEFAULT_FILES, DEFAULT_STATUSES, FALLBACK_STATUS } from "../constants/index.ts";
 import { parseDecision, parseDocument, parseMilestone, parseTask } from "../markdown/parser.ts";
 import { serializeDecision, serializeDocument, serializeTask } from "../markdown/serializer.ts";
 import { getTracer } from "../telemetry";
 import type { BacklogConfig, Decision, Document, Milestone, Task, TaskListFilter } from "../types/index.ts";
+import type { BacklogConfigSource } from "../utils/backlog-directory.ts";
+import { normalizeProjectBacklogDirectory, resolveBacklogDirectory } from "../utils/backlog-directory.ts";
 import { documentIdsEqual, normalizeDocumentId } from "../utils/document-id.ts";
+import { normalizeDocumentRelativePath, normalizeDocumentSubPath } from "../utils/document-path.ts";
 import {
 	buildGlobPattern,
 	extractAnyPrefix,
@@ -15,7 +19,7 @@ import {
 	idForFilename,
 	normalizeId,
 } from "../utils/prefix-config.ts";
-import { getTaskFilename, getTaskPath, normalizeTaskIdentity } from "../utils/task-path.ts";
+import { getTaskFilename, getTaskPath, normalizeTaskIdentity, taskIdsEqual } from "../utils/task-path.ts";
 import { sortByTaskId } from "../utils/task-sorting.ts";
 
 // Interface for task path resolution context
@@ -25,93 +29,90 @@ interface TaskPathContext {
 	};
 }
 
+interface CreateLockOptions {
+	timeoutMs?: number;
+	retryDelayMs?: number;
+	staleMs?: number;
+}
+
+const DEFAULT_CREATE_LOCK_TIMEOUT_MS = 30_000;
+const DEFAULT_CREATE_LOCK_RETRY_DELAY_MS = 100;
+const DEFAULT_CREATE_LOCK_STALE_MS = 10_000;
+
+export const CREATE_LOCK_ERROR_CODE = "ECREATELOCK";
+export const CREATE_LOCK_ERROR_MESSAGE =
+	"Another task create/promote/demote operation is already in progress. Please try again.";
+
+function createLockError(message: string, cause?: unknown): Error {
+	const error = new Error(message, cause === undefined ? undefined : { cause }) as Error & { code?: string };
+	error.name = "CreateLockError";
+	error.code = CREATE_LOCK_ERROR_CODE;
+	return error;
+}
+
+export function isCreateLockError(error: unknown): error is Error {
+	return (
+		error instanceof Error &&
+		(error as Error & { code?: string }).code === CREATE_LOCK_ERROR_CODE &&
+		error.name === "CreateLockError"
+	);
+}
+
 export class FileSystem {
-	private readonly backlogDir: string;
+	private resolvedBacklogDir: string;
+	private resolvedBacklogDirName: string;
+	private resolvedConfigPath: string;
+	private configSource: BacklogConfigSource;
 	private readonly projectRoot: string;
 	private cachedConfig: BacklogConfig | null = null;
 
 	constructor(projectRoot: string) {
 		this.projectRoot = projectRoot;
-		this.backlogDir = join(projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
+		const resolution = resolveBacklogDirectory(projectRoot);
+		this.resolvedBacklogDirName = resolution.backlogDir ?? DEFAULT_DIRECTORIES.BACKLOG;
+		this.resolvedBacklogDir = resolution.backlogPath ?? join(projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
+		this.resolvedConfigPath = resolution.configPath ?? join(this.resolvedBacklogDir, DEFAULT_FILES.CONFIG);
+		this.configSource = resolution.configSource ?? "folder";
 	}
 
 	private async getBacklogDir(): Promise<string> {
-		// Ensure migration is checked if needed
-		if (!this.cachedConfig) {
-			this.cachedConfig = await this.loadConfigDirect();
-		}
-		// Always use "backlog" as the directory name - no configuration needed
-		return join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
-	}
-
-	private async loadConfigDirect(): Promise<BacklogConfig | null> {
-		try {
-			// First try the standard "backlog" directory
-			let configPath = join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG, DEFAULT_FILES.CONFIG);
-			let file = Bun.file(configPath);
-			let exists = await file.exists();
-
-			// If not found, check for legacy ".backlog" directory and migrate it
-			if (!exists) {
-				const legacyBacklogDir = join(this.projectRoot, ".backlog");
-				const legacyConfigPath = join(legacyBacklogDir, DEFAULT_FILES.CONFIG);
-				const legacyFile = Bun.file(legacyConfigPath);
-				const legacyExists = await legacyFile.exists();
-
-				if (legacyExists) {
-					// Migrate legacy .backlog directory to backlog
-					const newBacklogDir = join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
-					await rename(legacyBacklogDir, newBacklogDir);
-
-					// Update paths to use the new location
-					configPath = join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG, DEFAULT_FILES.CONFIG);
-					file = Bun.file(configPath);
-					exists = true;
-				}
-			}
-
-			if (!exists) {
-				return null;
-			}
-
-			const content = await file.text();
-			return this.parseConfig(content);
-		} catch (_error) {
-			if (process.env.DEBUG) {
-				console.error("Error loading config:", _error);
-			}
-			return null;
-		}
+		return this.resolvedBacklogDir;
 	}
 
 	// Public accessors for directory paths
+	get backlogDir(): string {
+		return this.resolvedBacklogDir;
+	}
+	get backlogDirName(): string {
+		return this.resolvedBacklogDirName;
+	}
 	get tasksDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.TASKS);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.TASKS);
 	}
 	get completedDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.COMPLETED);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.COMPLETED);
 	}
 
 	get archiveTasksDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.ARCHIVE_TASKS);
 	}
 	get archiveMilestonesDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.ARCHIVE_MILESTONES);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.ARCHIVE_MILESTONES);
 	}
 	get decisionsDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.DECISIONS);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.DECISIONS);
 	}
 
 	get docsDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.DOCS);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.DOCS);
 	}
 
 	get milestonesDir(): string {
-		return join(this.backlogDir, DEFAULT_DIRECTORIES.MILESTONES);
+		return join(this.resolvedBacklogDir, DEFAULT_DIRECTORIES.MILESTONES);
 	}
 
 	get configFilePath(): string {
-		return join(this.backlogDir, DEFAULT_FILES.CONFIG);
+		return this.resolvedConfigPath;
 	}
 
 	/** Get the project root directory */
@@ -121,6 +122,35 @@ export class FileSystem {
 
 	invalidateConfigCache(): void {
 		this.cachedConfig = null;
+		const resolution = resolveBacklogDirectory(this.projectRoot);
+		this.resolvedBacklogDirName = resolution.backlogDir ?? DEFAULT_DIRECTORIES.BACKLOG;
+		this.resolvedBacklogDir = resolution.backlogPath ?? join(this.projectRoot, DEFAULT_DIRECTORIES.BACKLOG);
+		this.resolvedConfigPath = resolution.configPath ?? join(this.resolvedBacklogDir, DEFAULT_FILES.CONFIG);
+		this.configSource = resolution.configSource ?? "folder";
+	}
+
+	setBacklogDirectory(backlogDir: string): void {
+		const normalized = normalizeProjectBacklogDirectory(backlogDir);
+		if (!normalized) {
+			throw new Error("Backlog directory must be a project-relative path.");
+		}
+		this.resolvedBacklogDirName = normalized;
+		this.resolvedBacklogDir = join(this.projectRoot, normalized);
+		if (this.configSource === "folder") {
+			this.resolvedConfigPath = join(this.resolvedBacklogDir, DEFAULT_FILES.CONFIG);
+		}
+	}
+
+	setConfigLocation(configSource: BacklogConfigSource): void {
+		this.configSource = configSource;
+		this.resolvedConfigPath =
+			configSource === "root"
+				? join(this.projectRoot, DEFAULT_FILES.ROOT_CONFIG)
+				: join(this.resolvedBacklogDir, DEFAULT_FILES.CONFIG);
+	}
+
+	resolveBacklogDirectoryInfo() {
+		return resolveBacklogDirectory(this.projectRoot);
 	}
 
 	private async getTasksDir(): Promise<string> {
@@ -188,6 +218,75 @@ export class FileSystem {
 		}
 	}
 
+	private toCreateLockError(error: unknown): Error {
+		if (isCreateLockError(error)) {
+			return error;
+		}
+
+		const code = (error as NodeJS.ErrnoException | undefined)?.code;
+		if (code === "ELOCKED") {
+			return createLockError(CREATE_LOCK_ERROR_MESSAGE, error);
+		}
+		if (code === "ECOMPROMISED") {
+			return createLockError("Task creation lock was interrupted. Please try again.", error);
+		}
+		return error instanceof Error ? error : new Error(String(error));
+	}
+
+	// Uses a maintained lockfile with stale-lock recovery; USE_GLOBAL_TASK_ID_LOCK=false restores legacy behavior.
+	async withCreateLock<T>(fn: () => Promise<T>, options: CreateLockOptions = {}): Promise<T> {
+		if (process.env.USE_GLOBAL_TASK_ID_LOCK?.toLowerCase() === "false") {
+			return await fn();
+		}
+
+		const backlogDir = await this.getBacklogDir();
+		const locksDir = join(backlogDir, ".locks");
+		const lockDir = join(locksDir, "create");
+		const timeoutMs = options.timeoutMs ?? DEFAULT_CREATE_LOCK_TIMEOUT_MS;
+		const retryDelayMs = options.retryDelayMs ?? DEFAULT_CREATE_LOCK_RETRY_DELAY_MS;
+		const staleMs = Math.max(options.staleMs ?? DEFAULT_CREATE_LOCK_STALE_MS, 2_000);
+		const retries = Math.max(Math.ceil(timeoutMs / retryDelayMs) - 1, 0);
+
+		await mkdir(locksDir, { recursive: true });
+
+		let release: (() => Promise<void>) | undefined;
+		try {
+			release = await lockfile.lock(backlogDir, {
+				lockfilePath: lockDir,
+				realpath: true,
+				stale: staleMs,
+				retries: {
+					retries,
+					factor: 1,
+					minTimeout: retryDelayMs,
+					maxTimeout: retryDelayMs,
+					randomize: false,
+				},
+			});
+		} catch (error) {
+			throw this.toCreateLockError(error);
+		}
+
+		try {
+			const result = await fn();
+			try {
+				await release?.();
+			} catch (error) {
+				throw this.toCreateLockError(error);
+			}
+			return result;
+		} catch (error) {
+			if (release) {
+				try {
+					await release();
+				} catch {
+					// Preserve the original operation error if lock cleanup also fails.
+				}
+			}
+			throw error;
+		}
+	}
+
 	// Task operations
 	async saveTask(task: Task): Promise<string> {
 		// Extract prefix from task ID, or use configured prefix, or fall back to default "task"
@@ -199,26 +298,46 @@ export class FileSystem {
 		const taskId = normalizeId(task.id, prefix);
 		const filename = `${idForFilename(taskId)} - ${this.sanitizeFilename(task.title)}.md`;
 		const tasksDir = await this.getTasksDir();
-		const filepath = join(tasksDir, filename);
-		// Normalize task ID and parentTaskId to uppercase before serialization
+		const shouldPreservePath = typeof task.filePath === "string" && task.filePath.trim().length > 0;
+		const filepath = shouldPreservePath ? (task.filePath as string) : join(tasksDir, filename);
+		let existingTask: Task | null = null;
+
+		if (shouldPreservePath) {
+			try {
+				existingTask = parseTask(await Bun.file(filepath).text());
+			} catch {
+				existingTask = null;
+			}
+		}
+
+		const persistedTaskId = existingTask?.id && taskIdsEqual(existingTask.id, task.id) ? existingTask.id : taskId;
+		const normalizedParentTaskId = task.parentTaskId
+			? normalizeId(task.parentTaskId, extractAnyPrefix(task.parentTaskId) ?? prefix)
+			: undefined;
+		const persistedParentTaskId =
+			existingTask?.parentTaskId && task.parentTaskId && taskIdsEqual(existingTask.parentTaskId, task.parentTaskId)
+				? existingTask.parentTaskId
+				: normalizedParentTaskId;
+
+		// Normalize new task IDs before serialization, but preserve existing file identity on updates.
 		const normalizedTask = {
 			...task,
-			id: taskId,
-			parentTaskId: task.parentTaskId
-				? normalizeId(task.parentTaskId, extractAnyPrefix(task.parentTaskId) ?? prefix)
-				: undefined,
+			id: persistedTaskId,
+			parentTaskId: persistedParentTaskId,
 		};
 		const content = serializeTask(normalizedTask);
 
-		// Delete any existing task files with the same ID but different filenames
-		try {
-			const core = { filesystem: { tasksDir } };
-			const existingPath = await getTaskPath(taskId, core as TaskPathContext);
-			if (existingPath && !existingPath.endsWith(filename)) {
-				await unlink(existingPath);
+		if (!shouldPreservePath) {
+			// Delete any existing task files with the same ID but different filenames
+			try {
+				const core = { filesystem: { tasksDir } };
+				const existingPath = await getTaskPath(taskId, core as TaskPathContext);
+				if (existingPath && !existingPath.endsWith(filename)) {
+					await unlink(existingPath);
+				}
+			} catch {
+				// Ignore errors if no existing files found
 			}
-		} catch {
-			// Ignore errors if no existing files found
 		}
 
 		await this.ensureDirectoryExists(dirname(filepath));
@@ -541,83 +660,98 @@ export class FileSystem {
 		const span = trace.getActiveSpan();
 
 		try {
-			// Load the draft
-			const draft = await this.loadDraft(draftId);
-			if (!draft || !draft.filePath) return false;
+			return await this.withCreateLock(async () => {
+				// Load the draft
+				const draft = await this.loadDraft(draftId);
+				if (!draft?.filePath) return false;
 
-			// Emit draft.promote.loaded event
-			span?.addEvent("draft.promote.loaded", {
-				draftId: draft.id,
-				fromPath: draft.filePath,
+				// Emit draft.promote.loaded event
+				span?.addEvent("draft.promote.loaded", {
+					draftId: draft.id,
+					fromPath: draft.filePath,
+				});
+
+				// Get task prefix from config (default: "task")
+				const config = await this.loadConfig();
+				const taskPrefix = config?.prefixes?.task ?? "task";
+
+				// Get existing task IDs to generate next ID
+				// Include both active and completed tasks to prevent ID collisions
+				const existingTasks = await this.listTasks();
+				const completedTasks = await this.listCompletedTasks();
+				const existingIds = [...existingTasks, ...completedTasks].map((t) => t.id);
+
+				// Generate new task ID
+				const newTaskId = generateNextId(existingIds, taskPrefix, config?.zeroPaddedIds);
+
+				const promotedStatus =
+					!draft.status || draft.status.trim().toLowerCase() === "draft"
+						? config?.defaultStatus || FALLBACK_STATUS
+						: draft.status;
+
+				// Draft-only statuses should enter the normal task workflow.
+				const promotedTask: Task = {
+					...draft,
+					id: newTaskId,
+					status: promotedStatus,
+					filePath: undefined, // Will be set by saveTask
+				};
+
+				const savedPath = await this.saveTask(promotedTask);
+
+				// Emit draft.promote.moved event
+				span?.addEvent("draft.promote.moved", {
+					fromPath: draft.filePath,
+					toPath: savedPath,
+				});
+
+				// Delete old draft file
+				await unlink(draft.filePath);
+
+				return true;
 			});
-
-			// Get task prefix from config (default: "task")
-			const config = await this.loadConfig();
-			const taskPrefix = config?.prefixes?.task ?? "task";
-
-			// Get existing task IDs to generate next ID
-			// Include both active and completed tasks to prevent ID collisions
-			const existingTasks = await this.listTasks();
-			const completedTasks = await this.listCompletedTasks();
-			const existingIds = [...existingTasks, ...completedTasks].map((t) => t.id);
-
-			// Generate new task ID
-			const newTaskId = generateNextId(existingIds, taskPrefix, config?.zeroPaddedIds);
-
-			// Update draft with new task ID and save as task
-			const promotedTask: Task = {
-				...draft,
-				id: newTaskId,
-				filePath: undefined, // Will be set by saveTask
-			};
-
-			const savedPath = await this.saveTask(promotedTask);
-			const fromPath = draft.filePath;
-
-			// Emit draft.promote.moved event
-			span?.addEvent("draft.promote.moved", {
-				fromPath,
-				toPath: savedPath,
-			});
-
-			// Delete old draft file
-			await unlink(draft.filePath);
-
-			return true;
-		} catch {
+		} catch (error) {
+			if (isCreateLockError(error)) {
+				throw error;
+			}
 			return false;
 		}
 	}
 
 	async demoteTask(taskId: string): Promise<boolean> {
 		try {
-			// Load the task
-			const task = await this.loadTask(taskId);
-			if (!task || !task.filePath) return false;
+			return await this.withCreateLock(async () => {
+				// Load the task
+				const task = await this.loadTask(taskId);
+				if (!task?.filePath) return false;
 
-			// Get existing draft IDs to generate next ID
-			// Draft prefix is always "draft" (not configurable like task prefix)
-			const existingDrafts = await this.listDrafts();
-			const existingIds = existingDrafts.map((d) => d.id);
+				// Get existing draft IDs to generate next ID
+				// Draft prefix is always "draft" (not configurable like task prefix)
+				const existingDrafts = await this.listDrafts();
+				const existingIds = existingDrafts.map((d) => d.id);
 
-			// Generate new draft ID
-			const config = await this.loadConfig();
-			const newDraftId = generateNextId(existingIds, "draft", config?.zeroPaddedIds);
+				// Generate new draft ID
+				const config = await this.loadConfig();
+				const newDraftId = generateNextId(existingIds, "draft", config?.zeroPaddedIds);
 
-			// Update task with new draft ID and save as draft
-			const demotedDraft: Task = {
-				...task,
-				id: newDraftId,
-				filePath: undefined, // Will be set by saveDraft
-			};
+				// Update task with new draft ID and save as draft
+				const demotedDraft: Task = {
+					...task,
+					id: newDraftId,
+					filePath: undefined, // Will be set by saveDraft
+				};
 
-			await this.saveDraft(demotedDraft);
+				await this.saveDraft(demotedDraft);
 
-			// Delete old task file
-			await unlink(task.filePath);
+				// Delete old task file
+				await unlink(task.filePath);
 
-			return true;
-		} catch {
+				return true;
+			});
+		} catch (error) {
+			if (isCreateLockError(error)) {
+				throw error;
+			}
 			return false;
 		}
 	}
@@ -852,18 +986,17 @@ export class FileSystem {
 		const canonicalId = normalizeDocumentId(document.id);
 		document.id = canonicalId;
 		const filename = `${canonicalId} - ${this.sanitizeFilename(document.title)}.md`;
-		const subPathSegments = subPath
-			.split(/[\\/]+/)
-			.map((segment) => segment.trim())
-			.filter((segment) => segment.length > 0 && segment !== "." && segment !== "..");
-		const relativePath = subPathSegments.length > 0 ? join(...subPathSegments, filename) : filename;
-		const filepath = join(docsDir, relativePath);
+		const normalizedSubPath = normalizeDocumentSubPath(subPath);
+		const relativePath = normalizedSubPath ? `${normalizedSubPath}/${filename}` : filename;
+		const filepath = join(docsDir, ...relativePath.split("/"));
 		const content = serializeDocument(document);
 
 		await this.ensureDirectoryExists(dirname(filepath));
 
 		const glob = new Bun.Glob("**/doc-*.md");
-		const existingMatches = await Array.fromAsync(glob.scan({ cwd: docsDir, followSymlinks: true }));
+		const existingMatches = (await Array.fromAsync(glob.scan({ cwd: docsDir, followSymlinks: true }))).map((relative) =>
+			normalizeDocumentRelativePath(relative),
+		);
 		const matchesForId = existingMatches.filter((relative) => {
 			const base = relative.split("/").pop() || relative;
 			const [candidateId] = base.split(" - ");
@@ -871,13 +1004,13 @@ export class FileSystem {
 			return documentIdsEqual(canonicalId, candidateId);
 		});
 
-		let sourceRelativePath = document.path;
+		let sourceRelativePath = document.path ? normalizeDocumentRelativePath(document.path) : undefined;
 		if (!sourceRelativePath && matchesForId.length > 0) {
-			sourceRelativePath = matchesForId[0];
+			sourceRelativePath = normalizeDocumentRelativePath(matchesForId[0] ?? "");
 		}
 
 		if (sourceRelativePath && sourceRelativePath !== relativePath) {
-			const sourcePath = join(docsDir, sourceRelativePath);
+			const sourcePath = join(docsDir, ...sourceRelativePath.split("/"));
 			try {
 				await this.ensureDirectoryExists(dirname(filepath));
 				await rename(sourcePath, filepath);
@@ -890,7 +1023,7 @@ export class FileSystem {
 		}
 
 		for (const match of matchesForId) {
-			const matchPath = join(docsDir, match);
+			const matchPath = join(docsDir, ...normalizeDocumentRelativePath(match).split("/"));
 			if (matchPath === filepath) {
 				continue;
 			}
@@ -968,14 +1101,15 @@ export class FileSystem {
 			const docFiles = await Array.fromAsync(glob.scan({ cwd: docsDir, followSymlinks: true }));
 			const docs: Document[] = [];
 			for (const file of docFiles) {
-				const base = file.split("/").pop() || file;
+				const relativePath = normalizeDocumentRelativePath(file);
+				const base = relativePath.split("/").pop() || relativePath;
 				if (base.toLowerCase() === "readme.md") continue;
-				const filepath = join(docsDir, file);
+				const filepath = join(docsDir, ...relativePath.split("/"));
 				const content = await Bun.file(filepath).text();
 				const parsed = parseDocument(content);
 				docs.push({
 					...parsed,
-					path: file,
+					path: relativePath,
 				});
 			}
 
@@ -1334,84 +1468,88 @@ ${rawContent.trim()}
 				title,
 			});
 
-			const milestonesDir = await this.getMilestonesDir();
+			const result = await this.withCreateLock(async () => {
+				const milestonesDir = await this.getMilestonesDir();
 
-			// Ensure milestones directory exists
-			await mkdir(milestonesDir, { recursive: true });
+				// Ensure milestones directory exists
+				await mkdir(milestonesDir, { recursive: true });
 
-			// Find next available milestone ID
-			const archiveMilestonesDir = await this.getArchiveMilestonesDir();
-			await mkdir(archiveMilestonesDir, { recursive: true });
-			const [existingFiles, archivedFiles] = await Promise.all([
-				Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: milestonesDir, followSymlinks: true })),
-				Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: archiveMilestonesDir, followSymlinks: true })),
-			]);
-			const parseMilestoneId = async (dir: string, file: string): Promise<number | null> => {
-				if (file.toLowerCase() === "readme.md") {
-					return null;
-				}
-				const filepath = join(dir, file);
-				try {
-					const content = await Bun.file(filepath).text();
-					const parsed = parseMilestone(content);
-					const parsedIdMatch = parsed.id.match(/^m-(\d+)$/i);
-					if (parsedIdMatch?.[1]) {
-						return Number.parseInt(parsedIdMatch[1], 10);
+				// Find next available milestone ID
+				const archiveMilestonesDir = await this.getArchiveMilestonesDir();
+				await mkdir(archiveMilestonesDir, { recursive: true });
+				const [existingFiles, archivedFiles] = await Promise.all([
+					Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: milestonesDir, followSymlinks: true })),
+					Array.fromAsync(new Bun.Glob("m-*.md").scan({ cwd: archiveMilestonesDir, followSymlinks: true })),
+				]);
+				const parseMilestoneId = async (dir: string, file: string): Promise<number | null> => {
+					if (file.toLowerCase() === "readme.md") {
+						return null;
 					}
-				} catch {
-					// Fall through to filename-based fallback.
-				}
-				const filenameIdMatch = file.match(/^m-(\d+)/i);
-				if (filenameIdMatch?.[1]) {
-					return Number.parseInt(filenameIdMatch[1], 10);
-				}
-				return null;
-			};
-			const existingIds = (
-				await Promise.all([
-					...existingFiles.map((file) => parseMilestoneId(milestonesDir, file)),
-					...archivedFiles.map((file) => parseMilestoneId(archiveMilestonesDir, file)),
-				])
-			).filter((id): id is number => typeof id === "number" && id >= 0);
+					const filepath = join(dir, file);
+					try {
+						const content = await Bun.file(filepath).text();
+						const parsed = parseMilestone(content);
+						const parsedIdMatch = parsed.id.match(/^m-(\d+)$/i);
+						if (parsedIdMatch?.[1]) {
+							return Number.parseInt(parsedIdMatch[1], 10);
+						}
+					} catch {
+						// Fall through to filename-based fallback.
+					}
+					const filenameIdMatch = file.match(/^m-(\d+)/i);
+					if (filenameIdMatch?.[1]) {
+						return Number.parseInt(filenameIdMatch[1], 10);
+					}
+					return null;
+				};
+				const existingIds = (
+					await Promise.all([
+						...existingFiles.map((file) => parseMilestoneId(milestonesDir, file)),
+						...archivedFiles.map((file) => parseMilestoneId(archiveMilestonesDir, file)),
+					])
+				).filter((id): id is number => typeof id === "number" && id >= 0);
 
-			const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 0;
-			const id = `m-${nextId}`;
+				const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 0;
+				const id = `m-${nextId}`;
 
-			span.addEvent("milestone.create.validated", {
-				milestoneId: id,
-			});
+				span.addEvent("milestone.create.validated", {
+					milestoneId: id,
+				});
 
-			const filename = this.buildMilestoneFilename(id, title);
-			const content = this.serializeMilestoneContent(
-				id,
-				title,
-				`## Description
+				const filename = this.buildMilestoneFilename(id, title);
+				const content = this.serializeMilestoneContent(
+					id,
+					title,
+					`## Description
 
 ${description || `Milestone: ${title}`}`,
-			);
+				);
 
-			const filepath = join(milestonesDir, filename);
-			await Bun.write(filepath, content);
+				const filepath = join(milestonesDir, filename);
+				await Bun.write(filepath, content);
 
-			span.addEvent("milestone.create.saved", {
-				milestoneId: id,
-				filepath,
+				span.addEvent("milestone.create.saved", {
+					milestoneId: id,
+					filepath,
+				});
+
+				return {
+					id,
+					title,
+					description: description || `Milestone: ${title}`,
+					rawContent: parseMilestone(content).rawContent,
+				};
 			});
 
 			span.addEvent("milestone.create.complete", {
-				milestoneId: id,
+				milestoneId: result.id,
 				success: true,
 			});
 
 			span.setStatus({ code: SpanStatusCode.OK });
 			span.end();
 
-			return {
-				id,
-				title,
-				description: description || `Milestone: ${title}`,
-				rawContent: parseMilestone(content).rawContent,
-			};
+			return result;
 		} catch (error) {
 			span.addEvent("milestone.error", {
 				operation: "create",
@@ -1543,8 +1681,7 @@ ${description || `Milestone: ${title}`}`,
 		}
 
 		try {
-			const backlogDir = await this.getBacklogDir();
-			const configPath = join(backlogDir, DEFAULT_FILES.CONFIG);
+			const configPath = this.resolvedConfigPath;
 
 			// Check if file exists first to avoid hanging on Windows
 			const file = Bun.file(configPath);
@@ -1566,78 +1703,18 @@ ${description || `Milestone: ${title}`}`,
 	}
 
 	async saveConfig(config: BacklogConfig): Promise<void> {
-		const backlogDir = await this.getBacklogDir();
-		const configPath = join(backlogDir, DEFAULT_FILES.CONFIG);
 		const normalizedConfig: BacklogConfig = {
 			...config,
+			...(this.configSource === "root" ? { backlogDirectory: this.resolvedBacklogDirName } : {}),
 			definitionOfDone: this.normalizeDefinitionOfDone(config.definitionOfDone),
 		};
+		if (this.configSource === "folder") {
+			delete normalizedConfig.backlogDirectory;
+		}
+		const configPath = this.resolvedConfigPath;
 		const content = this.serializeConfig(normalizedConfig);
 		await Bun.write(configPath, content);
 		this.cachedConfig = normalizedConfig;
-	}
-
-	async getUserSetting(key: string, global = false): Promise<string | undefined> {
-		const settings = await this.loadUserSettings(global);
-		return settings ? settings[key] : undefined;
-	}
-
-	async setUserSetting(key: string, value: string, global = false): Promise<void> {
-		const settings = (await this.loadUserSettings(global)) || {};
-		settings[key] = value;
-		await this.saveUserSettings(settings, global);
-	}
-
-	private async loadUserSettings(global = false): Promise<Record<string, string> | null> {
-		const primaryPath = global
-			? join(homedir(), "backlog", DEFAULT_FILES.USER)
-			: join(this.projectRoot, DEFAULT_FILES.USER);
-		const fallbackPath = global ? join(this.projectRoot, "backlog", DEFAULT_FILES.USER) : undefined;
-		const tryPaths = fallbackPath ? [primaryPath, fallbackPath] : [primaryPath];
-		for (const filePath of tryPaths) {
-			try {
-				const content = await Bun.file(filePath).text();
-				const result: Record<string, string> = {};
-				for (const line of content.split(/\r?\n/)) {
-					const trimmed = line.trim();
-					if (!trimmed || trimmed.startsWith("#")) continue;
-					const idx = trimmed.indexOf(":");
-					if (idx === -1) continue;
-					const k = trimmed.substring(0, idx).trim();
-					result[k] = trimmed
-						.substring(idx + 1)
-						.trim()
-						.replace(/^['"]|['"]$/g, "");
-				}
-				return result;
-			} catch {
-				// Try next path (if any)
-			}
-		}
-		return null;
-	}
-
-	private async saveUserSettings(settings: Record<string, string>, global = false): Promise<void> {
-		const primaryPath = global
-			? join(homedir(), "backlog", DEFAULT_FILES.USER)
-			: join(this.projectRoot, DEFAULT_FILES.USER);
-		const fallbackPath = global ? join(this.projectRoot, "backlog", DEFAULT_FILES.USER) : undefined;
-
-		const lines = Object.entries(settings).map(([k, v]) => `${k}: ${v}`);
-		const data = `${lines.join("\n")}\n`;
-
-		try {
-			await this.ensureDirectoryExists(dirname(primaryPath));
-			await Bun.write(primaryPath, data);
-			return;
-		} catch {
-			// Fall through to fallback when global write fails (e.g., sandboxed env)
-		}
-
-		if (fallbackPath) {
-			await this.ensureDirectoryExists(dirname(fallbackPath));
-			await Bun.write(fallbackPath, data);
-		}
 	}
 
 	// Utility methods
@@ -1664,6 +1741,7 @@ ${description || `Milestone: ${title}`}`,
 
 	private parseConfig(content: string): BacklogConfig {
 		const config: Partial<BacklogConfig> = {};
+		const parsedDefinitionOfDone = this.parseDefinitionOfDone(content);
 		const lines = content.split("\n");
 
 		for (const line of lines) {
@@ -1700,12 +1778,8 @@ ${description || `Milestone: ${title}`}`,
 					}
 					break;
 				case "definition_of_done":
-					if (value.startsWith("[") && value.endsWith("]")) {
-						const arrayContent = value.slice(1, -1);
-						config.definitionOfDone = arrayContent
-							.split(",")
-							.map((item) => item.trim().replace(/['"]/g, ""))
-							.filter(Boolean);
+					if (parsedDefinitionOfDone !== undefined) {
+						config.definitionOfDone = parsedDefinitionOfDone;
 					}
 					break;
 				case "date_format":
@@ -1729,6 +1803,10 @@ ${description || `Milestone: ${title}`}`,
 				case "auto_commit":
 					config.autoCommit = value.toLowerCase() === "true";
 					break;
+				case "filesystem_only":
+				case "filesystemOnly":
+					config.filesystemOnly = value.toLowerCase() === "true";
+					break;
 				case "zero_padded_ids":
 					config.zeroPaddedIds = Number.parseInt(value, 10);
 					break;
@@ -1749,6 +1827,10 @@ ${description || `Milestone: ${title}`}`,
 				case "task_prefix":
 					config.prefixes = { task: value.replace(/['"]/g, "") };
 					break;
+				case "backlog_directory":
+				case "backlogDirectory":
+					config.backlogDirectory = value.replace(/['"]/g, "");
+					break;
 			}
 		}
 
@@ -1767,12 +1849,14 @@ ${description || `Milestone: ${title}`}`,
 			defaultPort: config.defaultPort,
 			remoteOperations: config.remoteOperations,
 			autoCommit: config.autoCommit,
+			filesystemOnly: config.filesystemOnly,
 			zeroPaddedIds: config.zeroPaddedIds,
 			bypassGitHooks: config.bypassGitHooks,
 			checkActiveBranches: config.checkActiveBranches,
 			activeBranchDays: config.activeBranchDays,
 			onStatusChange: config.onStatusChange,
 			prefixes: config.prefixes,
+			backlogDirectory: config.backlogDirectory,
 		};
 	}
 
@@ -1786,7 +1870,7 @@ ${description || `Milestone: ${title}`}`,
 			`statuses: [${config.statuses.map((s) => `"${s}"`).join(", ")}]`,
 			`labels: [${config.labels.map((l) => `"${l}"`).join(", ")}]`,
 			...(Array.isArray(normalizedDefinitionOfDone)
-				? [`definition_of_done: [${normalizedDefinitionOfDone.map((item) => `"${item}"`).join(", ")}]`]
+				? [`definition_of_done: [${normalizedDefinitionOfDone.map((item) => JSON.stringify(item)).join(", ")}]`]
 				: []),
 			`date_format: ${config.dateFormat}`,
 			...(config.maxColumnWidth ? [`max_column_width: ${config.maxColumnWidth}`] : []),
@@ -1795,6 +1879,7 @@ ${description || `Milestone: ${title}`}`,
 			...(config.defaultPort ? [`default_port: ${config.defaultPort}`] : []),
 			...(typeof config.remoteOperations === "boolean" ? [`remote_operations: ${config.remoteOperations}`] : []),
 			...(typeof config.autoCommit === "boolean" ? [`auto_commit: ${config.autoCommit}`] : []),
+			...(typeof config.filesystemOnly === "boolean" ? [`filesystem_only: ${config.filesystemOnly}`] : []),
 			...(typeof config.zeroPaddedIds === "number" ? [`zero_padded_ids: ${config.zeroPaddedIds}`] : []),
 			...(typeof config.bypassGitHooks === "boolean" ? [`bypass_git_hooks: ${config.bypassGitHooks}`] : []),
 			...(typeof config.checkActiveBranches === "boolean"
@@ -1803,9 +1888,131 @@ ${description || `Milestone: ${title}`}`,
 			...(typeof config.activeBranchDays === "number" ? [`active_branch_days: ${config.activeBranchDays}`] : []),
 			...(config.onStatusChange ? [`onStatusChange: '${config.onStatusChange}'`] : []),
 			...(config.prefixes?.task ? [`task_prefix: "${config.prefixes.task}"`] : []),
+			...(config.backlogDirectory ? [`backlog_directory: "${config.backlogDirectory}"`] : []),
 		];
 
 		return `${lines.join("\n")}\n`;
+	}
+
+	private parseDefinitionOfDone(content: string): string[] | undefined {
+		const definitionOfDoneYaml = this.extractDefinitionOfDoneYaml(content);
+		const legacyEscapedDefinitionOfDoneYaml = definitionOfDoneYaml
+			? this.escapeLegacyDefinitionOfDoneBackslashes(definitionOfDoneYaml)
+			: undefined;
+		if (legacyEscapedDefinitionOfDoneYaml) {
+			const parsedLegacyDefinitionOfDone = this.parseDefinitionOfDoneFromYaml(legacyEscapedDefinitionOfDoneYaml);
+			if (parsedLegacyDefinitionOfDone !== undefined) {
+				return parsedLegacyDefinitionOfDone;
+			}
+		}
+
+		const parsedFromDocument = this.parseDefinitionOfDoneFromYaml(content);
+		if (parsedFromDocument !== undefined) {
+			return parsedFromDocument;
+		}
+
+		// Some legacy config values are accepted by the line parser but are not valid YAML.
+		return definitionOfDoneYaml ? this.parseDefinitionOfDoneFromYaml(definitionOfDoneYaml) : undefined;
+	}
+
+	private parseDefinitionOfDoneFromYaml(content: string): string[] | undefined {
+		try {
+			const data = matter(`---\n${content.trimEnd()}\n---\n`).data as Record<string, unknown>;
+			if (!Object.hasOwn(data, "definition_of_done")) {
+				return undefined;
+			}
+
+			const definitionOfDone = data.definition_of_done;
+			if (definitionOfDone === null) {
+				return [];
+			}
+
+			return this.normalizeDefinitionOfDone(definitionOfDone);
+		} catch {
+			return undefined;
+		}
+	}
+
+	private extractDefinitionOfDoneYaml(content: string): string | undefined {
+		const lines = content.split(/\r?\n/);
+		const keyPattern = /^(\s*)definition_of_done\s*:/;
+		const topLevelKeyPattern = /^\s*[A-Za-z_][A-Za-z0-9_]*\s*:/;
+		const startIndex = lines.findIndex((line) => keyPattern.test(line));
+		if (startIndex === -1) {
+			return undefined;
+		}
+
+		const startLine = lines[startIndex];
+		const startIndent = startLine?.match(keyPattern)?.[1]?.length ?? 0;
+		const collected: string[] = [];
+
+		for (let index = startIndex; index < lines.length; index++) {
+			const line = lines[index] ?? "";
+			const trimmed = line.trim();
+			const indent = line.length - line.trimStart().length;
+			const isNextTopLevelKey =
+				index > startIndex && trimmed.length > 0 && indent <= startIndent && topLevelKeyPattern.test(line);
+
+			if (isNextTopLevelKey) {
+				break;
+			}
+
+			collected.push(line);
+		}
+
+		return collected.join("\n");
+	}
+
+	private escapeLegacyDefinitionOfDoneBackslashes(content: string): string | undefined {
+		let escaped = "";
+		let quote: "'" | '"' | undefined;
+		let changed = false;
+
+		for (let index = 0; index < content.length; index++) {
+			const char = content[index];
+
+			if (quote) {
+				if (quote === '"' && char === "\\") {
+					let slashCount = 1;
+					while (content[index + slashCount] === "\\") {
+						slashCount++;
+					}
+
+					const nextChar = content[index + slashCount];
+					if (nextChar === '"' && slashCount % 2 === 1) {
+						escaped += "\\".repeat(slashCount);
+						escaped += nextChar;
+						index += slashCount;
+						continue;
+					}
+
+					const escapedSlashCount = slashCount % 2 === 1 ? slashCount + 1 : slashCount;
+					escaped += "\\".repeat(escapedSlashCount);
+					changed ||= escapedSlashCount !== slashCount;
+					index += slashCount - 1;
+					continue;
+				}
+
+				if (char === quote) {
+					escaped += char;
+					quote = undefined;
+					continue;
+				}
+
+				escaped += char;
+				continue;
+			}
+
+			if (char === "'" || char === '"') {
+				escaped += char;
+				quote = char;
+				continue;
+			}
+
+			escaped += char;
+		}
+
+		return changed ? escaped : undefined;
 	}
 
 	private normalizeDefinitionOfDone(definitionOfDone: unknown): string[] | undefined {

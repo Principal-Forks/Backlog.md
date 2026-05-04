@@ -4,7 +4,7 @@ import { $ } from "bun";
 import { McpServer } from "../mcp/server.ts";
 import { registerMilestoneTools } from "../mcp/tools/milestones/index.ts";
 import { registerTaskTools } from "../mcp/tools/tasks/index.ts";
-import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
+import { createUniqueTestDir, initializeTestProject, safeCleanup } from "./test-utils.ts";
 
 const getText = (content: unknown[] | undefined, index = 0): string => {
 	const item = content?.[index] as { text?: string } | undefined;
@@ -56,7 +56,7 @@ describe("MCP milestone tools", () => {
 		await $`git config user.name "Test User"`.cwd(TEST_DIR).quiet();
 		await $`git config user.email test@example.com`.cwd(TEST_DIR).quiet();
 
-		await server.initializeProject("Test Project");
+		await initializeTestProject(server, "Test Project");
 
 		const config = await loadConfigOrThrow(server);
 		registerTaskTools(server, config);
@@ -410,6 +410,48 @@ describe("MCP milestone tools", () => {
 		expect(status.trim()).toBe("");
 		const lastCommit = await server.git.getLastCommitMessage();
 		expect(lastCommit).toContain("backlog: Rename milestone m-0");
+	});
+
+	it("preserves the original commit error when milestone rename rollback fails", async () => {
+		await server.testInterface.callTool({
+			params: { name: "milestone_add", arguments: { name: "Release 1.0" } },
+		});
+		const config = await loadConfigOrThrow(server);
+		config.autoCommit = true;
+		await server.filesystem.saveConfig(config);
+		await server.ensureConfigLoaded();
+
+		await $`git add .`.cwd(TEST_DIR).quiet();
+		await $`git commit -m "baseline"`.cwd(TEST_DIR).quiet();
+
+		const originalCommitFiles = server.git.commitFiles.bind(server.git);
+		const originalResetPaths = server.git.resetPaths.bind(server.git);
+		const originalRenameMilestone = server.filesystem.renameMilestone.bind(server.filesystem);
+		const commitError = new Error("simulated commit failure");
+		let renameCalls = 0;
+
+		server.git.commitFiles = (async () => {
+			throw commitError;
+		}) as typeof server.git.commitFiles;
+		server.git.resetPaths = (async () => {}) as typeof server.git.resetPaths;
+		server.filesystem.renameMilestone = (async (...args: Parameters<typeof server.filesystem.renameMilestone>) => {
+			renameCalls += 1;
+			if (renameCalls === 1) {
+				return await originalRenameMilestone(...args);
+			}
+			throw new Error("simulated rollback failure");
+		}) as typeof server.filesystem.renameMilestone;
+
+		try {
+			await expect(server.renameMilestone("Release 1.0", "Release 2.0", true)).rejects.toThrow(
+				"simulated commit failure",
+			);
+			expect(renameCalls).toBe(2);
+		} finally {
+			server.git.commitFiles = originalCommitFiles;
+			server.git.resetPaths = originalResetPaths;
+			server.filesystem.renameMilestone = originalRenameMilestone;
+		}
 	});
 
 	it("only rewrites the default description section when renaming milestones", async () => {

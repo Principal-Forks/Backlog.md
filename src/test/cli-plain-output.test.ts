@@ -3,7 +3,7 @@ import { mkdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { $ } from "bun";
 import { Core } from "../index.ts";
-import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
+import { createUniqueTestDir, initializeTestProject, safeCleanup } from "./test-utils.ts";
 
 let TEST_DIR: string;
 let SUBTASKS: Array<{ id: string; title: string }> = [];
@@ -27,7 +27,7 @@ describe("CLI plain output for AI agents", () => {
 
 		// Initialize backlog project using Core (same pattern as other tests)
 		const core = new Core(TEST_DIR);
-		await core.initializeProject("Plain Output Test Project");
+		await initializeTestProject(core, "Plain Output Test Project");
 
 		// Create a test task
 		await core.createTask(
@@ -78,16 +78,11 @@ describe("CLI plain output for AI agents", () => {
 			false,
 		);
 
-		// Create a test draft with proper DRAFT-X id format
-		await core.createDraft(
+		// Create a test draft through the canonical create path
+		await core.createTaskFromInput(
 			{
-				id: "draft-1",
 				title: "Test draft for plain output",
 				status: "Draft",
-				assignee: [],
-				createdDate: "2025-06-18",
-				labels: [],
-				dependencies: [],
 				description: "Test draft description",
 			},
 			false,
@@ -194,7 +189,7 @@ describe("CLI plain output for AI agents", () => {
 		// Should contain the formatted draft output
 		expect(result.stdout.toString()).toContain("Task DRAFT-1 - Test draft for plain output");
 		expect(result.stdout.toString()).toContain("Status: ○ Draft");
-		expect(result.stdout.toString()).toContain("Created: 2025-06-18");
+		expect(result.stdout.toString()).toMatch(/Created:\s+\d{4}-\d{2}-\d{2}/);
 		expect(result.stdout.toString()).toContain("Description:");
 		expect(result.stdout.toString()).toContain("Test draft description");
 		expect(result.stdout.toString()).toContain("Definition of Done:");
@@ -224,7 +219,7 @@ describe("CLI plain output for AI agents", () => {
 		// Should contain the formatted draft output
 		expect(result.stdout.toString()).toContain("Task DRAFT-1 - Test draft for plain output");
 		expect(result.stdout.toString()).toContain("Status: ○ Draft");
-		expect(result.stdout.toString()).toContain("Created: 2025-06-18");
+		expect(result.stdout.toString()).toMatch(/Created:\s+\d{4}-\d{2}-\d{2}/);
 		expect(result.stdout.toString()).toContain("Description:");
 		expect(result.stdout.toString()).toContain("Test draft description");
 		expect(result.stdout.toString()).toContain("Definition of Done:");

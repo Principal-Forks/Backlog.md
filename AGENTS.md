@@ -6,11 +6,12 @@ This project uses Backlog.md MCP for all task and project management activities.
 
 **CRITICAL GUIDANCE**
 
-* If your client supports MCP resources, read `backlog://workflow/overview` to understand when and how to use Backlog for this project.
-* If your client only supports tools or the above request fails, call `backlog.get_workflow_overview()` tool to load the tool-oriented overview (it lists the matching guide tools).
-* **First time working here?** Read the overview resource IMMEDIATELY to learn the workflow
-* **Already familiar?** You should have the overview cached ("## Backlog.md Overview (MCP)")
-* **When to read it**: BEFORE creating tasks, or when you're unsure whether to track work
+- If your client supports MCP resources, read `backlog://workflow/overview` to understand when and how to use Backlog for this project.
+- If your client only supports tools or the above request fails, call `backlog.get_backlog_instructions()` to load the tool-oriented overview. Use the `instruction` selector when you need `task-creation`, `task-execution`, or `task-finalization`.
+
+- **First time working here?** Read the overview resource IMMEDIATELY to learn the workflow
+- **Already familiar?** You should have the overview cached ("## Backlog.md Overview (MCP)")
+- **When to read it**: BEFORE creating tasks, or when you're unsure whether to track work
 
 These guides cover:
 - Decision framework for when to create tasks
@@ -67,7 +68,16 @@ If you can simplify the code, do it.
 * **Task Management**: Uses markdown files in `backlog/` directory structure
 * **Workflow**: Git-integrated with task IDs referenced in commits and PRs
 
-## Code Standard
+## Agent POV
+
+- Treat Backlog.md as a shipped CLI/MCP binary that may be used from other repositories where agents cannot inspect this source tree.
+- Backlog.md is not a supported JavaScript or TypeScript library API for external consumers. Do not treat exported source symbols, classes, or methods in `/src` as stable public interfaces unless they are explicitly documented in shipped CLI/MCP/instruction surfaces.
+- When you decide what another agent can rely on, use only the public surface: MCP workflow resources, MCP tool descriptions/schemas, CLI help, and instruction files shipped with the project.
+- Do not assume external agents know internal implementation details, constants, or source-only conventions.
+- When reviewing changes, do not ask for compatibility shims just because a source-level method exists or was removed. Only preserve compatibility for behavior that is part of the documented CLI, MCP, config, or instruction contract.
+- If a convention matters for agent behavior, document it in the public MCP/instruction surface rather than relying on source-code discovery.
+
+## Code Standards
 
 * **Runtime**: Bun with TypeScript 5
 * **Formatting**: Biome with tab indentation and double quotes

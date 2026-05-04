@@ -8,9 +8,11 @@ import type {
 	TaskSearchResult,
 } from "../../types";
 import { collectAvailableLabels } from "../../utils/label-filter.ts";
+import { isTerminalStatus } from "../../utils/terminal-status.ts";
 import { collectArchivedMilestoneKeys, getMilestoneLabel, milestoneKey } from "../utils/milestones";
 import { formatStoredUtcDateForCompactDisplay, parseStoredUtcDate } from "../utils/date-display";
 import CleanupModal from "./CleanupModal";
+import LabelFilterDropdown from "./LabelFilterDropdown";
 import { SuccessToast } from "./SuccessToast";
 
 interface TaskListProps {
@@ -89,7 +91,6 @@ const TaskList: React.FC<TaskListProps> = ({
 	onRefreshData,
 }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const [searchValue, setSearchValue] = useState(() => searchParams.get("query") ?? "");
 	const [statusFilter, setStatusFilter] = useState(() => searchParams.get("status") ?? "");
 	const [priorityFilter, setPriorityFilter] = useState<"" | SearchPriorityFilter>(
 		() => (searchParams.get("priority") as SearchPriorityFilter | null) ?? "",
@@ -106,14 +107,12 @@ const TaskList: React.FC<TaskListProps> = ({
 	const [error, setError] = useState<string | null>(null);
 	const [showCleanupModal, setShowCleanupModal] = useState(false);
 	const [cleanupSuccessMessage, setCleanupSuccessMessage] = useState<string | null>(null);
-	const [showLabelsMenu, setShowLabelsMenu] = useState(false);
 	const [sortColumn, setSortColumn] = useState<TaskSortColumn>("id");
 	const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
-	const labelsButtonRef = useRef<HTMLButtonElement | null>(null);
-	const labelsMenuRef = useRef<HTMLDivElement | null>(null);
 	const tableHeaderScrollRef = useRef<HTMLDivElement | null>(null);
 	const tableBodyScrollRef = useRef<HTMLDivElement | null>(null);
 	const isSyncingTableScrollRef = useRef(false);
+	const isFilteringTerminalStatus = isTerminalStatus(statusFilter, availableStatuses);
 	const milestoneAliasToCanonical = useMemo(() => {
 		const aliasMap = new Map<string, string>();
 		const collectIdAliasKeys = (value: string): string[] => {
@@ -256,14 +255,12 @@ const TaskList: React.FC<TaskListProps> = ({
 		const uniqueMilestones = Array.from(new Set([...availableMilestones.map((m) => m.trim()).filter(Boolean)]));
 		return uniqueMilestones;
 	}, [availableMilestones]);
-	const normalizedSearch = searchValue.trim();
 	const hasActiveFilters = Boolean(
-		normalizedSearch || statusFilter || priorityFilter || labelFilter.length > 0 || milestoneFilter,
+		statusFilter || priorityFilter || labelFilter.length > 0 || milestoneFilter,
 	);
 	const totalTasks = sortedBaseTasks.length;
 
 	useEffect(() => {
-		const paramQuery = searchParams.get("query") ?? "";
 		const paramStatus = searchParams.get("status") ?? "";
 		const paramPriority = (searchParams.get("priority") as SearchPriorityFilter | null) ?? "";
 		const paramMilestone = searchParams.get("milestone") ?? "";
@@ -274,9 +271,6 @@ const TaskList: React.FC<TaskListProps> = ({
 		}
 		const normalizedLabels = paramLabels.map((label) => label.trim()).filter((label) => label.length > 0);
 
-		if (paramQuery !== searchValue) {
-			setSearchValue(paramQuery);
-		}
 		if (paramStatus !== statusFilter) {
 			setStatusFilter(paramStatus);
 		}
@@ -314,7 +308,7 @@ const TaskList: React.FC<TaskListProps> = ({
 		};
 
 		const shouldUseApi =
-			Boolean(normalizedSearch) || Boolean(statusFilter) || Boolean(priorityFilter) || labelFilter.length > 0;
+			Boolean(statusFilter) || Boolean(priorityFilter) || labelFilter.length > 0;
 
 		if (!hasActiveFilters) {
 			return;
@@ -331,7 +325,6 @@ const TaskList: React.FC<TaskListProps> = ({
 			}
 			try {
 				const results = await apiClient.search({
-					query: normalizedSearch || undefined,
 					types: ["task"],
 					status: statusFilter || undefined,
 					priority: (priorityFilter || undefined) as SearchPriorityFilter | undefined,
@@ -359,29 +352,23 @@ const TaskList: React.FC<TaskListProps> = ({
 		};
 	}, [
 		hasActiveFilters,
-		normalizedSearch,
 		priorityFilter,
 		statusFilter,
 		labelFilter,
-			tasks,
-			milestoneFilter,
-			sortedBaseTasks,
-			milestoneAliasToCanonical,
-			archivedMilestoneKeys,
-		]);
+		tasks,
+		milestoneFilter,
+		sortedBaseTasks,
+		milestoneAliasToCanonical,
+		archivedMilestoneKeys,
+	]);
 
 	const syncUrl = (
-		nextQuery: string,
 		nextStatus: string,
 		nextPriority: "" | SearchPriorityFilter,
 		nextLabels: string[],
 		nextMilestone: string,
 	) => {
 		const params = new URLSearchParams();
-		const trimmedQuery = nextQuery.trim();
-		if (trimmedQuery) {
-			params.set("query", trimmedQuery);
-		}
 		if (nextStatus) {
 			params.set("status", nextStatus);
 		}
@@ -399,59 +386,36 @@ const TaskList: React.FC<TaskListProps> = ({
 		setSearchParams(params, { replace: true });
 	};
 
-	const handleSearchChange = (value: string) => {
-		setSearchValue(value);
-		syncUrl(value, statusFilter, priorityFilter, labelFilter, milestoneFilter);
-	};
-
 	const handleStatusChange = (value: string) => {
 		setStatusFilter(value);
-		syncUrl(searchValue, value, priorityFilter, labelFilter, milestoneFilter);
+		syncUrl(value, priorityFilter, labelFilter, milestoneFilter);
 	};
 
 	const handlePriorityChange = (value: "" | SearchPriorityFilter) => {
 		setPriorityFilter(value);
-		syncUrl(searchValue, statusFilter, value, labelFilter, milestoneFilter);
+		syncUrl(statusFilter, value, labelFilter, milestoneFilter);
 	};
 
 	const handleLabelChange = (next: string[]) => {
 		const normalized = next.map((label) => label.trim()).filter((label) => label.length > 0);
 		setLabelFilter(normalized);
-		syncUrl(searchValue, statusFilter, priorityFilter, normalized, milestoneFilter);
+		syncUrl(statusFilter, priorityFilter, normalized, milestoneFilter);
 	};
 
 	const handleMilestoneChange = (value: string) => {
 		setMilestoneFilter(value);
-		syncUrl(searchValue, statusFilter, priorityFilter, labelFilter, value);
+		syncUrl(statusFilter, priorityFilter, labelFilter, value);
 	};
 
 	const handleClearFilters = () => {
-		setSearchValue("");
 		setStatusFilter("");
 		setPriorityFilter("");
 		setLabelFilter([]);
 		setMilestoneFilter("");
-		syncUrl("", "", "", [], "");
+		syncUrl("", "", [], "");
 		setDisplayTasks(sortedBaseTasks);
 		setError(null);
 	};
-
-	useEffect(() => {
-		if (!showLabelsMenu) return;
-		const handleClickOutside = (event: MouseEvent) => {
-			const target = event.target as Node;
-			if (
-				labelsButtonRef.current &&
-				labelsMenuRef.current &&
-				!labelsButtonRef.current.contains(target) &&
-				!labelsMenuRef.current.contains(target)
-			) {
-				setShowLabelsMenu(false);
-			}
-		};
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [showLabelsMenu]);
 
 	const handleCleanupSuccess = async (movedCount: number) => {
 		setShowCleanupModal(false);
@@ -646,140 +610,56 @@ const TaskList: React.FC<TaskListProps> = ({
 
 				<div className="flex flex-wrap items-center gap-3 justify-between">
 					<div className="flex flex-wrap items-center gap-3 flex-1 min-w-0">
-						<div className="relative flex-1 basis-[200px] min-w-[180px] max-w-[280px]">
-							<span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
-								<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-								</svg>
-							</span>
-						<input
-							type="text"
-							value={searchValue}
-							onChange={(event) => handleSearchChange(event.target.value)}
-							placeholder="Search tasks"
-							className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 focus:border-transparent transition-colors duration-200"
-						/>
-						{searchValue && (
-								<button
-									type="button"
-									onClick={() => handleSearchChange("")}
-									className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
-								>
-									<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-								</svg>
-							</button>
-						)}
-						</div>
-
-					<select
-						value={statusFilter}
-						onChange={(event) => handleStatusChange(event.target.value)}
-						className="min-w-[140px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200"
-					>
-						<option value="">All statuses</option>
-						{availableStatuses.map((status) => (
-							<option key={status} value={status}>
-								{status}
-							</option>
-						))}
-					</select>
-
-					<select
-						value={priorityFilter}
-						onChange={(event) => handlePriorityChange(event.target.value as "" | SearchPriorityFilter)}
-						className="min-w-[140px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200"
-					>
-						{PRIORITY_OPTIONS.map((option) => (
-							<option key={option.value || "all"} value={option.value}>
-								{option.label}
-							</option>
-						))}
-					</select>
-
-					<select
-						value={milestoneFilter}
-						onChange={(event) => handleMilestoneChange(event.target.value)}
-						className="min-w-[160px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200"
-					>
-						<option value="">All milestones</option>
-						<option value="__none">No milestone</option>
-						{milestoneOptions.map((milestone) => (
-							<option key={milestone} value={milestone}>
-								{getMilestoneLabel(milestone, milestoneEntities)}
-							</option>
-						))}
-					</select>
-
-					<div className="relative">
-						<button
-							type="button"
-							ref={labelsButtonRef}
-							onClick={() => setShowLabelsMenu((open) => !open)}
-							className="min-w-[200px] py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200 text-left"
+						<select
+							value={statusFilter}
+							onChange={(event) => handleStatusChange(event.target.value)}
+							className="min-w-[140px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200"
 						>
-							<div className="flex items-center justify-between gap-2">
-								<span>Labels</span>
-								<span className="text-xs text-gray-500 dark:text-gray-400">
-									{labelFilter.length === 0
-										? "All"
-										: labelFilter.length === 1
-											? labelFilter[0]
-											: `${labelFilter.length} selected`}
-								</span>
-							</div>
-						</button>
-						{showLabelsMenu && (
-							<div
-								ref={labelsMenuRef}
-								className="absolute z-10 mt-2 w-[220px] max-h-56 overflow-y-auto rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg"
-							>
-								{mergedAvailableLabels.length === 0 ? (
-									<div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">No labels</div>
-								) : (
-									mergedAvailableLabels.map((label) => {
-										const isSelected = labelFilter.includes(label);
-										return (
-											<label
-												key={label}
-												className="flex items-center gap-2 px-3 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-											>
-												<input
-													type="checkbox"
-													checked={isSelected}
-													onChange={() => {
-														const next = isSelected
-															? labelFilter.filter((item) => item !== label)
-															: [...labelFilter, label];
-														handleLabelChange(next);
-													}}
-													className="h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
-												/>
-												<span className="truncate">{label}</span>
-											</label>
-										);
-									})
-								)}
-								{labelFilter.length > 0 && (
-									<button
-										type="button"
-										className="w-full text-left px-3 py-2 text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 border-t border-gray-200 dark:border-gray-700"
-										onClick={() => {
-											handleLabelChange([]);
-											setShowLabelsMenu(false);
-										}}
-									>
-										Clear label filter
-									</button>
-								)}
-							</div>
-						)}
-					</div>
+							<option value="">All statuses</option>
+							{availableStatuses.map((status) => (
+								<option key={status} value={status}>
+									{status}
+								</option>
+							))}
+						</select>
+
+						<select
+							value={priorityFilter}
+							onChange={(event) => handlePriorityChange(event.target.value as "" | SearchPriorityFilter)}
+							className="min-w-[140px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200"
+						>
+							{PRIORITY_OPTIONS.map((option) => (
+								<option key={option.value || "all"} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</select>
+
+						<select
+							value={milestoneFilter}
+							onChange={(event) => handleMilestoneChange(event.target.value)}
+							className="min-w-[160px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200"
+						>
+							<option value="">All milestones</option>
+							<option value="__none">No milestone</option>
+							{milestoneOptions.map((milestone) => (
+								<option key={milestone} value={milestone}>
+									{getMilestoneLabel(milestone, milestoneEntities)}
+								</option>
+							))}
+						</select>
+
+						<LabelFilterDropdown
+							availableLabels={mergedAvailableLabels}
+							selectedLabels={labelFilter}
+							onChange={handleLabelChange}
+							menuId="task-list-labels-menu"
+						/>
 
 					</div>
 
 					<div className="flex items-center gap-3 flex-shrink-0">
-						{statusFilter.toLowerCase() === "done" && currentCount > 0 && (
+						{isFilteringTerminalStatus && currentCount > 0 && (
 								<button
 									type="button"
 									onClick={() => setShowCleanupModal(true)}

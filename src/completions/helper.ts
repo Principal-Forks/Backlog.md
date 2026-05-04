@@ -57,7 +57,7 @@ export function parseCompletionContext(line: string, point: number): CompletionC
 		} else {
 			// Count positional arguments
 			const prevWord = completedWords[i - 1];
-			if (!prevWord || !prevWord.startsWith("-")) {
+			if (!prevWord?.startsWith("-")) {
 				argPosition++;
 			}
 		}
@@ -120,7 +120,7 @@ async function getFlagValueCompletions(flagName: string): Promise<string[]> {
 		case "assignee":
 			return await getAssignees();
 		case "shell":
-			return ["bash", "zsh", "fish"];
+			return ["bash", "zsh", "fish", "pwsh"];
 		default:
 			return [];
 	}

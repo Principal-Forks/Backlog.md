@@ -36,6 +36,7 @@ export interface Task {
 	dependencies: string[];
 	references?: string[];
 	documentation?: string[];
+	modifiedFiles?: string[];
 	readonly rawContent?: string; // Raw markdown content without frontmatter (read-only: do not modify directly)
 	description?: string;
 	implementationPlan?: string;
@@ -90,12 +91,14 @@ export interface TaskCreateInput {
 	description?: string;
 	status?: TaskStatus;
 	priority?: "high" | "medium" | "low";
+	ordinal?: number;
 	milestone?: string;
 	labels?: string[];
 	assignee?: string[];
 	dependencies?: string[];
 	references?: string[];
 	documentation?: string[];
+	modifiedFiles?: string[];
 	parentTaskId?: string;
 	implementationPlan?: string;
 	implementationNotes?: string;
@@ -126,6 +129,7 @@ export interface TaskUpdateInput {
 	documentation?: string[];
 	addDocumentation?: string[];
 	removeDocumentation?: string[];
+	modifiedFiles?: string[];
 	implementationPlan?: string;
 	appendImplementationPlan?: string[];
 	clearImplementationPlan?: boolean;
@@ -175,10 +179,13 @@ export interface Milestone {
 	readonly rawContent: string; // Raw markdown content without frontmatter
 }
 
+export const DOCUMENT_TYPE_VALUES = ["readme", "guide", "specification", "other"] as const;
+export type DocumentType = (typeof DOCUMENT_TYPE_VALUES)[number];
+
 export interface Document {
 	id: string;
 	title: string;
-	type: "readme" | "guide" | "specification" | "other";
+	type: DocumentType;
 	createdDate: string;
 	updatedDate?: string;
 	rawContent: string; // Raw markdown content without frontmatter
@@ -187,6 +194,23 @@ export interface Document {
 	name?: string;
 	path?: string;
 	lastModified?: string;
+}
+
+export interface DocumentCreateInput {
+	title: string;
+	content?: string;
+	type?: Document["type"];
+	path?: string;
+	tags?: string[];
+}
+
+export interface DocumentUpdateInput {
+	id: string;
+	content: string;
+	title?: string;
+	type?: Document["type"];
+	path?: string | null;
+	tags?: string[];
 }
 
 export type SearchResultType = "task" | "document" | "decision";
@@ -204,6 +228,7 @@ export interface SearchFilters {
 	priority?: SearchPriorityFilter | SearchPriorityFilter[];
 	assignee?: string | string[];
 	labels?: string | string[];
+	modifiedFiles?: string | string[];
 }
 
 export interface SearchOptions {
@@ -271,11 +296,15 @@ export interface BacklogConfig {
 	defaultPort?: number;
 	remoteOperations?: boolean;
 	autoCommit?: boolean;
+	/** Disable all Git integration for filesystem-only projects. */
+	filesystemOnly?: boolean;
 	zeroPaddedIds?: number;
 	includeDateTimeInDates?: boolean; // Whether to include time in new dates
 	bypassGitHooks?: boolean;
 	checkActiveBranches?: boolean; // Check task states across active branches (default: true)
 	activeBranchDays?: number; // How many days a branch is considered active (default: 30)
+	/** Project-relative backlog folder when config is stored at project root in backlog.config.yml. */
+	backlogDirectory?: string;
 	/** Global callback command to run on any task status change. Supports $TASK_ID, $OLD_STATUS, $NEW_STATUS, $TASK_TITLE variables. */
 	onStatusChange?: string;
 	/** ID prefix configuration for tasks and drafts. Defaults to { task: "task", draft: "draft" } */

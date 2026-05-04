@@ -3,7 +3,7 @@ import { $ } from "bun";
 import { McpServer } from "../mcp/server.ts";
 import { registerDefinitionOfDoneTools } from "../mcp/tools/definition-of-done/index.ts";
 import { registerTaskTools } from "../mcp/tools/tasks/index.ts";
-import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
+import { createUniqueTestDir, initializeTestProject, safeCleanup } from "./test-utils.ts";
 
 const getText = (content: unknown[] | undefined, index = 0): string => {
 	const item = content?.[index] as { text?: string } | undefined;
@@ -31,7 +31,7 @@ describe("MCP Definition of Done default tools", () => {
 		await $`git config user.name "Test User"`.cwd(testDir).quiet();
 		await $`git config user.email test@example.com`.cwd(testDir).quiet();
 
-		await server.initializeProject("Test Project");
+		await initializeTestProject(server, "Test Project");
 
 		const config = await loadConfigOrThrow(server);
 		registerTaskTools(server, config);
@@ -133,7 +133,7 @@ describe("MCP Definition of Done default tools", () => {
 		expect(withoutDefaultsText).not.toContain("Run tests");
 	});
 
-	it("rejects delimiter-sensitive DoD defaults (commas) to prevent config corruption", async () => {
+	it("round-trips comma-bearing DoD defaults", async () => {
 		await server.testInterface.callTool({
 			params: {
 				name: "definition_of_done_defaults_upsert",
@@ -152,10 +152,50 @@ describe("MCP Definition of Done default tools", () => {
 			},
 		});
 
-		expect(result.isError).toBe(true);
-		expect(getText(result.content)).toContain("cannot contain commas");
+		expect(result.isError).toBeUndefined();
+		expect(getText(result.content)).toContain("1. Run unit, integration, and e2e tests");
 
 		const reloaded = await loadConfigOrThrow(server);
-		expect(reloaded.definitionOfDone).toEqual(["Run tests", "Update docs"]);
+		expect(reloaded.definitionOfDone).toEqual(["Run unit, integration, and e2e tests"]);
+	});
+
+	it("round-trips quoted and multiline DoD defaults without injecting config keys", async () => {
+		const injectedKeyPayload = 'Validate "dark mode"\nonStatusChange: "echo pwned"';
+		const result = await server.testInterface.callTool({
+			params: {
+				name: "definition_of_done_defaults_upsert",
+				arguments: {
+					items: [injectedKeyPayload],
+				},
+			},
+		});
+
+		expect(result.isError).toBeUndefined();
+		expect(getText(result.content)).toContain('1. Validate "dark mode"');
+
+		const reloaded = await loadConfigOrThrow(server);
+		expect(reloaded.definitionOfDone).toEqual([injectedKeyPayload]);
+		expect(reloaded.onStatusChange).toBeUndefined();
+
+		const configText = await Bun.file(server.filesystem.configFilePath).text();
+		expect(configText).toContain(String.raw`Validate \"dark mode\"\nonStatusChange: \"echo pwned\"`);
+		expect(configText).not.toContain('\nonStatusChange: "echo pwned"');
+	});
+
+	it("allows apostrophes in DoD defaults", async () => {
+		const result = await server.testInterface.callTool({
+			params: {
+				name: "definition_of_done_defaults_upsert",
+				arguments: {
+					items: ["Don't forget release notes"],
+				},
+			},
+		});
+
+		expect(result.isError).toBeUndefined();
+		expect(getText(result.content)).toContain("1. Don't forget release notes");
+
+		const reloaded = await loadConfigOrThrow(server);
+		expect(reloaded.definitionOfDone).toEqual(["Don't forget release notes"]);
 	});
 });

@@ -3,7 +3,7 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { $ } from "bun";
 import { Core } from "../index.ts";
-import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
+import { createUniqueTestDir, initializeTestProject, safeCleanup } from "./test-utils.ts";
 
 let TEST_DIR: string;
 
@@ -19,7 +19,7 @@ describe("CLI search command", () => {
 		await $`git config user.email test@example.com`.cwd(TEST_DIR).quiet();
 
 		const core = new Core(TEST_DIR);
-		await core.initializeProject("Search Command Project");
+		await initializeTestProject(core, "Search Command Project");
 
 		await core.createTask(
 			{
@@ -32,6 +32,7 @@ describe("CLI search command", () => {
 				dependencies: [],
 				rawContent: "Implements central search module",
 				description: "Implements central search module",
+				modifiedFiles: ["src/web/App.tsx"],
 			},
 			false,
 		);
@@ -48,6 +49,7 @@ describe("CLI search command", () => {
 				rawContent: "Follow-up work",
 				description: "Follow-up work",
 				priority: "high",
+				modifiedFiles: ["src/core/search-service.ts"],
 			},
 			false,
 		);
@@ -112,5 +114,21 @@ describe("CLI search command", () => {
 		const stdout = result.stdout.toString();
 		const taskMatches = stdout.match(/TASK-\d+ -/g) || [];
 		expect(taskMatches.length).toBeLessThanOrEqual(1);
+	});
+
+	it("finds tasks by modified file path", async () => {
+		const queryResult = await $`bun ${cliPath} search "src/web/App.tsx" --type task --plain`.cwd(TEST_DIR).quiet();
+		expect(queryResult.exitCode).toBe(0);
+		const queryStdout = queryResult.stdout.toString();
+		expect(queryStdout).toContain("TASK-1 - Central search integration");
+
+		const filterResult = await $`bun ${cliPath} search --modified-file core/search-service --plain`
+			.cwd(TEST_DIR)
+			.quiet();
+		expect(filterResult.exitCode).toBe(0);
+		const filterStdout = filterResult.stdout.toString();
+		expect(filterStdout).toContain("TASK-2 - High priority follow-up");
+		expect(filterStdout).not.toContain("TASK-1 - Central search integration");
+		expect(filterStdout).not.toContain("Documents:");
 	});
 });

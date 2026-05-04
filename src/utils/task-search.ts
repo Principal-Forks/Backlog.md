@@ -5,18 +5,22 @@
 
 import Fuse from "fuse.js";
 import type { Task } from "../types/index.ts";
+import { NO_MILESTONE_FILTER_VALUE } from "./milestone-filter.ts";
+import { matchesModifiedFileFilters, normalizeModifiedFileFilters } from "./modified-files.ts";
 
 export interface TaskSearchOptions {
 	query?: string;
 	status?: string;
 	priority?: "high" | "medium" | "low";
 	labels?: string[];
+	modifiedFiles?: string[];
 }
 
 export interface SharedTaskFilterOptions {
 	query?: string;
 	priority?: "high" | "medium" | "low";
 	labels?: string[];
+	modifiedFiles?: string[];
 	milestone?: string;
 	resolveMilestoneLabel?: (milestone: string) => string;
 }
@@ -92,6 +96,7 @@ interface SearchableTask {
 	statusLower: string;
 	priorityLower?: string;
 	labelsLower: string[];
+	modifiedFiles: string[];
 }
 
 function buildSearchableTask(task: Task): SearchableTask {
@@ -107,6 +112,7 @@ function buildSearchableTask(task: Task): SearchableTask {
 	if (task.implementationNotes) bodyParts.push(task.implementationNotes);
 	if (task.labels?.length) bodyParts.push(task.labels.join(" "));
 	if (task.assignee?.length) bodyParts.push(task.assignee.join(" "));
+	if (task.modifiedFiles?.length) bodyParts.push(task.modifiedFiles.join(" "));
 
 	return {
 		task,
@@ -118,6 +124,7 @@ function buildSearchableTask(task: Task): SearchableTask {
 		statusLower: (task.status || "").toLowerCase(),
 		priorityLower: task.priority?.toLowerCase(),
 		labelsLower: (task.labels || []).map((label) => label.toLowerCase()),
+		modifiedFiles: task.modifiedFiles ?? [],
 	};
 }
 
@@ -138,6 +145,7 @@ export function createTaskSearchIndex(tasks: Task[]): TaskSearchIndex {
 			{ name: "id", weight: 0.2 },
 			{ name: "idVariants", weight: 0.1 },
 			{ name: "dependencyIds", weight: 0.05 },
+			{ name: "modifiedFiles", weight: 0.15 },
 		],
 	});
 
@@ -178,6 +186,11 @@ export function createTaskSearchIndex(tasks: Task[]): TaskSearchIndex {
 				});
 			}
 
+			const modifiedFiles = normalizeModifiedFileFilters(options.modifiedFiles);
+			if (modifiedFiles) {
+				results = results.filter((task) => matchesModifiedFileFilters(task.modifiedFiles, modifiedFiles));
+			}
+
 			return results.map((r) => r.task);
 		},
 	};
@@ -192,6 +205,9 @@ function applyMilestoneFilter(
 	if (!normalizedMilestone) {
 		return tasks;
 	}
+	if (normalizedMilestone === NO_MILESTONE_FILTER_VALUE) {
+		return tasks.filter((task) => !task.milestone?.trim());
+	}
 
 	return tasks.filter((task) => {
 		if (!task.milestone) {
@@ -205,7 +221,11 @@ function applyMilestoneFilter(
 export function applyTaskFilters(tasks: Task[], options: TaskFilterOptions, index?: TaskSearchIndex): Task[] {
 	const query = options.query?.trim() ?? "";
 	const hasBaseFilters = Boolean(
-		query || options.status || options.priority || (options.labels && options.labels.length > 0),
+		query ||
+			options.status ||
+			options.priority ||
+			(options.labels && options.labels.length > 0) ||
+			(options.modifiedFiles && options.modifiedFiles.length > 0),
 	);
 
 	let results = hasBaseFilters
@@ -214,6 +234,7 @@ export function applyTaskFilters(tasks: Task[], options: TaskFilterOptions, inde
 				status: options.status,
 				priority: options.priority,
 				labels: options.labels,
+				modifiedFiles: options.modifiedFiles,
 			})
 		: [...tasks];
 
@@ -235,6 +256,7 @@ export function applySharedTaskFilters(
 			query: options.query,
 			priority: options.priority,
 			labels: options.labels,
+			modifiedFiles: options.modifiedFiles,
 			milestone: options.milestone,
 			resolveMilestoneLabel: options.resolveMilestoneLabel,
 		},

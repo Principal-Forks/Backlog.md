@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { $ } from "bun";
 import { Core } from "../core/backlog.ts";
+import { initializeProject } from "../core/init.ts";
 
 async function main() {
 	// Create temp directory
@@ -20,7 +21,10 @@ async function main() {
 
 	// Create backlog instance and initialize project
 	const backlog = new Core(TEST_DIR);
-	await backlog.initializeProject("OTEL Test Project");
+	await initializeProject(backlog, {
+		projectName: "OTEL Test Project",
+		integrationMode: "cli",
+	});
 
 	// Create a draft
 	const draft = {

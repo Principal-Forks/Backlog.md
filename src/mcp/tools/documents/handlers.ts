@@ -1,6 +1,6 @@
 import { getTracer } from "../../../telemetry";
 import type { Document, DocumentSearchResult } from "../../../types/index.ts";
-import { McpError } from "../../errors/mcp-errors.ts";
+import { BacklogToolError } from "../../errors/mcp-errors.ts";
 import type { McpServer } from "../../server.ts";
 import type { CallToolResult } from "../../types.ts";
 import { formatDocumentCallResult } from "../../utils/document-response.ts";
@@ -16,12 +16,18 @@ export type DocumentViewArgs = {
 export type DocumentCreateArgs = {
 	title: string;
 	content: string;
+	type?: Document["type"];
+	path?: string;
+	tags?: string[];
 };
 
 export type DocumentUpdateArgs = {
 	id: string;
 	title?: string;
 	content: string;
+	type?: Document["type"];
+	path?: string;
+	tags?: string[];
 };
 
 export type DocumentSearchArgs = {
@@ -33,7 +39,11 @@ export class DocumentHandlers {
 	constructor(private readonly core: McpServer) {}
 
 	private formatDocumentSummaryLine(document: Document): string {
-		const metadata: string[] = [`type: ${document.type}`, `created: ${document.createdDate}`];
+		const metadata: string[] = [
+			`type: ${document.type}`,
+			`path: ${document.path ?? "(unknown)"}`,
+			`created: ${document.createdDate}`,
+		];
 		if (document.updatedDate) {
 			metadata.push(`updated: ${document.updatedDate}`);
 		}
@@ -56,7 +66,7 @@ export class DocumentHandlers {
 	private async loadDocumentOrThrow(id: string): Promise<Document> {
 		const document = await this.core.getDocument(id);
 		if (!document) {
-			throw new McpError(`Document not found: ${id}`, "DOCUMENT_NOT_FOUND");
+			throw new BacklogToolError(`Document not found: ${id}`, "DOCUMENT_NOT_FOUND");
 		}
 		return document;
 	}
@@ -117,36 +127,44 @@ export class DocumentHandlers {
 
 	async createDocument(args: DocumentCreateArgs): Promise<CallToolResult> {
 		try {
-			const document = await this.core.createDocumentWithId(args.title, args.content);
+			const document = await this.core.createDocumentFromInput({
+				title: args.title,
+				content: args.content,
+				type: args.type,
+				path: args.path,
+				tags: args.tags,
+			});
 			return await formatDocumentCallResult(document, {
 				summaryLines: ["Document created successfully."],
 			});
 		} catch (error) {
 			if (error instanceof Error) {
-				throw new McpError(`Failed to create document: ${error.message}`, "OPERATION_FAILED");
+				throw new BacklogToolError(`Failed to create document: ${error.message}`, "OPERATION_FAILED");
 			}
-			throw new McpError("Failed to create document.", "OPERATION_FAILED");
+			throw new BacklogToolError("Failed to create document.", "OPERATION_FAILED");
 		}
 	}
 
 	async updateDocument(args: DocumentUpdateArgs): Promise<CallToolResult> {
-		const existing = await this.loadDocumentOrThrow(args.id);
-		const nextDocument = args.title ? { ...existing, title: args.title } : existing;
+		await this.loadDocumentOrThrow(args.id);
 
 		try {
-			await this.core.updateDocument(nextDocument, args.content);
-			const refreshed = await this.core.getDocument(existing.id);
-			if (!refreshed) {
-				throw new McpError(`Document not found: ${args.id}`, "DOCUMENT_NOT_FOUND");
-			}
-			return await formatDocumentCallResult(refreshed, {
+			const document = await this.core.updateDocumentFromInput({
+				id: args.id,
+				content: args.content,
+				title: args.title,
+				type: args.type,
+				path: args.path,
+				tags: args.tags,
+			});
+			return await formatDocumentCallResult(document, {
 				summaryLines: ["Document updated successfully."],
 			});
 		} catch (error) {
 			if (error instanceof Error) {
-				throw new McpError(`Failed to update document: ${error.message}`, "OPERATION_FAILED");
+				throw new BacklogToolError(`Failed to update document: ${error.message}`, "OPERATION_FAILED");
 			}
-			throw new McpError("Failed to update document.", "OPERATION_FAILED");
+			throw new BacklogToolError("Failed to update document.", "OPERATION_FAILED");
 		}
 	}
 
@@ -195,7 +213,7 @@ export class DocumentHandlers {
 		for (const result of documents) {
 			const { document } = result;
 			const scoreText = this.formatScore(result.score);
-			lines.push(`  ${document.id} - ${document.title}${scoreText}`);
+			lines.push(`  ${document.id} - ${document.title} (${document.path ?? "(unknown)"})${scoreText}`);
 		}
 
 		span.addEvent("document.search.complete", {

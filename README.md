@@ -48,8 +48,11 @@ bun i -g backlog.md
 # or: npm i -g backlog.md
 # or: brew install backlog-md
 
-# Initialize in any git repo
+# Initialize in any Git repo
 backlog init "My Awesome Project"
+
+# Or initialize without Git for local/non-code projects
+backlog init "Personal Planning" --no-git
 ```
 
 The init wizard will ask how you want to connect AI tools:
@@ -57,7 +60,7 @@ The init wizard will ask how you want to connect AI tools:
 - **CLI commands** — creates instruction files (CLAUDE.md, AGENTS.md, etc.) so agents use Backlog via CLI.
 - **Skip** — no AI setup; use Backlog.md purely as a task manager.
 
-All data is saved under the `backlog` folder as human-readable Markdown files (e.g. `task-10 - Add core search functionality.md`).
+Backlog data is stored in a project-local backlog folder such as `backlog/`, `.backlog/`, or a custom project-relative path configured through `backlog.config.yml`. Tasks remain human-readable Markdown files (e.g. `task-10 - Add core search functionality.md`). Git is optional: `backlog init --no-git` creates a filesystem-only project and disables cross-branch checks, remote operations, and auto-commit.
 
 ---
 
@@ -111,7 +114,7 @@ backlog board
 backlog browser
 ```
 
-You can switch between AI-assisted and manual workflows at any time — both operate on the same Markdown task files. It is recommended to modify tasks via Backlog.md commands (CLI/MCP/Web) rather than editing task files manually, so field types and metadata stay consistent.
+You can switch between AI-assisted and manual workflows at any time — both operate on the same Markdown task files. It is recommended to modify tasks via Backlog.md commands (CLI/MCP/Web) rather than editing task files manually, so field types and metadata stay consistent. Tasks can record project-root-relative modified files and later be found with `backlog search --modified-file src/path.ts --plain`.
 
 **Learn more:** [CLI reference](CLI-INSTRUCTIONS.md) | [Advanced configuration](ADVANCED-CONFIG.md)
 
@@ -142,6 +145,8 @@ backlog browser --no-open
 - Seamless CLI integration - all changes sync with markdown files
 
 ![Web Interface Screenshot](./.github/web.jpeg)
+
+To keep the Web UI running as an auto-starting local service, see [Running Backlog.md as a Service](backlog/docs/doc-003%20-%20Running-Backlog-Browser-as-a-Service.md).
 
 ---
 
@@ -235,9 +240,10 @@ Full help: `backlog --help`
 Backlog.md merges the following layers (highest → lowest):
 
 1. CLI flags
-2. `backlog/config.yml` (per‑project)
-3. `~/backlog/user` (per‑user)
-4. Built‑ins
+2. Project config file:
+   - `backlog.config.yml` when present
+   - otherwise `backlog/config.yml` or `.backlog/config.yml`
+3. Built‑ins
 
 ### Interactive wizard (`backlog config`)
 
@@ -256,11 +262,13 @@ Skipping the wizard (answering "No" during init) applies the safe defaults that 
 - `defaultEditor` unset (falls back to your environment).
 - `defaultPort=6420`, `autoOpenBrowser=true`.
 
+For filesystem-only projects, run `backlog init --no-git`. Backlog.md will not run `git init`, and the saved config forces `checkActiveBranches=false`, `remoteOperations=false`, and `autoCommit=false` so CLI, Web, and MCP local-file workflows do not depend on a Git repository.
+
 Whenever you revisit `backlog init` or rerun `backlog config`, the wizard pre-populates prompts with your current values so you can adjust only what changed.
 
 ### Definition of Done defaults
 
-Set project-wide DoD items with `backlog config` (or during `backlog init` advanced setup), in the Web UI (Settings → Definition of Done Defaults), or by editing `backlog/config.yml` directly:
+Set project-wide DoD items with `backlog config` (or during `backlog init` advanced setup), in the Web UI (Settings → Definition of Done Defaults), or by editing the project config file directly:
 
 ```yaml
 definition_of_done:
@@ -269,9 +277,17 @@ definition_of_done:
   - No regressions introduced
 ```
 
+When a project uses root config discovery, edit `backlog.config.yml` instead of `backlog/config.yml`.
+
 These items are added to every new task by default. You can add more on create with `--dod`, or disable defaults per task with `--no-dod-defaults`.
 
 For the full configuration reference (all options, commands, and detailed notes), see **[ADVANCED-CONFIG.md](ADVANCED-CONFIG.md)**.
+
+---
+
+## 🌐 Community Tools
+
+- **[vscode-backlog-md](https://marketplace.visualstudio.com/items?itemName=ysamlan.vscode-backlog-md)** - VS Code extension with issues panel, kanban view, and editing. ([ysamlan/vscode-backlog-md](https://github.com/ysamlan/vscode-backlog-md))
 
 ---
 

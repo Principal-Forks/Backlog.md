@@ -1,4 +1,4 @@
-import { McpError } from "../../errors/mcp-errors.ts";
+import { BacklogToolError } from "../../errors/mcp-errors.ts";
 import type { McpServer } from "../../server.ts";
 import type { CallToolResult } from "../../types.ts";
 
@@ -8,10 +8,6 @@ export type DefinitionOfDoneDefaultsUpsertArgs = {
 
 function normalizeDefinitionOfDoneDefaults(items: string[]): string[] {
 	return items.map((item) => item.trim()).filter((item) => item.length > 0);
-}
-
-function findDelimiterSensitiveItem(items: string[]): string | undefined {
-	return items.find((item) => item.includes(","));
 }
 
 function formatDefinitionOfDoneDefaults(items: string[]): string {
@@ -30,7 +26,7 @@ export class DefinitionOfDoneHandlers {
 	private async loadConfigOrThrow() {
 		const config = await this.core.filesystem.loadConfig();
 		if (!config) {
-			throw new McpError("Backlog config not found. Initialize Backlog.md first.", "NOT_FOUND");
+			throw new BacklogToolError("Backlog config not found. Initialize Backlog.md first.", "NOT_FOUND");
 		}
 		return config;
 	}
@@ -54,13 +50,6 @@ export class DefinitionOfDoneHandlers {
 	async upsertDefaults(args: DefinitionOfDoneDefaultsUpsertArgs): Promise<CallToolResult> {
 		const config = await this.loadConfigOrThrow();
 		const nextDefaults = normalizeDefinitionOfDoneDefaults(args.items);
-		const commaSensitiveItem = findDelimiterSensitiveItem(nextDefaults);
-		if (commaSensitiveItem) {
-			throw new McpError(
-				`Definition of Done defaults cannot contain commas (invalid item: "${commaSensitiveItem}").`,
-				"VALIDATION_ERROR",
-			);
-		}
 
 		await this.core.filesystem.saveConfig({
 			...config,

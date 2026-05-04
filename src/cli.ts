@@ -11,7 +11,7 @@ import { type CompletionInstallResult, installCompletion, registerCompletionComm
 import { configureAdvancedSettings } from "./commands/configure-advanced-settings.ts";
 import { registerMcpCommand } from "./commands/mcp.ts";
 import { pickTaskForEditWizard, runTaskCreateWizard, runTaskEditWizard } from "./commands/task-wizard.ts";
-import { DEFAULT_DIRECTORIES } from "./constants/index.ts";
+import { DEFAULT_DIRECTORIES, DEFAULT_FILES, DEFAULT_STATUSES } from "./constants/index.ts";
 import { initializeProject } from "./core/init.ts";
 import { buildMilestoneBuckets, collectArchivedMilestoneKeys, milestoneKey } from "./core/milestones.ts";
 import { computeSequences } from "./core/sequences.ts";
@@ -33,9 +33,9 @@ import {
 	type BacklogConfig,
 	type Decision,
 	type DecisionSearchResult,
+	DOCUMENT_TYPE_VALUES,
 	type Document as DocType,
 	type DocumentSearchResult,
-	EntityType,
 	isLocalEditableTask,
 	type Milestone,
 	type SearchPriorityFilter,
@@ -51,14 +51,16 @@ import { createLoadingScreen } from "./ui/loading.ts";
 import { viewTaskEnhanced } from "./ui/task-viewer-with-search.ts";
 import { scrollableViewer } from "./ui/tui.ts";
 import { type AgentSelectionValue, processAgentSelection } from "./utils/agent-selection.ts";
+import { normalizeProjectBacklogDirectory } from "./utils/backlog-directory.ts";
 import { findBacklogRoot } from "./utils/find-backlog-root.ts";
 import { createMilestoneFilterValueResolver, resolveClosestMilestoneFilterValue } from "./utils/milestone-filter.ts";
+import { resolveMilestoneInputForStorage } from "./utils/milestone-storage.ts";
 import { hasAnyPrefix } from "./utils/prefix-config.ts";
 import { type RuntimeCwdResolution, resolveRuntimeCwd } from "./utils/runtime-cwd.ts";
 import { formatValidStatuses, getCanonicalStatus, getValidStatuses } from "./utils/status.ts";
 import {
-	buildDefinitionOfDoneItems,
-	normalizeStringList,
+	normalizeDependencies,
+	parseDelimitedStringList,
 	parsePositiveIndexList,
 	processAcceptanceCriteriaOptions,
 	toStringArray,
@@ -66,6 +68,7 @@ import {
 import { buildTaskUpdateInput } from "./utils/task-edit-builder.ts";
 import { normalizeTaskId, taskIdsEqual } from "./utils/task-path.ts";
 import { sortTasks } from "./utils/task-sorting.ts";
+import { getTerminalStatus, isTerminalStatus } from "./utils/terminal-status.ts";
 import { getVersion } from "./utils/version.ts";
 
 // Initialize OpenTelemetry if configured
@@ -176,6 +179,8 @@ function hasCreateFieldFlags(options: Record<string, unknown>): boolean {
 			options.status !== undefined ||
 			options.labels !== undefined ||
 			options.priority !== undefined ||
+			options.ordinal !== undefined ||
+			options.milestone !== undefined ||
 			options.plain ||
 			options.ac !== undefined ||
 			options.acceptanceCriteria !== undefined ||
@@ -189,7 +194,8 @@ function hasCreateFieldFlags(options: Record<string, unknown>): boolean {
 			options.dependsOn !== undefined ||
 			options.dep !== undefined ||
 			options.ref !== undefined ||
-			options.doc !== undefined,
+			options.doc !== undefined ||
+			options.modifiedFile !== undefined,
 	);
 }
 
@@ -203,6 +209,8 @@ function hasEditFieldFlags(options: Record<string, unknown>): boolean {
 			options.label !== undefined ||
 			options.priority !== undefined ||
 			options.ordinal !== undefined ||
+			options.milestone !== undefined ||
+			options.clearMilestone ||
 			options.plain ||
 			options.addLabel !== undefined ||
 			options.removeLabel !== undefined ||
@@ -224,8 +232,17 @@ function hasEditFieldFlags(options: Record<string, unknown>): boolean {
 			options.dependsOn !== undefined ||
 			options.dep !== undefined ||
 			options.ref !== undefined ||
-			options.doc !== undefined,
+			options.doc !== undefined ||
+			options.modifiedFile !== undefined,
 	);
+}
+
+async function resolveCliMilestoneInput(core: Core, milestone: string): Promise<string> {
+	const [activeMilestones, archivedMilestones] = await Promise.all([
+		core.filesystem.listMilestones(),
+		core.filesystem.listArchivedMilestones(),
+	]);
+	return resolveMilestoneInputForStorage(milestone, activeMilestones, archivedMilestones);
 }
 
 // Helper function to process multiple AC operations
@@ -415,7 +432,7 @@ program
 
 program
 	.command("init [projectName]")
-	.description("initialize backlog project in the current repository")
+	.description("initialize backlog project in the current directory")
 	.option(
 		"--agent-instructions <instructions>",
 		"comma-separated agent instructions to create. Valid: claude, agents, gemini, copilot, cursor (alias of agents), none. Use 'none' to skip; when combined with others, 'none' is ignored.",
@@ -430,7 +447,10 @@ program
 	.option("--auto-open-browser <boolean>", "auto-open browser for web UI (default: true)")
 	.option("--install-claude-agent <boolean>", "install Claude Code agent (default: false)")
 	.option("--integration-mode <mode>", "choose how AI tools connect to Backlog.md (mcp, cli, or none)")
+	.option("--backlog-dir <path>", "backlog folder for init: backlog, .backlog, or a custom project-relative path")
+	.option("--config-location <location>", "config location for init: folder or root")
 	.option("--task-prefix <prefix>", "custom task prefix, letters only (default: task)")
+	.option("--no-git", "initialize without Git integration")
 	.option("--defaults", "use default values for all prompts")
 	.action(
 		async (
@@ -447,7 +467,10 @@ program
 				autoOpenBrowser?: string;
 				installClaudeAgent?: string;
 				integrationMode?: string;
+				backlogDir?: string;
+				configLocation?: string;
 				taskPrefix?: string;
+				git?: boolean;
 				defaults?: boolean;
 			},
 		) => {
@@ -455,22 +478,34 @@ program
 				// init command uses process.cwd() directly - it initializes in the current directory
 				const cwd = process.cwd();
 				const isRepo = await isGitRepository(cwd);
+				let filesystemOnly = options.git === false;
 
-				if (!isRepo) {
-					const initializeRepo = await clack.confirm({
-						message: "No git repository found. Initialize one here?",
-						initialValue: false,
+				if (!isRepo && !filesystemOnly) {
+					const repositoryMode = await clack.select({
+						message: "No git repository found. How should Backlog.md initialize this project?",
+						initialValue: "git",
+						options: [
+							{
+								label: "Initialize a Git repository",
+								value: "git",
+								hint: "Use the standard Git-backed workflow",
+							},
+							{
+								label: "Continue without Git",
+								value: "filesystem",
+								hint: "Use local Markdown files only",
+							},
+						],
 					});
-					if (clack.isCancel(initializeRepo)) {
+					if (clack.isCancel(repositoryMode)) {
 						abortInitialization();
 						return;
 					}
 
-					if (initializeRepo) {
+					if (repositoryMode === "git") {
 						await initializeGitRepository(cwd);
 					} else {
-						abortInitialization();
-						return;
+						filesystemOnly = true;
 					}
 				}
 
@@ -484,6 +519,18 @@ program
 					console.log(
 						"Existing backlog project detected. Current configuration will be preserved where not specified.",
 					);
+					if (options.backlogDir) {
+						console.error(
+							"The backlog directory is fixed after initialization. Re-run init without --backlog-dir for this project.",
+						);
+						process.exit(1);
+					}
+					if (options.configLocation) {
+						console.error(
+							"The config location is fixed after initialization. Re-run init without --config-location for this project.",
+						);
+						process.exit(1);
+					}
 				}
 
 				// Helper function to parse boolean strings
@@ -520,7 +567,10 @@ program
 					options.autoOpenBrowser ||
 					options.installClaudeAgent ||
 					options.integrationMode ||
-					options.taskPrefix
+					options.backlogDir ||
+					options.configLocation ||
+					options.taskPrefix ||
+					options.git === false
 				);
 
 				// Get project name
@@ -552,6 +602,126 @@ program
 					if (!name) {
 						abortInitialization();
 						return;
+					}
+				}
+
+				let backlogDirectory: string | undefined;
+				let backlogDirectorySource: "backlog" | ".backlog" | "custom" | undefined;
+				let configLocation: "folder" | "root" | undefined;
+				if (!isReInitialization) {
+					const backlogResolution = core.filesystem.resolveBacklogDirectoryInfo();
+					const defaultBacklogDirectory = backlogResolution.backlogDir ?? DEFAULT_DIRECTORIES.BACKLOG;
+					const defaultBacklogSource = backlogResolution.source ?? "backlog";
+					const defaultConfigLocation = backlogResolution.configSource ?? "folder";
+					const normalizedBacklogDirOption = options.backlogDir
+						? normalizeProjectBacklogDirectory(options.backlogDir)
+						: undefined;
+					const normalizedConfigLocation = options.configLocation?.trim().toLowerCase();
+					if (options.backlogDir && !normalizedBacklogDirOption) {
+						console.error(
+							"Invalid --backlog-dir value. Use 'backlog', '.backlog', or a project-relative path inside the project.",
+						);
+						process.exit(1);
+					}
+					if (
+						normalizedConfigLocation &&
+						normalizedConfigLocation !== "folder" &&
+						normalizedConfigLocation !== "root"
+					) {
+						console.error("Invalid --config-location value. Use 'folder' or 'root'.");
+						process.exit(1);
+					}
+
+					if (isNonInteractive) {
+						if (normalizedBacklogDirOption) {
+							backlogDirectory = normalizedBacklogDirOption;
+							backlogDirectorySource =
+								normalizedBacklogDirOption === DEFAULT_DIRECTORIES.BACKLOG ||
+								normalizedBacklogDirOption === DEFAULT_DIRECTORIES.HIDDEN_BACKLOG
+									? (normalizedBacklogDirOption as "backlog" | ".backlog")
+									: "custom";
+						} else {
+							backlogDirectory = defaultBacklogDirectory;
+							backlogDirectorySource = defaultBacklogSource;
+						}
+						configLocation =
+							(normalizedConfigLocation as "folder" | "root" | undefined) ??
+							(backlogDirectorySource === "custom" ? "root" : defaultConfigLocation);
+						if (backlogDirectorySource === "custom" && configLocation !== "root") {
+							console.error("Custom backlog directories require --config-location root.");
+							process.exit(1);
+						}
+					} else {
+						const locationPrompt = await clack.select({
+							message: "Where should Backlog.md store project files?",
+							initialValue: defaultBacklogSource,
+							options: [
+								{
+									label: "backlog/ (default)",
+									value: "backlog",
+									hint: "Store tasks and config in backlog/",
+								},
+								{
+									label: ".backlog/",
+									value: ".backlog",
+									hint: "Store tasks and config in .backlog/",
+								},
+								{
+									label: "Custom project-relative path",
+									value: "custom",
+									hint: `Backlog.md will store project config in ${backlogResolution.rootConfigPath}`,
+								},
+							],
+						});
+						if (clack.isCancel(locationPrompt)) {
+							abortInitialization();
+							return;
+						}
+
+						backlogDirectorySource = locationPrompt as "backlog" | ".backlog" | "custom";
+						if (backlogDirectorySource === "custom") {
+							const customDirectory = await clack.text({
+								message: "Project-relative backlog directory:",
+								defaultValue:
+									defaultBacklogSource === "custom" && defaultBacklogDirectory ? defaultBacklogDirectory : "",
+								validate: (value) => {
+									const normalized = normalizeProjectBacklogDirectory(String(value ?? ""));
+									if (!normalized) {
+										return "Enter a project-relative path inside the current project.";
+									}
+									return undefined;
+								},
+							});
+							if (clack.isCancel(customDirectory)) {
+								abortInitialization();
+								return;
+							}
+							backlogDirectory = normalizeProjectBacklogDirectory(String(customDirectory ?? "")) ?? undefined;
+							configLocation = "root";
+						} else {
+							backlogDirectory = backlogDirectorySource;
+							const configPrompt = await clack.select({
+								message: "Where should Backlog.md store project configuration?",
+								initialValue: defaultConfigLocation,
+								options: [
+									{
+										label: `${backlogDirectorySource}/config.yml`,
+										value: "folder",
+										hint: "Keep config inside the backlog folder",
+									},
+									{
+										label: "backlog.config.yml in project root",
+										value: "root",
+										hint: "Keep config at project root and point to the backlog folder there",
+									},
+								],
+							});
+							if (clack.isCancel(configPrompt)) {
+								abortInitialization();
+								return;
+							}
+							configLocation = configPrompt as "folder" | "root";
+						}
 					}
 				}
 
@@ -943,9 +1113,21 @@ program
 						advancedConfigured = true;
 					}
 				}
+				if (filesystemOnly) {
+					advancedConfig = {
+						...advancedConfig,
+						checkActiveBranches: false,
+						remoteOperations: false,
+						bypassGitHooks: false,
+						autoCommit: false,
+					};
+				}
 				// Call shared core init function
 				const initResult = await initializeProject(core, {
 					projectName: name,
+					backlogDirectory,
+					backlogDirectorySource,
+					configLocation,
 					integrationMode: integrationMode || "none",
 					mcpClients: [], // MCP clients are handled separately in CLI with interactive prompts
 					agentInstructions: agentFiles,
@@ -964,9 +1146,11 @@ program
 						taskPrefix: taskPrefix || undefined,
 					},
 					existingConfig,
+					filesystemOnly,
 				});
 
 				const config = initResult.config;
+				const gitIntegrationDisabled = Boolean(config.filesystemOnly);
 
 				// Show configuration summary
 				const supportsColor = Boolean(process.stdout.isTTY) && !process.env.NO_COLOR;
@@ -999,6 +1183,13 @@ program
 						})
 						.join("\n");
 				const summaryLines: string[] = [`${label("Project Name:")} ${colorize("1", config.projectName)}`];
+				summaryLines.push(`${label("Backlog directory:")} ${backlogDirectory ?? core.filesystem.backlogDirName}`);
+				summaryLines.push(
+					`${label("Config location:")} ${configLocation === "root" ? DEFAULT_FILES.ROOT_CONFIG : "folder config.yml"}`,
+				);
+				summaryLines.push(
+					`${label("Git integration:")} ${gitIntegrationDisabled ? muted("disabled (filesystem-only)") : good("enabled")}`,
+				);
 				if (integrationMode === "cli") {
 					summaryLines.push(`${label("AI Integration:")} ${muted("CLI commands (legacy)")}`);
 					if (agentFiles.length > 0) {
@@ -1029,7 +1220,7 @@ program
 					completionSummary = muted("not configured");
 				}
 				summaryLines.push(`${label("Shell completions:")} ${completionSummary}`);
-				if (advancedConfigured) {
+				if (advancedConfigured || gitIntegrationDisabled) {
 					summaryLines.push(label("Advanced settings:"));
 					summaryLines.push(`  ${label("Check active branches:")} ${boolValue(Boolean(config.checkActiveBranches))}`);
 					summaryLines.push(`  ${label("Remote operations:")} ${boolValue(Boolean(config.remoteOperations))}`);
@@ -1128,7 +1319,7 @@ export async function generateNextDocId(core: Core): Promise<string> {
 	const allIds: string[] = [];
 
 	try {
-		const backlogDir = DEFAULT_DIRECTORIES.BACKLOG;
+		const backlogDir = core.filesystem.backlogDirName;
 
 		// Skip remote operations if disabled
 		if (config?.remoteOperations === false) {
@@ -1196,7 +1387,7 @@ export async function generateNextDecisionId(core: Core): Promise<string> {
 	const allIds: string[] = [];
 
 	try {
-		const backlogDir = DEFAULT_DIRECTORIES.BACKLOG;
+		const backlogDir = core.filesystem.backlogDirName;
 
 		// Skip remote operations if disabled
 		if (config?.remoteOperations === false) {
@@ -1257,130 +1448,11 @@ export async function generateNextDecisionId(core: Core): Promise<string> {
 	return `decision-${nextIdNumber}`;
 }
 
-function normalizeDependencies(dependencies: unknown): string[] {
-	if (!dependencies) return [];
-
-	const normalizeList = (values: string[]): string[] =>
-		values
-			.map((value) => value.trim())
-			.filter((value): value is string => value.length > 0)
-			.map((value) => normalizeTaskId(value));
-
-	if (Array.isArray(dependencies)) {
-		return normalizeList(
-			dependencies.flatMap((dep) =>
-				String(dep)
-					.split(",")
-					.map((d) => d.trim()),
-			),
-		);
-	}
-
-	return normalizeList(String(dependencies).split(","));
-}
-
-async function validateDependencies(
-	dependencies: string[],
-	core: Core,
-): Promise<{ valid: string[]; invalid: string[] }> {
-	const valid: string[] = [];
-	const invalid: string[] = [];
-
-	if (dependencies.length === 0) {
-		return { valid, invalid };
-	}
-
-	// Load both tasks and drafts to validate dependencies
-	const [tasks, drafts] = await Promise.all([core.queryTasks(), core.fs.listDrafts()]);
-
-	const knownIds = [...tasks.map((task) => task.id), ...drafts.map((draft) => draft.id)];
-	for (const dep of dependencies) {
-		const match = knownIds.find((id) => taskIdsEqual(dep, id));
-		if (match) {
-			valid.push(match);
-		} else {
-			invalid.push(dep);
-		}
-	}
-
-	return { valid, invalid };
-}
-
-function buildTaskFromOptions(id: string, title: string, options: Record<string, unknown>): Task {
-	const parentInput = options.parent ? String(options.parent) : undefined;
-	const normalizedParent = parentInput ? normalizeTaskId(parentInput) : undefined;
-
-	const createdDate = new Date().toISOString().slice(0, 16).replace("T", " ");
-
-	// Handle dependencies - they will be validated separately
-	const dependencies = normalizeDependencies(options.dependsOn || options.dep);
-
-	// Handle references (URLs or file paths)
-	const references = normalizeStringList(
-		Array.isArray(options.ref)
-			? options.ref.flatMap((r: string) =>
-					String(r)
-						.split(",")
-						.map((s: string) => s.trim()),
-				)
-			: options.ref
-				? String(options.ref)
-						.split(",")
-						.map((s: string) => s.trim())
-				: [],
-	);
-
-	// Handle documentation (URLs or file paths)
-	const documentation = normalizeStringList(
-		Array.isArray(options.doc)
-			? options.doc.flatMap((d: string) =>
-					String(d)
-						.split(",")
-						.map((s: string) => s.trim()),
-				)
-			: options.doc
-				? String(options.doc)
-						.split(",")
-						.map((s: string) => s.trim())
-				: [],
-	);
-
-	// Validate priority option
-	const priority = options.priority ? String(options.priority).toLowerCase() : undefined;
-	const validPriorities = ["high", "medium", "low"];
-	const validatedPriority =
-		priority && validPriorities.includes(priority) ? (priority as "high" | "medium" | "low") : undefined;
-
-	return {
-		id,
-		title,
-		status: options.status ? String(options.status) : "",
-		assignee: options.assignee ? [String(options.assignee)] : [],
-		createdDate,
-		labels: options.labels
-			? String(options.labels)
-					.split(",")
-					.map((l: string) => l.trim())
-					.filter(Boolean)
-			: [],
-		dependencies,
-		references,
-		documentation,
-		rawContent: "",
-		...(options.description || options.desc ? { description: String(options.description || options.desc) } : {}),
-		...(normalizedParent && { parentTaskId: normalizedParent }),
-		...(validatedPriority && { priority: validatedPriority }),
-	};
-}
-
 const taskCmd = program.command("task").aliases(["tasks"]);
 
 taskCmd
 	.command("create [title]")
-	.option(
-		"-d, --description <text>",
-		"task description (multi-line: bash $'Line1\\nLine2', POSIX printf, PowerShell \"Line1`nLine2\")",
-	)
+	.option("-d, --description <text>", "task description (multi-line: include real newlines inside the quoted string)")
 	.option("--desc <text>", "alias for --description")
 	.option("-a, --assignee <assignee>")
 	.option("-s, --status <status>")
@@ -1398,6 +1470,8 @@ taskCmd
 	.option("--plan <text>", "add implementation plan")
 	.option("--notes <text>", "add implementation notes")
 	.option("--final-summary <text>", "add final summary")
+	.option("--ordinal <number>", "set task ordinal for custom ordering")
+	.option("-m, --milestone <milestone>", "assign task to milestone by ID or title")
 	.option("--draft")
 	.option("-p, --parent <taskId>", "specify parent task ID")
 	.option(
@@ -1416,6 +1490,14 @@ taskCmd
 		const soFar = Array.isArray(previous) ? previous : previous ? [previous] : [];
 		return [...soFar, value];
 	})
+	.option(
+		"--modified-file <path>",
+		"add modified file path from project root (can be used multiple times)",
+		(value, previous) => {
+			const soFar = Array.isArray(previous) ? previous : previous ? [previous] : [];
+			return [...soFar, value];
+		},
+	)
 	.option(
 		"--doc <documentation>",
 		"add documentation URL or file path (can be used multiple times)",
@@ -1456,88 +1538,67 @@ taskCmd
 		}
 
 		const createAsDraft = Boolean(options.draft);
-		const id = await core.generateNextId(
-			createAsDraft ? EntityType.Draft : EntityType.Task,
-			createAsDraft ? undefined : options.parent,
-		);
-		const task = buildTaskFromOptions(id, title ?? "", options);
-
-		// Normalize and validate status if provided (case-insensitive)
-		if (options.status) {
-			const canonical = await getCanonicalStatus(String(options.status), core);
-			if (!canonical) {
-				const configuredStatuses = await getValidStatuses(core);
-				console.error(
-					`Invalid status: ${options.status}. Valid statuses are: ${formatValidStatuses(configuredStatuses)}`,
-				);
-				process.exitCode = 1;
-				return;
-			}
-			task.status = canonical;
-		}
-
-		// Validate dependencies if provided
-		if (task.dependencies.length > 0) {
-			const { valid, invalid } = await validateDependencies(task.dependencies, core);
-			if (invalid.length > 0) {
-				console.error(`Error: The following dependencies do not exist: ${invalid.join(", ")}`);
-				console.error("Please create these tasks first or check the task IDs.");
-				process.exitCode = 1;
-				return;
-			}
-			task.dependencies = valid;
-		}
-
-		// Handle acceptance criteria for create command (structured only)
-		const criteria = processAcceptanceCriteriaOptions(options);
-		if (criteria.length > 0) {
-			let idx = 1;
-			task.acceptanceCriteriaItems = criteria.map((text) => ({ index: idx++, text, checked: false }));
-		}
-
-		const config = await core.filesystem.loadConfig();
-		const dodItems = buildDefinitionOfDoneItems({
-			defaults: config?.definitionOfDone,
-			add: toStringArray(options.dod),
-			disableDefaults: options.dodDefaults === false,
-		});
-		if (dodItems) {
-			task.definitionOfDoneItems = dodItems;
-		}
-
-		// Handle implementation plan
-		if (options.plan) {
-			task.implementationPlan = String(options.plan);
-		}
-
-		// Handle implementation notes
-		if (options.notes) {
-			task.implementationNotes = String(options.notes);
-		}
-
-		// Handle final summary
-		if (options.finalSummary) {
-			task.finalSummary = String(options.finalSummary);
-		}
-
 		const usePlainOutput = isPlainRequested(options);
+		let ordinalValue: number | undefined;
 
-		if (createAsDraft) {
-			const filepath = await core.createDraft(task);
-			if (usePlainOutput) {
-				console.log(formatTaskPlainText(task, { filePathOverride: filepath }));
+		if (options.ordinal !== undefined) {
+			const parsed = Number(options.ordinal);
+			if (!Number.isFinite(parsed) || parsed < 0) {
+				console.error(`Invalid ordinal: ${options.ordinal}. Must be a non-negative number.`);
+				process.exitCode = 1;
 				return;
 			}
-			console.log(`Created draft ${task.id}`);
-			console.log(`File: ${filepath}`);
-		} else {
-			const filepath = await core.createTask(task);
+			ordinalValue = parsed;
+		}
+
+		try {
+			const criteria = processAcceptanceCriteriaOptions(options);
+			const milestone =
+				typeof options.milestone === "string" ? await resolveCliMilestoneInput(core, options.milestone) : undefined;
+			const { task, filePath } = await core.createTaskFromInput({
+				title: title ?? "",
+				description: options.description || options.desc ? String(options.description || options.desc) : undefined,
+				status: createAsDraft ? "Draft" : options.status ? String(options.status) : undefined,
+				assignee: options.assignee ? [String(options.assignee)] : undefined,
+				labels: options.labels
+					? String(options.labels)
+							.split(",")
+							.map((label: string) => label.trim())
+							.filter(Boolean)
+					: undefined,
+				dependencies:
+					options.dependsOn || options.dep ? normalizeDependencies(options.dependsOn || options.dep) : undefined,
+				references: parseDelimitedStringList(options.ref),
+				documentation: parseDelimitedStringList(options.doc),
+				modifiedFiles: parseDelimitedStringList(options.modifiedFile),
+				parentTaskId: options.parent ? String(options.parent) : undefined,
+				priority: options.priority ? (String(options.priority).toLowerCase() as "high" | "medium" | "low") : undefined,
+				...(ordinalValue !== undefined ? { ordinal: ordinalValue } : {}),
+				milestone,
+				implementationPlan: options.plan ? String(options.plan) : undefined,
+				implementationNotes: options.notes ? String(options.notes) : undefined,
+				finalSummary: options.finalSummary ? String(options.finalSummary) : undefined,
+				acceptanceCriteria: criteria.map((text) => ({ text, checked: false })),
+				definitionOfDoneAdd: toStringArray(options.dod),
+				disableDefinitionOfDoneDefaults: options.dodDefaults === false,
+			});
+
 			if (usePlainOutput) {
-				console.log(formatTaskPlainText(task, { filePathOverride: filepath }));
+				console.log(formatTaskPlainText(task, { filePathOverride: filePath }));
 				return;
 			}
+
+			if (createAsDraft) {
+				console.log(`Created draft ${task.id}`);
+				console.log(`File: ${filePath}`);
+				return;
+			}
+
 			console.log(`Created task ${task.id}`);
-			console.log(`File: ${filepath}`);
+			console.log(`File: ${filePath}`);
+		} catch (error) {
+			console.error(error instanceof Error ? error.message : String(error));
+			process.exitCode = 1;
 		}
 	});
 
@@ -1547,6 +1608,11 @@ program
 	.option("--type <type>", "limit results to type (task, document, decision)", createMultiValueAccumulator())
 	.option("--status <status>", "filter task results by status")
 	.option("--priority <priority>", "filter task results by priority (high, medium, low)")
+	.option(
+		"--modified-file <path>",
+		"filter task results by modified file path substring",
+		createMultiValueAccumulator(),
+	)
 	.option("--limit <number>", "limit total results returned")
 	.option("--plain", "print plain text output instead of interactive UI")
 	.action(async (query: string | undefined, options) => {
@@ -1559,6 +1625,7 @@ program
 			contentStore.dispose();
 		};
 
+		const modifiedFileFilters = parseDelimitedStringList(options.modifiedFile);
 		const rawTypes = options.type ? (Array.isArray(options.type) ? options.type : [options.type]) : undefined;
 		const allowedTypes: SearchResultType[] = ["task", "document", "decision"];
 		const types = rawTypes
@@ -1571,9 +1638,11 @@ program
 						}
 						return true;
 					})
-			: allowedTypes;
+			: modifiedFileFilters?.length
+				? ["task"]
+				: allowedTypes;
 
-		const filters: { status?: string; priority?: SearchPriorityFilter } = {};
+		const filters: { status?: string; priority?: SearchPriorityFilter; modifiedFiles?: string[] } = {};
 		if (options.status) {
 			filters.status = options.status;
 		}
@@ -1587,6 +1656,9 @@ program
 				return;
 			}
 			filters.priority = priorityLower as SearchPriorityFilter;
+		}
+		if (modifiedFileFilters?.length) {
+			filters.modifiedFiles = modifiedFileFilters;
 		}
 
 		let limit: number | undefined;
@@ -1629,8 +1701,16 @@ program
 			return;
 		}
 
+		const hasModifiedFileFilter = Boolean(modifiedFileFilters?.length);
+		const interactiveTasks = hasModifiedFileFilter ? searchResultTasks : allTasks;
+		if (interactiveTasks.length === 0) {
+			printSearchResults(searchResults);
+			cleanup();
+			return;
+		}
+
 		// Use the first search result as the selected task, or first available task if no results
-		const firstTask = searchResultTasks[0] || allTasks[0];
+		const firstTask = searchResultTasks[0] || interactiveTasks[0];
 		const priorityFilter = filters.priority ? filters.priority : undefined;
 		const statusFilter = filters.status;
 		const { runUnifiedView } = await import("./ui/unified-view.ts");
@@ -1639,13 +1719,14 @@ program
 			core,
 			initialView: "task-list",
 			selectedTask: firstTask,
-			tasks: allTasks, // Pass ALL tasks, not just search results
+			tasks: interactiveTasks,
 			filter: {
 				title: query ? `Search: ${query}` : "Search",
 				filterDescription: buildSearchFilterDescription({
 					status: statusFilter,
 					priority: priorityFilter,
 					query: query ?? "",
+					modifiedFiles: modifiedFileFilters ?? [],
 				}),
 				status: statusFilter,
 				priority: priorityFilter,
@@ -1659,6 +1740,7 @@ function buildSearchFilterDescription(filters: {
 	status?: string;
 	priority?: SearchPriorityFilter;
 	query?: string;
+	modifiedFiles?: string[];
 }): string {
 	const parts: string[] = [];
 	if (filters.query) {
@@ -1669,6 +1751,9 @@ function buildSearchFilterDescription(filters: {
 	}
 	if (filters.priority) {
 		parts.push(`Priority: ${filters.priority}`);
+	}
+	if (filters.modifiedFiles?.length) {
+		parts.push(`Modified files: ${filters.modifiedFiles.join(", ")}`);
 	}
 	return parts.join(" • ");
 }
@@ -2032,16 +2117,15 @@ taskCmd
 	.command("edit [taskId]")
 	.description("edit an existing task")
 	.option("-t, --title <title>")
-	.option(
-		"-d, --description <text>",
-		"task description (multi-line: bash $'Line1\\nLine2', POSIX printf, PowerShell \"Line1`nLine2\")",
-	)
+	.option("-d, --description <text>", "task description (multi-line: include real newlines inside the quoted string)")
 	.option("--desc <text>", "alias for --description")
 	.option("-a, --assignee <assignee>")
 	.option("-s, --status <status>")
 	.option("-l, --label <labels>")
 	.option("--priority <priority>", "set task priority (high, medium, low)")
 	.option("--ordinal <number>", "set task ordinal for custom ordering")
+	.option("-m, --milestone <milestone>", "assign task to milestone by ID or title")
+	.option("--clear-milestone", "clear task milestone assignment")
 	.option("--plain", "use plain text output after editing")
 	.option("--add-label <label>")
 	.option("--remove-label <label>")
@@ -2108,6 +2192,14 @@ taskCmd
 		const soFar = Array.isArray(previous) ? previous : previous ? [previous] : [];
 		return [...soFar, value];
 	})
+	.option(
+		"--modified-file <path>",
+		"set modified file paths from project root (can be used multiple times)",
+		(value, previous) => {
+			const soFar = Array.isArray(previous) ? previous : previous ? [previous] : [];
+			return [...soFar, value];
+		},
+	)
 	.option("--doc <documentation>", "set documentation (can be used multiple times)", (value, previous) => {
 		const soFar = Array.isArray(previous) ? previous : previous ? [previous] : [];
 		return [...soFar, value];
@@ -2174,13 +2266,6 @@ taskCmd
 			return;
 		}
 
-		const parseCommaSeparated = (value: unknown): string[] => {
-			return toStringArray(value)
-				.flatMap((entry) => String(entry).split(","))
-				.map((entry) => entry.trim())
-				.filter((entry) => entry.length > 0);
-		};
-
 		let canonicalStatus: string | undefined;
 		if (options.status) {
 			const canonical = await getCanonicalStatus(String(options.status), core);
@@ -2216,6 +2301,19 @@ taskCmd
 				return;
 			}
 			ordinalValue = parsed;
+		}
+
+		if (options.milestone !== undefined && options.clearMilestone) {
+			console.error("Cannot use --milestone and --clear-milestone together.");
+			process.exitCode = 1;
+			return;
+		}
+
+		let milestoneValue: string | null | undefined;
+		if (typeof options.milestone === "string") {
+			milestoneValue = await resolveCliMilestoneInput(core, options.milestone);
+		} else if (options.clearMilestone) {
+			milestoneValue = null;
 		}
 
 		let removeCriteria: number[] | undefined;
@@ -2256,10 +2354,10 @@ taskCmd
 			return;
 		}
 
-		const labelValues = parseCommaSeparated(options.label);
-		const addLabelValues = parseCommaSeparated(options.addLabel);
-		const removeLabelValues = parseCommaSeparated(options.removeLabel);
-		const assigneeValues = parseCommaSeparated(options.assignee);
+		const labelValues = parseDelimitedStringList(options.label) ?? [];
+		const addLabelValues = parseDelimitedStringList(options.addLabel) ?? [];
+		const removeLabelValues = parseDelimitedStringList(options.removeLabel) ?? [];
+		const assigneeValues = parseDelimitedStringList(options.assignee) ?? [];
 		const acceptanceAdditions = processAcceptanceCriteriaOptions(options);
 		const definitionOfDoneAdditions = toStringArray(options.dod)
 			.map((value) => String(value).trim())
@@ -2268,29 +2366,9 @@ taskCmd
 		const combinedDependencies = [...toStringArray(options.dependsOn), ...toStringArray(options.dep)];
 		const dependencyValues = combinedDependencies.length > 0 ? normalizeDependencies(combinedDependencies) : undefined;
 
-		const referenceValues = toStringArray(options.ref);
-		const normalizedReferences =
-			referenceValues.length > 0
-				? normalizeStringList(
-						referenceValues.flatMap((r: string) =>
-							String(r)
-								.split(",")
-								.map((s: string) => s.trim()),
-						),
-					)
-				: undefined;
-
-		const documentationValues = toStringArray(options.doc);
-		const normalizedDocumentation =
-			documentationValues.length > 0
-				? normalizeStringList(
-						documentationValues.flatMap((d: string) =>
-							String(d)
-								.split(",")
-								.map((s: string) => s.trim()),
-						),
-					)
-				: undefined;
+		const normalizedReferences = parseDelimitedStringList(options.ref);
+		const normalizedDocumentation = parseDelimitedStringList(options.doc);
+		const normalizedModifiedFiles = parseDelimitedStringList(options.modifiedFile);
 
 		const notesAppendValues = toStringArray(options.appendNotes);
 		const finalSummaryAppendValues = toStringArray(options.appendFinalSummary);
@@ -2312,6 +2390,9 @@ taskCmd
 		if (ordinalValue !== undefined) {
 			editArgs.ordinal = ordinalValue;
 		}
+		if (milestoneValue !== undefined) {
+			editArgs.milestone = milestoneValue;
+		}
 		if (labelValues.length > 0) {
 			editArgs.labels = labelValues;
 		}
@@ -2332,6 +2413,9 @@ taskCmd
 		}
 		if (normalizedDocumentation && normalizedDocumentation.length > 0) {
 			editArgs.documentation = normalizedDocumentation;
+		}
+		if (normalizedModifiedFiles && normalizedModifiedFiles.length > 0) {
+			editArgs.modifiedFiles = normalizedModifiedFiles;
 		}
 		if (typeof options.plan === "string") {
 			editArgs.planSet = String(options.plan);
@@ -2446,11 +2530,16 @@ taskCmd
 	.action(async (taskId: string) => {
 		const cwd = await requireProjectRoot();
 		const core = new Core(cwd);
-		const success = await core.demoteTask(taskId);
-		if (success) {
-			console.log(`Demoted task ${taskId}`);
-		} else {
-			console.error(`Task ${taskId} not found.`);
+		try {
+			const success = await core.demoteTask(taskId);
+			if (success) {
+				console.log(`Demoted task ${taskId}`);
+			} else {
+				console.error(`Task ${taskId} not found.`);
+			}
+		} catch (error) {
+			console.error(error instanceof Error ? error.message : String(error));
+			process.exitCode = 1;
 		}
 	});
 
@@ -2568,10 +2657,7 @@ draftCmd
 
 draftCmd
 	.command("create <title>")
-	.option(
-		"-d, --description <text>",
-		"task description (multi-line: bash $'Line1\\nLine2', POSIX printf, PowerShell \"Line1`nLine2\")",
-	)
+	.option("-d, --description <text>", "task description (multi-line: include real newlines inside the quoted string)")
 	.option("--desc <text>", "alias for --description")
 	.option("-a, --assignee <assignee>")
 	.option("-s, --status <status>")
@@ -2580,11 +2666,25 @@ draftCmd
 		const cwd = await requireProjectRoot();
 		const core = new Core(cwd);
 		await core.ensureConfigLoaded();
-		const id = await core.generateNextId(EntityType.Draft);
-		const task = buildTaskFromOptions(id, title, options);
-		const filepath = await core.createDraft(task);
-		console.log(`Created draft ${id}`);
-		console.log(`File: ${filepath}`);
+		try {
+			const { task, filePath } = await core.createTaskFromInput({
+				title,
+				description: options.description || options.desc ? String(options.description || options.desc) : undefined,
+				status: "Draft",
+				assignee: options.assignee ? [String(options.assignee)] : undefined,
+				labels: options.labels
+					? String(options.labels)
+							.split(",")
+							.map((label: string) => label.trim())
+							.filter(Boolean)
+					: undefined,
+			});
+			console.log(`Created draft ${task.id}`);
+			console.log(`File: ${filePath}`);
+		} catch (error) {
+			console.error(error instanceof Error ? error.message : String(error));
+			process.exitCode = 1;
+		}
 	});
 
 draftCmd
@@ -2607,11 +2707,16 @@ draftCmd
 	.action(async (taskId: string) => {
 		const cwd = await requireProjectRoot();
 		const core = new Core(cwd);
-		const success = await core.promoteDraft(taskId);
-		if (success) {
-			console.log(`Promoted draft ${taskId}`);
-		} else {
-			console.error(`Draft ${taskId} not found.`);
+		try {
+			const success = await core.promoteDraft(taskId);
+			if (success) {
+				console.log(`Promoted draft ${taskId}`);
+			} else {
+				console.error(`Draft ${taskId} not found.`);
+			}
+		} catch (error) {
+			console.error(error instanceof Error ? error.message : String(error));
+			process.exitCode = 1;
 		}
 	});
 
@@ -2768,8 +2873,6 @@ async function handleBoardView(options: { layout?: string; vertical?: boolean; m
 	const core = new Core(cwd);
 	const config = await core.filesystem.loadConfig();
 
-	const _layout = options.vertical ? "vertical" : (options.layout as "horizontal" | "vertical") || "horizontal";
-	const _maxColumnWidth = config?.maxColumnWidth || 20; // Default for terminal display
 	const statuses = config?.statuses || [];
 
 	// Use unified view for Tab switching support
@@ -2961,20 +3064,51 @@ const docCmd = program.command("doc");
 docCmd
 	.command("create <title>")
 	.option("-p, --path <path>")
-	.option("-t, --type <type>")
+	.option("-t, --type <type>", `document type (${DOCUMENT_TYPE_VALUES.join(", ")})`)
 	.action(async (title: string, options) => {
 		const cwd = await requireProjectRoot();
 		const core = new Core(cwd);
-		const id = await generateNextDocId(core);
-		const document: DocType = {
-			id,
+		const document = await core.createDocumentFromInput({
 			title: title as string,
 			type: (options.type || "other") as DocType["type"],
-			createdDate: new Date().toISOString().slice(0, 16).replace("T", " "),
-			rawContent: "",
-		};
-		await core.createDocument(document, undefined, options.path || "");
-		console.log(`Created document ${id}`);
+			path: options.path,
+			content: "",
+		});
+		console.log(`Created document ${document.id}`);
+		if (document.path) {
+			console.log(`Path: ${core.filesystem.backlogDirName}/docs/${document.path}`);
+		}
+	});
+
+docCmd
+	.command("update <docId>")
+	.description("update a document")
+	.option("--title <title>", "update document title")
+	.option("--content <content>", "replace document markdown content")
+	.option("-p, --path <path>", "move document under a docs-relative path (absolute paths and .. are rejected)")
+	.option("-t, --type <type>", `document type (${DOCUMENT_TYPE_VALUES.join(", ")})`)
+	.option("--tags <tags>", "set tags (comma-separated or use multiple times)", createMultiValueAccumulator())
+	.action(async (docId: string, options) => {
+		const cwd = await requireProjectRoot();
+		const core = new Core(cwd);
+		const existingDocument = await core.getDocument(docId);
+		if (!existingDocument) {
+			throw new Error(`Document not found: ${docId}`);
+		}
+
+		const document = await core.updateDocumentFromInput({
+			id: docId,
+			title: options.title,
+			content: options.content ?? existingDocument.rawContent,
+			type: options.type,
+			path: options.path,
+			...(options.tags !== undefined && { tags: parseDelimitedStringList(options.tags) ?? [] }),
+		});
+
+		console.log(`Updated document ${document.id}`);
+		if (document.path) {
+			console.log(`Path: ${core.filesystem.backlogDirName}/docs/${document.path}`);
+		}
 	});
 
 docCmd
@@ -3083,8 +3217,6 @@ agentsCmd
 				process.exit(1);
 			}
 
-			const _agentOptions = ["CLAUDE.md", "AGENTS.md", "GEMINI.md", ".github/copilot-instructions.md"] as const;
-
 			const selected = await clack.multiselect({
 				message: "Select agent instruction files to update (space toggles selections; enter confirms)",
 				required: false,
@@ -3098,12 +3230,12 @@ agentsCmd
 					{ label: "Copilot (GitHub Copilot)", value: ".github/copilot-instructions.md" },
 				],
 			});
-			const files: AgentInstructionFile[] = clack.isCancel(selected)
-				? []
-				: Array.isArray(selected)
-					? (selected as AgentInstructionFile[])
-					: [];
+			if (clack.isCancel(selected)) {
+				clack.log.info("Agent instruction update cancelled.");
+				return;
+			}
 
+			const files: AgentInstructionFile[] = Array.isArray(selected) ? (selected as AgentInstructionFile[]) : [];
 			if (files.length > 0) {
 				// Get autoCommit setting from config
 				const config = await core.filesystem.loadConfig();
@@ -3306,6 +3438,9 @@ configCmd
 				case "autoCommit":
 					console.log(config.autoCommit?.toString() || "");
 					break;
+				case "filesystemOnly":
+					console.log(config.filesystemOnly?.toString() || "false");
+					break;
 				case "bypassGitHooks":
 					console.log(config.bypassGitHooks?.toString() || "");
 					break;
@@ -3321,7 +3456,7 @@ configCmd
 				default:
 					console.error(`Unknown config key: ${key}`);
 					console.error(
-						"Available keys: defaultEditor, projectName, defaultStatus, statuses, labels, milestones, definitionOfDone, dateFormat, maxColumnWidth, defaultPort, autoOpenBrowser, remoteOperations, autoCommit, bypassGitHooks, zeroPaddedIds, checkActiveBranches, activeBranchDays",
+						"Available keys: defaultEditor, projectName, defaultStatus, statuses, labels, milestones, definitionOfDone, dateFormat, maxColumnWidth, defaultPort, autoOpenBrowser, remoteOperations, autoCommit, filesystemOnly, bypassGitHooks, zeroPaddedIds, checkActiveBranches, activeBranchDays",
 					);
 					process.exit(1);
 			}
@@ -3422,6 +3557,22 @@ configCmd
 					}
 					break;
 				}
+				case "filesystemOnly": {
+					const boolValue = value.toLowerCase();
+					if (boolValue === "true" || boolValue === "1" || boolValue === "yes") {
+						config.filesystemOnly = true;
+						config.checkActiveBranches = false;
+						config.remoteOperations = false;
+						config.autoCommit = false;
+						config.bypassGitHooks = false;
+					} else if (boolValue === "false" || boolValue === "0" || boolValue === "no") {
+						config.filesystemOnly = false;
+					} else {
+						console.error("filesystemOnly must be true or false");
+						process.exit(1);
+					}
+					break;
+				}
 				case "bypassGitHooks": {
 					const boolValue = value.toLowerCase();
 					if (boolValue === "true" || boolValue === "1" || boolValue === "yes") {
@@ -3477,7 +3628,7 @@ configCmd
 					} else if (key === "definitionOfDone") {
 						console.error("definitionOfDone cannot be set directly.");
 						console.error(
-							"Use `backlog config` for interactive editing, update `backlog/config.yml`, or use Web UI Settings.",
+							"Use `backlog config` for interactive editing, update the project config file (`backlog/config.yml`, `.backlog/config.yml`, or `backlog.config.yml`), or use Web UI Settings.",
 						);
 					} else {
 						console.error(`${key} cannot be set directly. Use 'backlog config list-${key}' to view current values.`);
@@ -3496,7 +3647,7 @@ configCmd
 				default:
 					console.error(`Unknown config key: ${key}`);
 					console.error(
-						"Available keys: defaultEditor, projectName, defaultStatus, dateFormat, maxColumnWidth, autoOpenBrowser, defaultPort, remoteOperations, autoCommit, bypassGitHooks, zeroPaddedIds, checkActiveBranches, activeBranchDays",
+						"Available keys: defaultEditor, projectName, defaultStatus, dateFormat, maxColumnWidth, autoOpenBrowser, defaultPort, remoteOperations, autoCommit, filesystemOnly, bypassGitHooks, zeroPaddedIds, checkActiveBranches, activeBranchDays",
 					);
 					process.exit(1);
 			}
@@ -3538,6 +3689,7 @@ configCmd
 			console.log(`  defaultPort: ${config.defaultPort ?? "(not set)"}`);
 			console.log(`  remoteOperations: ${config.remoteOperations ?? "(not set)"}`);
 			console.log(`  autoCommit: ${config.autoCommit ?? "(not set)"}`);
+			console.log(`  filesystemOnly: ${config.filesystemOnly ?? "false"}`);
 			console.log(`  bypassGitHooks: ${config.bypassGitHooks ?? "(not set)"}`);
 			console.log(`  zeroPaddedIds: ${config.zeroPaddedIds ?? "(disabled)"}`);
 			console.log(`  taskPrefix: ${config.prefixes?.task || "task"} (read-only)`);
@@ -3564,17 +3716,24 @@ program
 				console.error("No backlog project found. Initialize one first with: backlog init");
 				process.exit(1);
 			}
+			core.gitOps.setConfig(config);
 
-			// Get all Done tasks
-			const tasks = await core.queryTasks();
-			const doneTasks = tasks.filter((task) => task.status === "Done");
-
-			if (doneTasks.length === 0) {
-				console.log("No completed tasks found to clean up.");
+			const statuses = config.statuses ?? [...DEFAULT_STATUSES];
+			const terminalStatus = getTerminalStatus(statuses);
+			if (!terminalStatus) {
+				console.log("No terminal status configured for cleanup.");
 				return;
 			}
 
-			console.log(`Found ${doneTasks.length} tasks marked as Done.`);
+			const tasks = await core.queryTasks();
+			const terminalStatusTasks = tasks.filter((task) => isTerminalStatus(task.status, statuses));
+
+			if (terminalStatusTasks.length === 0) {
+				console.log(`No ${terminalStatus} tasks found to clean up.`);
+				return;
+			}
+
+			console.log(`Found ${terminalStatusTasks.length} tasks marked as ${terminalStatus}.`);
 
 			const ageOptions = [
 				{ title: "1 day", value: 1 },
@@ -3598,7 +3757,7 @@ program
 			}
 
 			// Get tasks older than selected period
-			const tasksToMove = await core.getDoneTasksByAge(selectedAge);
+			const tasksToMove = await core.getTerminalStatusTasksByAge(selectedAge);
 
 			if (tasksToMove.length === 0) {
 				console.log(`No tasks found that are older than ${ageOptions.find((o) => o.value === selectedAge)?.title}.`);
@@ -3655,7 +3814,8 @@ program
 			}
 
 			// If autoCommit is disabled, stage the moves so Git recognizes them
-			if (successCount > 0 && !shouldAutoCommit) {
+			const hasGitRepository = await core.gitOps.isRepository();
+			if (successCount > 0 && !shouldAutoCommit && hasGitRepository) {
 				console.log("Staging file moves for Git...");
 				for (const { fromPath, toPath } of movedTasks) {
 					try {
@@ -3667,7 +3827,7 @@ program
 			}
 
 			console.log(`Successfully moved ${successCount} of ${tasksToMove.length} tasks to completed folder.`);
-			if (successCount > 0 && !shouldAutoCommit) {
+			if (successCount > 0 && !shouldAutoCommit && hasGitRepository) {
 				console.log("Files have been staged. To commit: git commit -m 'cleanup: Move completed tasks'");
 			}
 		} catch (err) {

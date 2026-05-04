@@ -2,9 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { type Milestone, type Task } from '../../types';
 import { apiClient, type ReorderTaskPayload } from '../lib/api';
 import { buildLanes, DEFAULT_LANE_KEY, groupTasksByLaneAndStatus, type LaneMode } from '../lib/lanes';
+import { collectAvailableLabels, labelsToLower } from '../../utils/label-filter';
 import { collectArchivedMilestoneKeys, milestoneKey } from '../utils/milestones';
+import { getTerminalStatus } from '../../utils/terminal-status';
 import TaskColumn from './TaskColumn';
 import CleanupModal from './CleanupModal';
+import LabelFilterDropdown from './LabelFilterDropdown';
 import { SuccessToast } from './SuccessToast';
 
 interface BoardProps {
@@ -16,12 +19,30 @@ interface BoardProps {
   statuses: string[];
   isLoading: boolean;
   milestones: string[];
+  availableLabels: string[];
   milestoneEntities: Milestone[];
   archivedMilestones: Milestone[];
   laneMode: LaneMode;
   onLaneChange: (mode: LaneMode) => void;
   milestoneFilter?: string | null;
+  filterAssignee?: string;
+  filterLabels?: string[];
+  filterPriority?: string;
+  onFiltersChange?: (filters: { assignee: string; labels: string[]; priority: string }) => void;
 }
+
+const PRIORITY_OPTIONS = [
+  { label: 'All priorities', value: '' },
+  { label: 'High', value: 'high' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'Low', value: 'low' },
+] as const;
+
+const BOARD_FILTER_SELECT_CLASS =
+  'min-w-[140px] h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-stone-500 dark:focus:ring-stone-400 transition-colors duration-200';
+
+const BOARD_FILTER_BUTTON_CLASS =
+  'h-10 py-2 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg whitespace-nowrap transition-colors duration-200 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700';
 
 const Board: React.FC<BoardProps> = ({
   onEditTask,
@@ -31,11 +52,16 @@ const Board: React.FC<BoardProps> = ({
   onRefreshData,
   statuses,
   isLoading,
+  availableLabels,
   milestoneEntities,
   archivedMilestones,
   laneMode,
   onLaneChange,
   milestoneFilter,
+  filterAssignee = '',
+  filterLabels = [],
+  filterPriority = '',
+  onFiltersChange,
 }) => {
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [dragSourceStatus, setDragSourceStatus] = useState<string | null>(null);
@@ -43,6 +69,7 @@ const Board: React.FC<BoardProps> = ({
   const [showCleanupModal, setShowCleanupModal] = useState(false);
   const [cleanupSuccessMessage, setCleanupSuccessMessage] = useState<string | null>(null);
   const [collapsedLanes, setCollapsedLanes] = useState<Record<string, boolean>>({});
+  const terminalStatus = getTerminalStatus(statuses);
   const archivedMilestoneIds = useMemo(
     () => collectArchivedMilestoneKeys(archivedMilestones, milestoneEntities),
     [archivedMilestones, milestoneEntities]
@@ -179,11 +206,49 @@ const Board: React.FC<BoardProps> = ({
   };
   const canonicalMilestoneFilter = canonicalizeMilestone(milestoneFilter);
 
-  // Filter tasks by milestone when milestoneFilter is set
+  // Collect unique assignees and labels from all tasks for filter dropdowns
+  const uniqueAssignees = useMemo(() => {
+    const seen = new Set<string>();
+    for (const task of tasks) {
+      for (const a of task.assignee) {
+        if (a.trim()) seen.add(a.trim());
+      }
+    }
+    return Array.from(seen).sort((a, b) => a.localeCompare(b));
+  }, [tasks]);
+
+  const uniqueLabels = useMemo(
+    () => collectAvailableLabels(tasks, availableLabels),
+    [tasks, availableLabels]
+  );
+
+  const normalizedFilterLabels = useMemo(
+    () => filterLabels.map(label => label.trim()).filter(label => label.length > 0),
+    [filterLabels]
+  );
+
+  const hasActiveFilters = filterAssignee !== '' || normalizedFilterLabels.length > 0 || filterPriority !== '';
+
+  // Filter tasks by milestone when milestoneFilter is set, then apply assignee/label/priority filters
   const filteredTasks = useMemo(() => {
-    if (!milestoneFilter) return tasks;
-    return tasks.filter(task => canonicalizeMilestone(task.milestone) === canonicalMilestoneFilter);
-  }, [tasks, milestoneFilter, canonicalMilestoneFilter, milestoneAliasToCanonical]);
+    let result = tasks;
+    if (milestoneFilter) {
+      result = result.filter(task => canonicalizeMilestone(task.milestone) === canonicalMilestoneFilter);
+    }
+    if (filterAssignee === '__unassigned__') {
+      result = result.filter(task => !task.assignee || task.assignee.length === 0 || task.assignee.every(a => !a.trim()));
+    } else if (filterAssignee) {
+      result = result.filter(task => task.assignee.some(a => a.trim() === filterAssignee));
+    }
+    if (normalizedFilterLabels.length > 0) {
+      const selectedLabels = new Set(labelsToLower(normalizedFilterLabels));
+      result = result.filter(task => labelsToLower(task.labels).some(label => selectedLabels.has(label)));
+    }
+    if (filterPriority) {
+      result = result.filter(task => task.priority === filterPriority);
+    }
+    return result;
+  }, [tasks, milestoneFilter, canonicalMilestoneFilter, milestoneAliasToCanonical, filterAssignee, normalizedFilterLabels, filterPriority]);
 
   // Handle highlighting a task (opening its edit popup)
   useEffect(() => {
@@ -281,10 +346,11 @@ const Board: React.FC<BoardProps> = ({
     [laneMode, lanes, statuses, filteredTasks, archivedMilestoneIds, milestoneEntities, archivedMilestones]
   );
 
+  const displayTasksByLane = (milestoneFilter || hasActiveFilters) ? filteredTasksByLane : tasksByLane;
+  const laneMetadataTasksByLane = hasActiveFilters ? filteredTasksByLane : tasksByLane;
+
   const getTasksForLane = (laneKey: string, status: string): Task[] => {
-    // When filtering by milestone, use filtered tasks for display
-    const sourceMap = milestoneFilter ? filteredTasksByLane : tasksByLane;
-    const statusMap = sourceMap.get(laneKey);
+    const statusMap = displayTasksByLane.get(laneKey);
     if (!statusMap) {
       return [];
     }
@@ -292,7 +358,7 @@ const Board: React.FC<BoardProps> = ({
   };
 
   const laneTaskCount = (laneKey: string): number => {
-    const statusMap = tasksByLane.get(laneKey);
+    const statusMap = laneMetadataTasksByLane.get(laneKey);
     if (!statusMap) return 0;
     let count = 0;
     for (const list of statusMap.values()) {
@@ -302,7 +368,7 @@ const Board: React.FC<BoardProps> = ({
   };
 
   const countDoneTasksInLane = (laneKey: string): number => {
-    const statusMap = tasksByLane.get(laneKey);
+    const statusMap = laneMetadataTasksByLane.get(laneKey);
     if (!statusMap) return 0;
     let count = 0;
     for (const [status, taskList] of statusMap) {
@@ -324,7 +390,7 @@ const Board: React.FC<BoardProps> = ({
   const visibleLanes = useMemo(() => {
     if (laneMode !== 'milestone') return lanes;
     return lanes.filter(l => laneTaskCount(l.key) > 0);
-  }, [laneMode, lanes, tasksByLane]);
+  }, [laneMode, lanes, laneMetadataTasksByLane]);
 
   // Only show lane headers when multiple lanes exist
   const shouldShowLaneHeaders = useMemo(() => {
@@ -380,42 +446,89 @@ const Board: React.FC<BoardProps> = ({
         </div>
       )}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-200">Kanban Board</h2>
-          <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 p-1 bg-gray-50 dark:bg-gray-800/50 transition-colors duration-200">
-            <button
-              type="button"
-              onClick={() => onLaneChange('none')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
-                laneMode === 'none'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-              }`}
-            >
-              All Tasks
-            </button>
-            <button
-              type="button"
-              onClick={() => onLaneChange('milestone')}
-              disabled={!hasTasksWithMilestones}
-              title={!hasTasksWithMilestones ? 'No tasks have milestones. Assign milestones to tasks first.' : 'Group tasks by milestone'}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
-                !hasTasksWithMilestones
-                  ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'
-                  : laneMode === 'milestone'
+          <div className="flex flex-wrap items-center gap-3" role="toolbar" aria-label="Board view controls">
+            <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 p-1 bg-gray-50 dark:bg-gray-800/50 transition-colors duration-200">
+              <button
+                type="button"
+                onClick={() => onLaneChange('none')}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
+                  laneMode === 'none'
                     ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-              }`}
-            >
-              Milestone
-            </button>
+                }`}
+              >
+                All Tasks
+              </button>
+              <button
+                type="button"
+                onClick={() => onLaneChange('milestone')}
+                disabled={!hasTasksWithMilestones}
+                title={!hasTasksWithMilestones ? 'No tasks have milestones. Assign milestones to tasks first.' : 'Group tasks by milestone'}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
+                  !hasTasksWithMilestones
+                    ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'
+                    : laneMode === 'milestone'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                }`}
+              >
+                Milestone
+              </button>
+            </div>
+            {onFiltersChange && (
+              <div className="flex flex-wrap items-center gap-3" aria-label="Board filters">
+                <select
+                  aria-label="Filter board by assignee"
+                  value={filterAssignee}
+                  onChange={e => onFiltersChange({ assignee: e.target.value, labels: normalizedFilterLabels, priority: filterPriority })}
+                  className={BOARD_FILTER_SELECT_CLASS}
+                >
+                  <option value="">All assignees</option>
+                  <option value="__unassigned__">Unassigned</option>
+                  {uniqueAssignees.map(a => (
+                    <option key={a} value={a}>{a}</option>
+                  ))}
+                </select>
+
+                <LabelFilterDropdown
+                  availableLabels={uniqueLabels}
+                  selectedLabels={normalizedFilterLabels}
+                  onChange={labels => onFiltersChange({ assignee: filterAssignee, labels, priority: filterPriority })}
+                  menuId="board-labels-filter-menu"
+                  className="min-w-[200px]"
+                />
+
+                <select
+                  aria-label="Filter board by priority"
+                  value={filterPriority}
+                  onChange={e => onFiltersChange({ assignee: filterAssignee, labels: normalizedFilterLabels, priority: e.target.value })}
+                  className={BOARD_FILTER_SELECT_CLASS}
+                >
+                  {PRIORITY_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={() => onFiltersChange({ assignee: '', labels: [], priority: '' })}
+                    className={BOARD_FILTER_BUTTON_CLASS}
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
-	        <button
-	          className="inline-flex items-center px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 dark:focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors duration-200"
-	          onClick={onNewTask}
-	        >
-	          + New Task
+        <button
+          className="inline-flex items-center px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 dark:focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors duration-200"
+          onClick={onNewTask}
+        >
+          + New Task
         </button>
       </div>
 
@@ -491,7 +604,7 @@ const Board: React.FC<BoardProps> = ({
                               setDragSourceStatus(null);
                               setDragSourceLane(null);
                             }}
-                            onCleanup={status.toLowerCase() === 'done' ? () => setShowCleanupModal(true) : undefined}
+                            onCleanup={status === terminalStatus ? () => setShowCleanupModal(true) : undefined}
                           />
                         </div>
                       ))}
@@ -524,7 +637,7 @@ const Board: React.FC<BoardProps> = ({
                     setDragSourceStatus(null);
                     setDragSourceLane(null);
                   }}
-                  onCleanup={status.toLowerCase() === 'done' ? () => setShowCleanupModal(true) : undefined}
+                  onCleanup={status === terminalStatus ? () => setShowCleanupModal(true) : undefined}
                 />
               </div>
             ))}

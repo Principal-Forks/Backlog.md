@@ -1,5 +1,5 @@
 import matter from "gray-matter";
-import type { Decision, Document, Task } from "../types/index.ts";
+import type { AcceptanceCriterion, Decision, Document, Task } from "../types/index.ts";
 import { normalizeAssignee } from "../utils/assignee.ts";
 import {
 	AcceptanceCriteriaManager,
@@ -7,6 +7,28 @@ import {
 	getStructuredSections,
 	updateStructuredSections,
 } from "./structured-sections.ts";
+
+function normalizeOptionalText(value: string | undefined): string | undefined {
+	const trimmed = value?.trim();
+	return trimmed ? trimmed : undefined;
+}
+
+function sectionChanged(
+	rawContent: string,
+	key: keyof ReturnType<typeof getStructuredSections>,
+	nextValue: string,
+): boolean {
+	const existing = normalizeOptionalText(getStructuredSections(rawContent)[key]);
+	return existing !== normalizeOptionalText(nextValue);
+}
+
+function checklistItemsEqual(left: AcceptanceCriterion[], right: AcceptanceCriterion[]): boolean {
+	if (left.length !== right.length) return false;
+	return left.every((item, index) => {
+		const other = right[index];
+		return other?.index === item.index && other.checked === item.checked && other.text === item.text;
+	});
+}
 
 export function serializeTask(task: Task): string {
 	normalizeAssignee(task);
@@ -23,6 +45,7 @@ export function serializeTask(task: Task): string {
 		dependencies: task.dependencies,
 		...(task.references && task.references.length > 0 && { references: task.references }),
 		...(task.documentation && task.documentation.length > 0 && { documentation: task.documentation }),
+		...(task.modifiedFiles && task.modifiedFiles.length > 0 && { modified_files: task.modifiedFiles }),
 		...(task.parentTaskId && { parent_task_id: task.parentTaskId }),
 		...(task.subtasks && task.subtasks.length > 0 && { subtasks: task.subtasks }),
 		...(task.priority && { priority: task.priority }),
@@ -31,30 +54,47 @@ export function serializeTask(task: Task): string {
 	};
 
 	let contentBody = task.rawContent ?? "";
-	if (typeof task.description === "string" && task.description.trim() !== "") {
+	const rawContent = task.rawContent ?? "";
+	if (
+		typeof task.description === "string" &&
+		task.description.trim() !== "" &&
+		sectionChanged(rawContent, "description", task.description)
+	) {
 		contentBody = updateTaskDescription(contentBody, task.description);
 	}
 	if (Array.isArray(task.acceptanceCriteriaItems)) {
 		const existingCriteria = AcceptanceCriteriaManager.parseAllCriteria(task.rawContent ?? "");
 		const hasExistingStructuredCriteria = existingCriteria.length > 0;
-		if (task.acceptanceCriteriaItems.length > 0 || hasExistingStructuredCriteria) {
+		if (
+			(task.acceptanceCriteriaItems.length > 0 || hasExistingStructuredCriteria) &&
+			!checklistItemsEqual(existingCriteria, task.acceptanceCriteriaItems)
+		) {
 			contentBody = AcceptanceCriteriaManager.updateContent(contentBody, task.acceptanceCriteriaItems);
 		}
 	}
 	if (Array.isArray(task.definitionOfDoneItems)) {
 		const existingDefinitionOfDone = DefinitionOfDoneManager.parseAllCriteria(task.rawContent ?? "");
 		const hasExistingDefinitionOfDone = existingDefinitionOfDone.length > 0;
-		if (task.definitionOfDoneItems.length > 0 || hasExistingDefinitionOfDone) {
+		if (
+			(task.definitionOfDoneItems.length > 0 || hasExistingDefinitionOfDone) &&
+			!checklistItemsEqual(existingDefinitionOfDone, task.definitionOfDoneItems)
+		) {
 			contentBody = DefinitionOfDoneManager.updateContent(contentBody, task.definitionOfDoneItems);
 		}
 	}
-	if (typeof task.implementationPlan === "string") {
+	if (
+		typeof task.implementationPlan === "string" &&
+		sectionChanged(rawContent, "implementationPlan", task.implementationPlan)
+	) {
 		contentBody = updateTaskImplementationPlan(contentBody, task.implementationPlan);
 	}
-	if (typeof task.implementationNotes === "string") {
+	if (
+		typeof task.implementationNotes === "string" &&
+		sectionChanged(rawContent, "implementationNotes", task.implementationNotes)
+	) {
 		contentBody = updateTaskImplementationNotes(contentBody, task.implementationNotes);
 	}
-	if (typeof task.finalSummary === "string") {
+	if (typeof task.finalSummary === "string" && sectionChanged(rawContent, "finalSummary", task.finalSummary)) {
 		contentBody = updateTaskFinalSummary(contentBody, task.finalSummary);
 	}
 

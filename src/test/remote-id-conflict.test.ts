@@ -3,7 +3,7 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { $ } from "bun";
 import { Core } from "../index.ts";
-import { createUniqueTestDir, safeCleanup } from "./test-utils.ts";
+import { createUniqueTestDir, initializeTestProject, safeCleanup } from "./test-utils.ts";
 
 let TEST_DIR: string;
 let REMOTE_DIR: string;
@@ -28,7 +28,7 @@ describe("next id across remote branches", () => {
 		await $`git remote add origin ${REMOTE_DIR}`.cwd(LOCAL_DIR).quiet();
 
 		const core = new Core(LOCAL_DIR);
-		await core.initializeProject("Remote Test", true);
+		await initializeTestProject(core, "Remote Test", true);
 		await core.ensureConfigMigrated();
 		await $`git branch -M main`.cwd(LOCAL_DIR).quiet();
 		await $`git push -u origin main`.cwd(LOCAL_DIR).quiet();
@@ -61,7 +61,7 @@ describe("next id across remote branches", () => {
 
 	it("uses id after highest remote task", async () => {
 		const result = await $`bun run ${CLI_PATH} task create "Local Task"`.cwd(LOCAL_DIR).quiet();
-		expect(result.stdout.toString()).toContain("Created task task-2");
+		expect(result.stdout.toString()).toContain("Created task TASK-2");
 		const core = new Core(LOCAL_DIR);
 		const task = await core.filesystem.loadTask("task-2");
 		expect(task).not.toBeNull();

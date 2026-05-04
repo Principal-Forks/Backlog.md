@@ -12,17 +12,22 @@ Full command reference for Backlog.md. For getting started, see [README.md](READ
 
 `backlog init` keeps first-run setup focused on the essentials:
 - **Project name** – identifier for your backlog (defaults to the current directory on re-run).
+- **Backlog folder** – choose `backlog/`, `.backlog/`, or a custom project-relative path.
+- **Config location** – for built-in folders, choose folder-local `config.yml` or root `backlog.config.yml`; custom paths use root `backlog.config.yml`.
 - **Integration choice** – decide whether your AI tools connect through the **MCP connector** (recommended) or stick with **CLI commands (legacy)**.
 - **Instruction files (CLI path only)** – when you choose the legacy CLI flow, pick which instruction files to create (CLAUDE.md, AGENTS.md, GEMINI.md, Copilot, or skip).
 - **Advanced settings prompt** – default answer "No" finishes init immediately; choosing "Yes" jumps straight into the advanced wizard documented in [ADVANCED-CONFIG.md](ADVANCED-CONFIG.md).
 
 The advanced wizard includes interactive Definition of Done defaults editing (add/remove/reorder/clear), so project checklist defaults can be managed without manual YAML edits.
 
-You can rerun the wizard anytime with `backlog config`. All existing CLI flags (for example `--defaults`, `--agent-instructions`) continue to provide fully non-interactive setups, so existing scripts keep working without change.
+You can rerun the wizard anytime with `backlog config`. All existing CLI flags (for example `--defaults`, `--agent-instructions`) continue to provide fully non-interactive setups, and init also supports `--backlog-dir <path>` plus `--config-location <folder|root>` for scripted configuration.
 
 ## Documentation
 
-- Document IDs are global across all subdirectories under `backlog/docs`. You can organize files in nested folders (e.g., `backlog/docs/guides/`), and `backlog doc list` and `backlog doc view <id>` work across the entire tree. Example: `backlog doc create -p guides "New Guide"`.
+- Document IDs are global across all subdirectories under `backlog/docs`. You can organize files in nested folders (e.g., `backlog/docs/guides/`), and `backlog doc list` and `backlog doc view <id>` work across the entire tree.
+- Use `backlog doc create "New Guide" -p guides` to create a document in a docs subdirectory. The created output includes the persisted docs-relative file path, such as `backlog/docs/guides/doc-1 - New-Guide.md`.
+- Use `backlog doc update doc-1 --content "Updated markdown"` to update document content. Add `--title`, `-t/--type`, `--tags`, or `-p/--path` to update metadata or move the document while preserving omitted fields.
+- Document paths are always relative to the docs directory. Absolute paths and traversal segments such as `..` are rejected.
 
 ## Task Management
 
@@ -72,21 +77,46 @@ You can rerun the wizard anytime with `backlog config`. All existing CLI flags (
 
 ### Multi-line input (description/plan/notes/final summary)
 
-The CLI preserves input literally; `\n` sequences are not auto-converted. Use one of the following to insert real newlines:
+The CLI preserves input literally — `\n` sequences are not auto-converted. Use one of the following forms (recommended order for AI agents):
+
+**1. Repeat `--append-*` for each line (works in every shell, including Claude Code / Codex / agent sandboxes):**
+
+```bash
+backlog task edit 7 --notes "First line"
+backlog task edit 7 --append-notes "Second line"
+backlog task edit 7 --append-notes "Third line"
+```
+
+**2. Real newlines inside double quotes (single command):**
+
+```bash
+backlog task create "Feature" --desc "Line1
+Line2
+
+Final paragraph"
+```
+
+The same shape works for `--plan`, `--notes`, `--final-summary`, and the `--append-*` variants.
+
+**3. Shell-specific shorthand (interactive shells only — rejected by tree-sitter-based agent sandboxes, see [#595](https://github.com/MrLesk/Backlog.md/issues/595)):**
 
 - **Bash/Zsh (ANSI-C quoting)**
-  - Description: `backlog task create "Feature" --desc $'Line1\nLine2\n\nFinal paragraph'`
-  - Plan: `backlog task edit 7 --plan $'1. Research\n2. Implement'`
-  - Notes: `backlog task edit 7 --notes $'Completed A\nWorking on B'`
-  - Append notes: `backlog task edit 7 --append-notes $'Added X\nAdded Y'`
-  - Final summary: `backlog task edit 7 --final-summary $'Shipped A\nAdded B'`
-  - Append final summary: `backlog task edit 7 --append-final-summary $'Added X\nAdded Y'`
-- **POSIX sh (printf)**
-  - `backlog task create "Feature" --desc "$(printf 'Line1\nLine2\n\nFinal paragraph')"`
-- **PowerShell (backtick)**
-  - `backlog task create "Feature" --desc "Line1`nLine2`n`nFinal paragraph"`
 
-Tip: Help text shows Bash examples with escaped `\\n` for readability; when typing, `$'\n'` expands to a newline.
+  ```bash
+  backlog task edit 7 --notes $'Line1\nLine2'
+  ```
+
+- **POSIX sh (printf substitution)**
+
+  ```bash
+  backlog task create "Feature" --desc "$(printf 'Line1\nLine2\n\nFinal paragraph')"
+  ```
+
+- **PowerShell (backtick-n)**
+
+  ```powershell
+  backlog task create "Feature" --desc "Line1`nLine2`n`nFinal paragraph"
+  ```
 
 ## Search
 
@@ -152,13 +182,17 @@ Manage task dependencies to create execution sequences and prevent circular rela
 | Web interface | `backlog browser` (launches web UI on port 6420) |
 | Web custom port | `backlog browser --port 8080 --no-open` |
 
+To keep the Web UI running in the background with auto-start on boot, see [Running Backlog.md as a Service](backlog/docs/doc-003%20-%20Running-Backlog-Browser-as-a-Service.md).
+
 ## Documentation
 
 | Action      | Example                                              |
 |-------------|------------------------------------------------------|
 | Create doc | `backlog doc create "API Guidelines"` |
 | Create with path | `backlog doc create "Setup Guide" -p guides/setup` |
-| Create with type | `backlog doc create "Architecture" -t technical` |
+| Create with type | `backlog doc create "Architecture" -t guide` |
+| Update content | `backlog doc update doc-1 --content "Updated markdown"` |
+| Update metadata/path | `backlog doc update doc-1 --title "Setup Handbook" -t guide --tags setup,runbook -p guides` |
 | List docs | `backlog doc list` |
 | View doc | `backlog doc view doc-1` |
 
@@ -215,7 +249,7 @@ Perfect for sharing project status, creating reports, or storing snapshots in ve
 
 ## Shell Tab Completion
 
-Backlog.md includes built-in intelligent tab completion for bash, zsh, and fish shells. Completion scripts are embedded in the binary — no external files needed.
+Backlog.md includes built-in intelligent tab completion for bash, zsh, fish, and PowerShell shells. Completion scripts are embedded in the binary — no external files needed.
 
 **Quick Installation:**
 ```bash
@@ -226,6 +260,7 @@ backlog completion install
 backlog completion install --shell bash
 backlog completion install --shell zsh
 backlog completion install --shell fish
+backlog completion install --shell pwsh
 ```
 
 **What you get:**

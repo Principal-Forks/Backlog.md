@@ -26,6 +26,7 @@ export function registerDocumentTools(server: McpServer, _config: BacklogConfig)
 			name: "document_list",
 			description: "List Backlog.md documents with optional substring filtering",
 			inputSchema: documentListSchema,
+			annotations: { title: "List Documents", readOnlyHint: true, destructiveHint: false },
 		},
 		documentListSchema,
 		async (input) => handlers.listDocuments(input as DocumentListArgs),
@@ -36,6 +37,7 @@ export function registerDocumentTools(server: McpServer, _config: BacklogConfig)
 			name: "document_view",
 			description: "View a Backlog.md document including metadata and markdown content",
 			inputSchema: documentViewSchema,
+			annotations: { title: "View Document", readOnlyHint: true, destructiveHint: false },
 		},
 		documentViewSchema,
 		async (input) => handlers.viewDocument(input as DocumentViewArgs),
@@ -44,8 +46,10 @@ export function registerDocumentTools(server: McpServer, _config: BacklogConfig)
 	const createDocumentTool: McpToolHandler = createSimpleValidatedTool(
 		{
 			name: "document_create",
-			description: "Create a Backlog.md document using the shared ID generator",
+			description:
+				"Create a Backlog.md document using the shared core document pipeline, with optional docs subdirectory path",
 			inputSchema: documentCreateSchema,
+			annotations: { title: "Create Document", destructiveHint: false },
 		},
 		documentCreateSchema,
 		async (input) => handlers.createDocument(input as DocumentCreateArgs),
@@ -54,8 +58,10 @@ export function registerDocumentTools(server: McpServer, _config: BacklogConfig)
 	const updateDocumentTool: McpToolHandler = createSimpleValidatedTool(
 		{
 			name: "document_update",
-			description: "Update an existing Backlog.md document's content and optional title",
+			description:
+				"Update an existing Backlog.md document's content, optional title, metadata, and optional docs subdirectory path",
 			inputSchema: documentUpdateSchema,
+			annotations: { title: "Update Document", destructiveHint: false },
 		},
 		documentUpdateSchema,
 		async (input) => handlers.updateDocument(input as DocumentUpdateArgs),
@@ -66,6 +72,7 @@ export function registerDocumentTools(server: McpServer, _config: BacklogConfig)
 			name: "document_search",
 			description: "Search Backlog.md documents using the shared fuzzy index",
 			inputSchema: documentSearchSchema,
+			annotations: { title: "Search Documents", readOnlyHint: true, destructiveHint: false },
 		},
 		documentSearchSchema,
 		async (input) => handlers.searchDocuments(input as DocumentSearchArgs),

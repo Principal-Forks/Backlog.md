@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Board from './Board';
 import { type Milestone, type Task } from '../../types';
@@ -11,6 +11,7 @@ interface BoardPageProps {
 	onRefreshData?: () => Promise<void>;
 	statuses: string[];
 	milestones: string[];
+	availableLabels: string[];
 	milestoneEntities: Milestone[];
 	archivedMilestones: Milestone[];
 	isLoading: boolean;
@@ -23,6 +24,7 @@ export default function BoardPage({
 	onRefreshData,
 	statuses,
 	milestones,
+	availableLabels,
 	milestoneEntities,
 	archivedMilestones,
 	isLoading,
@@ -85,6 +87,37 @@ export default function BoardPage({
 		}, { replace: true });
 	};
 
+	const handleFiltersChange = (filters: { assignee: string; labels: string[]; priority: string }) => {
+		setSearchParams(params => {
+			if (filters.assignee) {
+				params.set('assignee', filters.assignee);
+			} else {
+				params.delete('assignee');
+			}
+			params.delete('label');
+			params.delete('labels');
+			for (const label of filters.labels) {
+				const normalized = label.trim();
+				if (normalized) {
+					params.append('label', normalized);
+				}
+			}
+			if (filters.priority) {
+				params.set('priority', filters.priority);
+			} else {
+				params.delete('priority');
+			}
+			return params;
+		}, { replace: true });
+	};
+
+	const filterAssignee = searchParams.get('assignee') ?? '';
+	const filterLabels = [
+		...searchParams.getAll('label'),
+		...searchParams.getAll('labels').flatMap((value) => value.split(',')),
+	].map((label) => label.trim()).filter((label) => label.length > 0);
+	const filterPriority = searchParams.get('priority') ?? '';
+
 	return (
 		<div className="container mx-auto px-4 py-8 transition-colors duration-200">
 			<Board
@@ -98,9 +131,14 @@ export default function BoardPage({
 				milestoneEntities={milestoneEntities}
 				archivedMilestones={archivedMilestones}
 				isLoading={isLoading}
+				availableLabels={availableLabels}
 				laneMode={laneMode}
 				onLaneChange={handleLaneChange}
 				milestoneFilter={milestoneFilter}
+				filterAssignee={filterAssignee}
+				filterLabels={filterLabels}
+				filterPriority={filterPriority}
+				onFiltersChange={handleFiltersChange}
 			/>
 		</div>
 	);

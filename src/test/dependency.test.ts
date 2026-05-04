@@ -19,7 +19,7 @@ describe("Task Dependencies", () => {
 		await $`git config user.email test@example.com`.cwd(tempDir).quiet();
 
 		core = new Core(tempDir);
-		await core.initializeProject("test-project");
+		await initializeTestProject(core, "test-project");
 	});
 
 	afterEach(() => {
@@ -138,7 +138,15 @@ describe("Task Dependencies", () => {
 			description: "Draft task",
 		};
 
-		await core.createDraft(draftTask, false);
+		await core.createTaskFromInput(
+			{
+				title: draftTask.title,
+				status: "Draft",
+				description: draftTask.description,
+				dependencies: draftTask.dependencies,
+			},
+			false,
+		);
 
 		// Create task that depends on draft
 		const task2: Task = {
@@ -333,10 +341,20 @@ describe("Task Dependencies", () => {
 		};
 
 		await core.createTask(archiveTarget, false);
-		await core.createDraft(draftTask, false);
+		await core.createTaskFromInput(
+			{
+				title: draftTask.title,
+				status: "Draft",
+				description: draftTask.description,
+				dependencies: draftTask.dependencies,
+			},
+			false,
+		);
 		await core.archiveTask("task-1", false);
 
 		const draft = await core.filesystem.loadDraft("draft-1");
-		expect(draft?.dependencies).toEqual(["task-1"]);
+		expect(draft?.dependencies).toEqual(["TASK-1"]);
 	});
 });
+
+import { initializeTestProject } from "./test-utils.ts";

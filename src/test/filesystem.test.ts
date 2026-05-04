@@ -256,6 +256,49 @@ Invalid content`,
 			const promotedTask = await filesystem.loadTask("task-1");
 			expect(promotedTask?.id).toBe("TASK-1");
 			expect(promotedTask?.title).toBe(sampleDraft.title);
+			expect(promotedTask?.status).toBe("To Do");
+		});
+
+		it("should promote a draft to the configured default status", async () => {
+			const customConfig: BacklogConfig = {
+				projectName: "Custom Default Status Project",
+				defaultStatus: "Ready",
+				statuses: ["Ready", "In Progress", "Done"],
+				labels: [],
+				milestones: [],
+				dateFormat: "yyyy-MM-dd",
+			};
+			await filesystem.saveConfig(customConfig);
+			await filesystem.saveDraft(sampleDraft);
+
+			const promoted = await filesystem.promoteDraft("draft-1");
+			expect(promoted).toBe(true);
+
+			const promotedTask = await filesystem.loadTask("task-1");
+			expect(promotedTask?.id).toBe("TASK-1");
+			expect(promotedTask?.status).toBe("Ready");
+		});
+
+		it("should preserve a non-draft status when promoting a demoted task", async () => {
+			await filesystem.saveTask({
+				...sampleDraft,
+				id: "task-1",
+				title: "Demoted Task",
+				status: "In Progress",
+			});
+
+			const demoted = await filesystem.demoteTask("task-1");
+			expect(demoted).toBe(true);
+
+			const draft = await filesystem.loadDraft("draft-1");
+			expect(draft?.status).toBe("In Progress");
+
+			const promoted = await filesystem.promoteDraft("draft-1");
+			expect(promoted).toBe(true);
+
+			const promotedTask = await filesystem.loadTask("task-1");
+			expect(promotedTask?.id).toBe("TASK-1");
+			expect(promotedTask?.status).toBe("In Progress");
 		});
 
 		it("should promote draft with custom task prefix", async () => {
@@ -382,19 +425,6 @@ Invalid content`,
 			await filesystem.saveConfig(cfg);
 			const loaded = await filesystem.loadConfig();
 			expect(loaded?.defaultReporter).toBe("@author");
-		});
-	});
-
-	describe("user config operations", () => {
-		it("should save and load local and global user settings", async () => {
-			await filesystem.setUserSetting("reporter", "local", false);
-			await filesystem.setUserSetting("reporter", "global", true);
-
-			const local = await filesystem.getUserSetting("reporter", false);
-			const global = await filesystem.getUserSetting("reporter", true);
-
-			expect(local).toBe("local");
-			expect(global).toBe("global");
 		});
 	});
 
@@ -571,7 +601,29 @@ Invalid content`,
 
 			const docs = await filesystem.listDocuments();
 			const nested = docs.find((doc) => doc.id === "doc-3");
-			expect(nested?.path).toBe(join("guides", "doc-3 - Nested-Guide.md"));
+			expect(nested?.path).toBe("guides/doc-3 - Nested-Guide.md");
+		});
+
+		it("rejects unsafe document paths", async () => {
+			await expect(
+				filesystem.saveDocument(
+					{
+						...sampleDocument,
+						id: "doc-4",
+					},
+					"../outside",
+				),
+			).rejects.toThrow("Document path cannot include traversal segments.");
+
+			await expect(
+				filesystem.saveDocument(
+					{
+						...sampleDocument,
+						id: "doc-5",
+					},
+					"/tmp/docs",
+				),
+			).rejects.toThrow("Document path must be relative");
 		});
 
 		it("should load documents using flexible ID formats", async () => {
